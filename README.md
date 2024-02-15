@@ -73,10 +73,3 @@ Contributions to the AuctionNext project are welcome. To contribute, follow thes
 3. Make your changes and commit them: `git commit -am 'Add some feature'`
 4. Push the changes to your fork: `git push origin feature/your-feature-name`
 5. Create a new pull request
-
-## License
-
-The AuctionNext project is licensed under the [MIT License](LICENSE).
-```
-
-Please note that the markdown syntax may not be rendered properly in this text-based format, but it should work correctly when used in a markdown file.
