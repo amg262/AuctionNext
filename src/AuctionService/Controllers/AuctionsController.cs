@@ -55,9 +55,8 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper) : Cont
 	[HttpPut("{id:guid}")]
 	public async Task<ActionResult> UpdateAuction(Guid id, UpdateAuctionDto updateAuctionDto)
 	{
-		var auction = await context.Auctions
-			.Include(x => x.Item)
-			.FirstOrDefaultAsync(x => x.Id == id);
+		var auction = await context.Auctions.Include(x => x.Item).FirstOrDefaultAsync(x => x.Id == id);
+
 
 		if (auction is null) return NotFound();
 
@@ -77,5 +76,21 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper) : Cont
 		if (result) return Ok();
 
 		return BadRequest("Failed to update auction in the database.");
+	}
+
+	[HttpDelete("{id:guid}")]
+	public async Task<ActionResult> DeleteAuction(Guid id)
+	{
+		var auction = await context.Auctions.FindAsync(id);
+
+		if (auction is null) return NotFound();
+
+		context.Auctions.Remove(auction);
+
+		var result = await context.SaveChangesAsync() > 0;
+
+		if (!result) return BadRequest("Failed to delete auction in the database.");
+
+		return Ok();
 	}
 }
