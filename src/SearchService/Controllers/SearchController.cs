@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Entities;
 using SearchService.Models;
+using SearchService.RequestHelpers;
 
 namespace SearchService.Controllers;
 
@@ -12,33 +13,65 @@ namespace SearchService.Controllers;
 public class SearchController : ControllerBase
 {
 	/// <summary>
-	/// Searches items based on the provided search term. If no search term is provided, it returns all items sorted by make.
+	/// Searches items based on the provided search parameters. Allows filtering, ordering, and pagination of search results.
 	/// </summary>
-	/// <param name="searchTerm">The search term to filter items. Optional.</param>
-	/// <returns>A list of items that match the search criteria.</returns>
+	/// <param name="searchParams">The search parameters to filter and order items.</param>
+	/// <returns>A list of items that match the search criteria along with pagination details.</returns>
 	/// <remarks>
-	/// This method performs a text search if a search term is provided, leveraging MongoDB's full-text search capabilities.
-	/// It returns items sorted by their make in ascending order, and if a search term is provided, results are further sorted by text score to prioritize more relevant matches.
+	/// Utilizes MongoDB's text search and filtering capabilities to find items matching the criteria specified in <paramref name="searchParams"/>.
+	/// Supports ordering by 'make', 'new', or 'auction end', and filtering by status such as 'finished' or 'ending soon'.
 	/// </remarks>
 	[HttpGet]
-	public async Task<ActionResult<List<Item>>> SearchItems(string? searchTerm, int pageNumber = 1, int pageSize = 4)
+	public async Task<ActionResult<List<Item>>> SearchItems([FromQuery] SearchParams searchParams)
 	{
 		// Initialize a query against the items collection.
-		var query = DB.PagedSearch<Item>();
+		var query = DB.PagedSearch<Item, Item>();
+		
 		// Sort items by the 'Make' field in ascending order.
 		query.Sort(x => x.Ascending(a => a.Make));
 
 		// If a search term is provided, perform a full-text search and sort by text score.
-		if (!string.IsNullOrEmpty(searchTerm))
+		if (!string.IsNullOrEmpty(searchParams.SearchTerm))
 		{
-			query.Match(Search.Full, searchTerm).SortByTextScore();
+			query.Match(Search.Full, searchParams.SearchTerm).SortByTextScore();
 		}
+		
+		// Apply ordering based on the 'OrderBy' parameter.
+		query = searchParams.OrderBy switch
+		{
+			"make" => query.Sort(x => x.Ascending(a => a.Make)),
+			"new" => query.Sort(x => x.Descending(a => a.CreatedAt)),
+			_ => query.Sort(x => x.Ascending(a => a.AuctionEnd))
+		};
+		
+		// Apply filtering based on the 'FilterBy' parameter.
+		query = searchParams.FilterBy switch
+		{
+			"finished" => query.Match(x => x.Where(a => a.AuctionEnd < DateTime.UtcNow)),
+			"endingSoon" => query.Match(x =>
+				x.Where(a => a.AuctionEnd < DateTime.UtcNow.AddHours(6) && a.AuctionEnd > DateTime.UtcNow)),
+			_ => query.Match(x => x.AuctionEnd < DateTime.UtcNow)
+		};
 
-		query.PageNumber(pageNumber).PageSize(pageSize);
+		// Apply additional filtering by seller or winner if provided.
+		if (!string.IsNullOrEmpty(searchParams.Seller))
+		{
+			query.Match(x => x.Where(a => a.Seller == searchParams.Seller));
+		}
+		
+		// Apply additional filtering by seller or winner if provided.
+		if (!string.IsNullOrEmpty(searchParams.Winner))
+		{
+			query.Match(x => x.Where(a => a.Winner == searchParams.Winner));
+		}
+		
+		// Set the pagination parameters.
+		query.PageNumber(searchParams.PageNumber);
+		query.PageSize(searchParams.PageSize);
 
 		var result = await query.ExecuteAsync();
-		
-		// Return the result as an HTTP response.
+
+		// Construct and return the response with search results and pagination details.
 		return Ok(new
 		{
 			results = result.Results,
