@@ -1,5 +1,8 @@
 ﻿namespace AuctionService.DTOs;
 
+/// <summary>
+/// Represents a Data Transfer Object for updating an auction.
+/// </summary>
 public class UpdateAuctionDto
 {
 	public string Make { get; set; }

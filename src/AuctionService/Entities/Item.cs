@@ -2,6 +2,9 @@
 
 namespace AuctionService.Entities;
 
+/// <summary>
+/// Entity class representing an item in an auction
+/// </summary>
 [Table("Items")]
 public class Item
 {

@@ -1,5 +1,8 @@
 ﻿namespace AuctionService.Entities;
 
+/// <summary>
+/// Entity class representing an auction.
+/// </summary>
 public class Auction
 {
 	public Guid Id { get; set; }

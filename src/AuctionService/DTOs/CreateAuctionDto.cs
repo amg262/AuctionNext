@@ -2,6 +2,9 @@
 
 namespace AuctionService.DTOs;
 
+/// <summary>
+/// Represents a Data Transfer Object for creating a new auction.
+/// </summary>
 public class CreateAuctionDto
 {
 	[Required] public string Make { get; set; }

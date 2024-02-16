@@ -7,10 +7,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuctionService.Controllers;
 
+/// <summary>
+/// Initializes a new instance of the <see cref="AuctionsController"/> class.
+/// </summary>
+/// <param name="context">The database context for auction data.</param>
+/// <param name="mapper">The AutoMapper instance for mapping between entities and DTOs.</param>
 [ApiController]
 [Route("api/auctions")]
 public class AuctionsController(AuctionDbContext context, IMapper mapper) : ControllerBase
 {
+	/// <summary>
+	/// Retrieves all auctions.
+	/// </summary>
+	/// <returns>A list of auction DTOs.</returns>
 	[HttpGet]
 	public async Task<ActionResult<List<AuctionDto>>> GetAllAuctions()
 	{
@@ -18,11 +27,16 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper) : Cont
 			.Include(x => x.Item)
 			.OrderBy(x => x.Item.Make)
 			.ToListAsync();
-		
+
 		var auctionsDto = mapper.Map<List<AuctionDto>>(auctions);
 		return Ok(auctionsDto);
 	}
 
+	/// <summary>
+	/// Retrieves a specific auction by ID.
+	/// </summary>
+	/// <param name="id">The unique identifier of the auction.</param>
+	/// <returns>An auction DTO.</returns>
 	[HttpGet("{id:guid}")]
 	public async Task<ActionResult<AuctionDto>> GetAuctionById(Guid id)
 	{
@@ -35,6 +49,11 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper) : Cont
 		return mapper.Map<AuctionDto>(auction);
 	}
 
+	/// <summary>
+	/// Creates a new auction.
+	/// </summary>
+	/// <param name="auctionDto">The auction data transfer object containing the creation data.</param>
+	/// <returns>The created auction DTO.</returns>
 	[HttpPost]
 	public async Task<ActionResult<AuctionDto>> CreateAuction(CreateAuctionDto auctionDto)
 	{
@@ -52,6 +71,12 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper) : Cont
 		return CreatedAtAction(nameof(GetAuctionById), new {id = auction.Id}, mapper.Map<AuctionDto>(auction));
 	}
 
+	/// <summary>
+	/// Updates an existing auction.
+	/// </summary>
+	/// <param name="id">The unique identifier of the auction to update.</param>
+	/// <param name="updateAuctionDto">The auction data transfer object containing the update data.</param>
+	/// <returns>A response indicating the outcome of the operation.</returns>
 	[HttpPut("{id:guid}")]
 	public async Task<ActionResult> UpdateAuction(Guid id, UpdateAuctionDto updateAuctionDto)
 	{
@@ -78,6 +103,11 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper) : Cont
 		return BadRequest("Failed to update auction in the database.");
 	}
 
+	/// <summary>
+	/// Deletes an auction.
+	/// </summary>
+	/// <param name="id">The unique identifier of the auction to delete.</param>
+	/// <returns>A response indicating the outcome of the operation.</returns>
 	[HttpDelete("{id:guid}")]
 	public async Task<ActionResult> DeleteAuction(Guid id)
 	{

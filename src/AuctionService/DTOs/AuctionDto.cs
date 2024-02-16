@@ -1,5 +1,8 @@
 ﻿namespace AuctionService.DTOs;
 
+/// <summary>
+/// Represents a Data Transfer Object for auction data.
+/// </summary>
 public class AuctionDto
 {
 	public Guid Id { get; set; }
