@@ -21,10 +21,10 @@ public class SearchController : ControllerBase
 	/// It returns items sorted by their make in ascending order, and if a search term is provided, results are further sorted by text score to prioritize more relevant matches.
 	/// </remarks>
 	[HttpGet]
-	public async Task<ActionResult<List<Item>>> SearchItems(string? searchTerm)
+	public async Task<ActionResult<List<Item>>> SearchItems(string? searchTerm, int pageNumber = 1, int pageSize = 4)
 	{
 		// Initialize a query against the items collection.
-		var query = DB.Find<Item>();
+		var query = DB.PagedSearch<Item>();
 		// Sort items by the 'Make' field in ascending order.
 		query.Sort(x => x.Ascending(a => a.Make));
 
@@ -34,8 +34,16 @@ public class SearchController : ControllerBase
 			query.Match(Search.Full, searchTerm).SortByTextScore();
 		}
 
+		query.PageNumber(pageNumber).PageSize(pageSize);
+
 		var result = await query.ExecuteAsync();
+		
 		// Return the result as an HTTP response.
-		return result;
+		return Ok(new
+		{
+			results = result.Results,
+			pageCount = result.PageCount,
+			totalCount = result.TotalCount
+		});
 	}
 }
