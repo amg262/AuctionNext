@@ -18,7 +18,7 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper) : Cont
 			.Include(x => x.Item)
 			.OrderBy(x => x.Item.Make)
 			.ToListAsync();
-
+		
 		var auctionsDto = mapper.Map<List<AuctionDto>>(auctions);
 		return Ok(auctionsDto);
 	}
@@ -57,8 +57,8 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper) : Cont
 	{
 		var auction = await context.Auctions.Include(x => x.Item).FirstOrDefaultAsync(x => x.Id == id);
 
-
 		if (auction is null) return NotFound();
+
 
 		// Todo: check if seller == username
 		auction.Item.Make = updateAuctionDto.Make ?? auction.Item.Make;
