@@ -1,9 +1,6 @@
-using MongoDB.Driver;
-using MongoDB.Entities;
 using Polly;
 using Polly.Extensions.Http;
 using SearchService.Data;
-using SearchService.Models;
 using SearchService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,14 +29,20 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-try
+// Search search will still start even if the database is not available.
+app.Lifetime.ApplicationStarted.Register(async () =>
 {
-	await DbInitializer.InitDb(app);
-}
-catch (Exception e)
-{
-	Console.WriteLine(e);
-}
+	try
+	{
+		await DbInitializer.InitDb(app);
+	}
+	catch (Exception e)
+	{
+		Console.WriteLine(e);
+	}
+});
+
+
 
 app.Run();
 return;

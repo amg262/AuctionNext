@@ -38,6 +38,7 @@ public static class DbInitializer
 
 		var count = await DB.CountAsync<Item>();
 
+		// Seed the database with initial data file if it is empty.
 		// if (count == 0)
 		// {
 		// 	Console.WriteLine("Seeding database...");
@@ -47,10 +48,10 @@ public static class DbInitializer
 		// 	await DB.SaveAsync(items);
 		// }
 
+		// Retrieve items from the AuctionService and save them to the database.
 		using var scope = app.Services.CreateScope();
 
 		var httpClient = scope.ServiceProvider.GetRequiredService<AuctionServiceHttpClient>();
-		// var httpClient = scope.ServiceProvider.GetRequiredService<IHttpClientFactory>().CreateClient("AuctionService");
 
 		var items = await httpClient.GetItemsForSearchDb();
 
