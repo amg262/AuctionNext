@@ -3,6 +3,8 @@ using AuctionService.DTOs;
 using AuctionService.Entities;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Contracts;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +17,7 @@ namespace AuctionService.Controllers;
 /// <param name="mapper">The AutoMapper instance for mapping between entities and DTOs.</param>
 [ApiController]
 [Route("api/auctions")]
-public class AuctionsController(AuctionDbContext context, IMapper mapper) : ControllerBase
+public class AuctionsController(AuctionDbContext context, IMapper mapper, IPublishEndpoint endpoint) : ControllerBase
 {
 	/// <summary>
 	/// Retrieves all auctions.
@@ -67,10 +69,14 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper) : Cont
 		// If the number of changes is greater than 0, then the operation was successful
 		var result = await context.SaveChangesAsync() > 0;
 
+		var newAuction = mapper.Map<AuctionDto>(auction);
+
+		await endpoint.Publish(mapper.Map<AuctionCreated>(newAuction));
+
 		if (!result) return BadRequest("Failed to create auction in the database.");
 
 		// This will return the auction that was created via GET request and parameters
-		return CreatedAtAction(nameof(GetAuctionById), new {id = auction.Id}, mapper.Map<AuctionDto>(auction));
+		return CreatedAtAction(nameof(GetAuctionById), new {id = auction.Id}, newAuction);
 	}
 
 	/// <summary>
