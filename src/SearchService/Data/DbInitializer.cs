@@ -52,7 +52,7 @@ public static class DbInitializer
 		var httpClient = scope.ServiceProvider.GetRequiredService<AuctionServiceHttpClient>();
 		// var httpClient = scope.ServiceProvider.GetRequiredService<IHttpClientFactory>().CreateClient("AuctionService");
 
-		var items = await httpClient.GetItemsForSearchDb(null);
+		var items = await httpClient.GetItemsForSearchDb();
 
 		Console.WriteLine($"{items.Count} items retrieved from AuctionService");
 

@@ -9,7 +9,8 @@
     ports:
       - "5432:5432"
     volumes:
-      - postgresdata:/var/lib/postgresql/data
+      - /var/lib/postgresql/data
+#      - postgresdata:/var/lib/postgresql/data
   mongo:
     image: mongo:latest
     container_name: mongo
@@ -19,9 +20,10 @@
     ports:
       - "27017:27017"
     volumes:
-      - mongodata:/var/lib/mongo
+      - /var/lib/mongo
+#      - mongodata:/var/lib/mongo
 
-volumes:
-  postgresdata:
-  mongodata:
+#volumes:
+#  postgresdata:
+#  mongodata:
 
