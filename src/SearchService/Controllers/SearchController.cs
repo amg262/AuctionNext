@@ -50,7 +50,7 @@ public class SearchController : ControllerBase
 			"finished" => query.Match(x => x.Where(a => a.AuctionEnd < DateTime.UtcNow)),
 			"endingSoon" => query.Match(x =>
 				x.Where(a => a.AuctionEnd < DateTime.UtcNow.AddHours(6) && a.AuctionEnd > DateTime.UtcNow)),
-			_ => query.Match(x => x.AuctionEnd < DateTime.UtcNow)
+			_ => query.Match(x => x.AuctionEnd > DateTime.UtcNow)
 		};
 
 		// Apply additional filtering by seller or winner if provided.
