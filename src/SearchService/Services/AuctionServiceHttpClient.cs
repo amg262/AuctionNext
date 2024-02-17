@@ -4,37 +4,34 @@ using SearchService.Models;
 
 namespace SearchService.Services;
 
-public class AuctionServiceHttpClient(
-	HttpClient httpClient,
-	IHttpClientFactory clientFactory,
-	IConfiguration configuration)
+/// <summary>
+/// Represents a client service for fetching auction items from an external Auction Service.
+/// Initializes a new instance of the <see cref="AuctionServiceHttpClient"/> class.
+/// </summary>
+/// <param name="httpClient">The <see cref="HttpClient"/> for making HTTP requests.</param>
+/// <param name="config">The application's configuration to access settings like the Auction Service URL.</param>
+public class AuctionServiceHttpClient(HttpClient httpClient, IConfiguration config)
 {
-	private readonly HttpClient _httpClient = httpClient;
-	private readonly IConfiguration _configuration = configuration;
-
+	/// <summary>
+	/// Asynchronously retrieves a list of <see cref="Item"/> objects from the Auction Service.
+	/// </summary>
+	/// <param name="date">The optional date parameter to filter items by their last updated timestamp. 
+	/// If not provided, the method fetches the most recently updated item and uses its timestamp as the filter.</param>
+	/// <returns>A task that represents the asynchronous operation. The task result contains a list of <see cref="Item"/> objects.</returns>
+	/// <remarks>
+	/// This method fetches items from the Auction Service by making an HTTP GET request. 
+	/// It constructs the request URL using the base URL provided in the application's configuration and appends a query parameter
+	/// to filter items based on their last updated timestamp. The method uses MongoDB to find the most recent update timestamp
+	/// if no specific date is provided.
+	/// </remarks>
 	public async Task<List<Item>> GetItemsForSearchDb(string date = null)
 	{
-		var client = clientFactory.CreateClient("AuctionService");
-
 		var lastUpdated = await DB.Find<Item, string>()
 			.Sort(x => x.Descending(x => x.UpdatedAt))
 			.Project(x => x.UpdatedAt.ToString())
 			.ExecuteFirstAsync();
 
-		return await _httpClient.GetFromJsonAsync<List<Item>>(_configuration["AuctionServiceUrl"] +
-		                                                      $"api/auctions?date={lastUpdated}");
-
-		// var client = httpClientFactory.CreateClient("AuctionService");
-		// var response = await client.GetAsync($"api/auctions?date={date}");
-		// if (response.IsSuccessStatusCode)
-		// {
-		// 	var auctions = await response.Content.ReadFromJsonAsync<List<AuctionDto>>();
-		// 	return auctions;
-		// }
-		// else
-		// {
-		// 	logger.LogError("Failed to retrieve auctions from AuctionService. Status code: {StatusCode}", response.StatusCode);
-		// 	return null;
-		// }
+		return await httpClient.GetFromJsonAsync<List<Item>>(config["AuctionServiceUrl"] +
+		                                                     $"api/auctions?date={lastUpdated}");
 	}
 }
