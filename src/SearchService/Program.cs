@@ -1,3 +1,4 @@
+using MassTransit;
 using Polly;
 using Polly.Extensions.Http;
 using SearchService.Data;
@@ -9,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddHttpClient<AuctionServiceHttpClient>().AddPolicyHandler(GetPolicy());
-
+builder.Services.AddMassTransit(x => { x.UsingRabbitMq((context, cfg) => { cfg.ConfigureEndpoints(context); }); });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -41,7 +42,6 @@ app.Lifetime.ApplicationStarted.Register(async () =>
 		Console.WriteLine(e);
 	}
 });
-
 
 
 app.Run();
