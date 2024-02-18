@@ -15,7 +15,7 @@ builder.Services.AddHttpClient<AuctionServiceHttpClient>().AddPolicyHandler(GetP
 builder.Services.AddMassTransit(x =>
 {
 	x.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
-	x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search", false));
+	// x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search", false));
 	x.UsingRabbitMq((context, cfg) => { cfg.ConfigureEndpoints(context); });
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

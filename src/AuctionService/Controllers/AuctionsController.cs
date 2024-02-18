@@ -65,13 +65,13 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper, IPubli
 		// Todo: Add the user id from the token
 		auction.Seller = "Andrew";
 		await context.Auctions.AddAsync(auction);
-
-		// If the number of changes is greater than 0, then the operation was successful
-		var result = await context.SaveChangesAsync() > 0;
-
+		
 		var newAuction = mapper.Map<AuctionDto>(auction);
 
 		await endpoint.Publish(mapper.Map<AuctionCreated>(newAuction));
+
+		// If the number of changes is greater than 0, then the operation was successful
+		var result = await context.SaveChangesAsync() > 0;
 
 		if (!result) return BadRequest("Failed to create auction in the database.");
 
