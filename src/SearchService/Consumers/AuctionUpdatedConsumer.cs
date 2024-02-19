@@ -26,7 +26,7 @@ public class AuctionUpdatedConsumer(IMapper mapper) : IConsumer<AuctionUpdated>
 	/// </remarks>
 	public async Task Consume(ConsumeContext<AuctionUpdated> context)
 	{
-		Console.WriteLine("--> Consuming auction updated: " + context.Message.Id);
+		Console.WriteLine($"--> Consuming auction updated: {context.Message.Id}");
 
 		var item = mapper.Map<Item>(context.Message);
 
