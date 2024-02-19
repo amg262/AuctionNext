@@ -1,5 +1,9 @@
 ﻿namespace Contracts;
 
+/// <summary>
+/// Represents the details of an auction when it is created.
+/// This class is used to transfer auction data within the system or between systems.
+/// </summary>
 public class AuctionCreated
 {
 	public Guid Id { get; set; }
