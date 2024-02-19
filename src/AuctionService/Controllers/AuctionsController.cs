@@ -65,7 +65,7 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper, IPubli
 		// Todo: Add the user id from the token
 		auction.Seller = "Andrew";
 		await context.Auctions.AddAsync(auction);
-		
+
 		var newAuction = mapper.Map<AuctionDto>(auction);
 
 		await endpoint.Publish(mapper.Map<AuctionCreated>(newAuction));
@@ -104,6 +104,10 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper, IPubli
 		//
 		// context.Auctions.Update(auction);
 
+		// We have to call the Publish method to send the message to the message broker before saving the changes to the database.
+		await endpoint.Publish(mapper.Map<AuctionUpdated>(auction));
+
+
 		var result = await context.SaveChangesAsync() > 0;
 
 		if (result) return Ok();
@@ -124,6 +128,8 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper, IPubli
 		if (auction is null) return NotFound();
 
 		context.Auctions.Remove(auction);
+
+		await endpoint.Publish<AuctionDeleted>(new {Id = auction.Id.ToString()});
 
 		var result = await context.SaveChangesAsync() > 0;
 
