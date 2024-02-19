@@ -16,7 +16,18 @@ builder.Services.AddMassTransit(x =>
 {
 	x.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
 	x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search", false));
-	x.UsingRabbitMq((context, cfg) => { cfg.ConfigureEndpoints(context); });
+	x.UsingRabbitMq((context, cfg) =>
+	{
+		cfg.ReceiveEndpoint("search-auction-created", e =>
+		{
+			e.UseMessageRetry(r=>r.Interval(5,5));
+			e.ConfigureConsumer<AuctionCreatedConsumer>(context);
+			e.PublishFaults = true; // Enable fault handling for this endpoint.
+
+		});
+		cfg.ConfigureEndpoints(context);
+		
+	});
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

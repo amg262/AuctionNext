@@ -27,6 +27,12 @@ public class AuctionCreatedConsumer(IMapper mapper) : IConsumer<AuctionCreated>
 	{
 		Console.WriteLine($"--> Consuming auction created: {context.Message.Id}");
 		var item = mapper.Map<Item>(context.Message);
+
+		if (item.Model == "Foo")
+		{
+			throw new ArgumentException("Cannot create item with model 'foo'.");
+		}
+
 		await item.SaveAsync();
 	}
 }
