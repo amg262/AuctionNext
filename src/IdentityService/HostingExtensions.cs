@@ -1,6 +1,7 @@
 using Duende.IdentityServer;
 using IdentityService.Data;
 using IdentityService.Models;
+using IdentityService.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -34,7 +35,8 @@ internal static class HostingExtensions
 			.AddInMemoryIdentityResources(Config.IdentityResources)
 			.AddInMemoryApiScopes(Config.ApiScopes)
 			.AddInMemoryClients(Config.Clients)
-			.AddAspNetIdentity<ApplicationUser>();
+			.AddAspNetIdentity<ApplicationUser>()
+			.AddProfileService<CustomProfileService>();
 
 		// Required for doing over HTTP in development on Docker
 		builder.Services.ConfigureApplicationCookie(opts => { opts.Cookie.SameSite = SameSiteMode.Lax; });
