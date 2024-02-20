@@ -34,6 +34,53 @@
       RABBITMQ_DEFAULT_PASS: "guest"
     volumes:
       - /var/lib/rabbitmq
+  auction-svc:
+    image: amg31/auction-svc:latest
+    build:
+      context: .
+      dockerfile: src/AuctionService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMq__Host=rabbitmq
+      - ConnectionStrings__DefaultConnection=Server=postgres:5432;Database=postgres;User Id=postgres;Password=postgrespw;Database=Auctions
+      - IdentityServiceUrl=http://identity-svc
+    ports:
+      - 7001:80
+    depends_on:
+      - postgres
+      - rabbitmq
+  search-svc:
+    image: amg31/search-svc:latest
+    build:
+      context: .
+      dockerfile: src/SearchService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMq__Host=rabbitmq
+      - ConnectionStrings__DefaultConnection=mongodb://root:rootpw@mongo:27017
+      - AuctionServiceUrl=http://auction-svc
+    ports:
+      - 7002:80
+    depends_on:
+      - mongo
+      - rabbitmq
+  identity-svc:
+    image: amg31/identity-svc:latest
+    build:
+      context: .
+      dockerfile: src/IdentityService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=postgres:5432;Database=postgres;User Id=postgres;Password=postgrespw;Database=Identity
+    ports:
+      - 5000:80
+    depends_on:
+      - postgres
+
+
 #      - rabbitmq:/var/lib/rabbitmq
 #volumes:
 #  postgresdata:
