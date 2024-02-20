@@ -28,6 +28,18 @@ public static class Config
 				RedirectUris = new[] {"https://www.getpostman.com/oauth2/callback"},
 				ClientSecrets = new[] {new Secret("NotASecret".Sha256())},
 				AllowedGrantTypes = {GrantType.ResourceOwnerPassword}
+			},
+			new()
+			{
+				ClientId = "nextApp",
+				ClientName = "nextApp",
+				AllowedScopes = {"openid", "profile", "auctionApp"},
+				RedirectUris = new[] {"http://localhost:3000/api/auth/callback/id-server"},
+				ClientSecrets = new[] {new Secret("secret".Sha256())},
+				AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
+				RequirePkce = false,
+				AllowOfflineAccess = true,
+				AccessTokenLifetime = 3600 * 24 * 30, // 30 days
 			}
 			// m2m client credentials flow client
 			// new Client
