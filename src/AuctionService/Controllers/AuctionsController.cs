@@ -5,6 +5,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Contracts;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -59,11 +60,13 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper, IPubli
 	/// <param name="auctionDto">The auction data transfer object containing the creation data.</param>
 	/// <returns>The created auction DTO.</returns>
 	[HttpPost]
+	[Authorize]
 	public async Task<ActionResult<AuctionDto>> CreateAuction(CreateAuctionDto auctionDto)
 	{
 		var auction = mapper.Map<Auction>(auctionDto);
-		// Todo: Add the user id from the token
-		auction.Seller = "Andrew";
+
+		auction.Seller = User.Identity.Name;
+
 		await context.Auctions.AddAsync(auction);
 
 		var newAuction = mapper.Map<AuctionDto>(auction);
@@ -86,14 +89,15 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper, IPubli
 	/// <param name="updateAuctionDto">The auction data transfer object containing the update data.</param>
 	/// <returns>A response indicating the outcome of the operation.</returns>
 	[HttpPut("{id:guid}")]
+	[Authorize]
 	public async Task<ActionResult> UpdateAuction(Guid id, UpdateAuctionDto updateAuctionDto)
 	{
 		var auction = await context.Auctions.Include(x => x.Item).FirstOrDefaultAsync(x => x.Id == id);
 
 		if (auction is null) return NotFound();
 
-
-		// Todo: check if seller == username
+		if (auction.Seller != User.Identity.Name) return Forbid(); // 403 Forbidden
+		
 		auction.Item.Make = updateAuctionDto.Make ?? auction.Item.Make;
 		auction.Item.Model = updateAuctionDto.Model ?? auction.Item.Model;
 		auction.Item.Color = updateAuctionDto.Color ?? auction.Item.Color;
@@ -121,11 +125,14 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper, IPubli
 	/// <param name="id">The unique identifier of the auction to delete.</param>
 	/// <returns>A response indicating the outcome of the operation.</returns>
 	[HttpDelete("{id:guid}")]
+	[Authorize]
 	public async Task<ActionResult> DeleteAuction(Guid id)
 	{
 		var auction = await context.Auctions.FindAsync(id);
 
 		if (auction is null) return NotFound();
+		
+		if (auction.Seller != User.Identity.Name) return Forbid(); // 403 Forbidden
 
 		context.Auctions.Remove(auction);
 

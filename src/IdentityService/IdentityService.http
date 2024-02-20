@@ -1,0 +1,6 @@
+@IdentityService_HostAddress = http://localhost:5000
+
+GET {{IdentityService_HostAddress}}/api/auctions/
+Accept: application/json
+
+###
