@@ -65,7 +65,7 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper, IPubli
 	{
 		var auction = mapper.Map<Auction>(auctionDto);
 
-		auction.Seller = User.Identity.Name;
+		auction.Seller = User.Identity.Name ?? "unknown";
 
 		await context.Auctions.AddAsync(auction);
 
@@ -97,7 +97,7 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper, IPubli
 		if (auction is null) return NotFound();
 
 		if (auction.Seller != User.Identity.Name) return Forbid(); // 403 Forbidden
-		
+
 		auction.Item.Make = updateAuctionDto.Make ?? auction.Item.Make;
 		auction.Item.Model = updateAuctionDto.Model ?? auction.Item.Model;
 		auction.Item.Color = updateAuctionDto.Color ?? auction.Item.Color;
@@ -131,7 +131,7 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper, IPubli
 		var auction = await context.Auctions.FindAsync(id);
 
 		if (auction is null) return NotFound();
-		
+
 		if (auction.Seller != User.Identity.Name) return Forbid(); // 403 Forbidden
 
 		context.Auctions.Remove(auction);
