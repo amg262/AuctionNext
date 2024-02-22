@@ -17,7 +17,7 @@ public class AuctionRepository : IAuctionRepository
 		_mapper = mapper;
 	}
 
-	public async Task<List<AuctionDto>> GetAuctionsAsync(string date)
+	public async Task<List<AuctionDto>> GetAuctionsAsync(string? date)
 	{
 		var query = _context.Auctions.OrderBy(x => x.Item.Make).AsQueryable();
 

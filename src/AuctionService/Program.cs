@@ -49,6 +49,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add repositories to the container.
+builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
