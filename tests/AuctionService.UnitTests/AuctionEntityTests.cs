@@ -16,7 +16,7 @@ public class AuctionEntityTests
 		// Arrange: Create an Auction instance with a reserve price greater than zero.
 		var auction = new Auction
 		{
-			Id = Guid.NewGuid(), // Assign a unique identifier.
+			Id = Guid.NewGuid(),
 			ReservePrice = 10, // Set a reserve price greater than zero to test the positive scenario.
 		};
 
