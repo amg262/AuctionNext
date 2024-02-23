@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using AuctionService.Data;
-using AuctionService.DTOs;
 using AuctionService.IntegrationTests.Fixtures;
 using AuctionService.IntegrationTests.Util;
 using Contracts;

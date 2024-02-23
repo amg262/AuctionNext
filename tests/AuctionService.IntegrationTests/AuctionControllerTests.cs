@@ -16,7 +16,7 @@ public class AuctionControllerTests : IAsyncLifetime // BaseTest
 {
 	private readonly CustomWebAppFactory _factory;
 	private readonly HttpClient _httpClient;
-	private const string GT_ID = "afbee524-5972-4075-8800-7d1f9d7b0a0c";
+	private const string GtId = "afbee524-5972-4075-8800-7d1f9d7b0a0c";
 
 	/// <summary>
 	/// Initializes a new instance of the AuctionControllerTests class using the provided CustomWebAppFactory.
@@ -48,7 +48,7 @@ public class AuctionControllerTests : IAsyncLifetime // BaseTest
 	public async Task GetAuctionById_WithValidId_ShouldReturnAuction()
 	{
 		// Act
-		var response = await _httpClient.GetFromJsonAsync<AuctionDto>($"/api/auctions/{GT_ID}");
+		var response = await _httpClient.GetFromJsonAsync<AuctionDto>($"/api/auctions/{GtId}");
 
 		// Assert
 		Assert.Equal("GT", response.Model);
@@ -152,7 +152,7 @@ public class AuctionControllerTests : IAsyncLifetime // BaseTest
 		_httpClient.SetFakeJwtBearerToken(AuthHelper.GetBearerForUser("bob"));
 
 		// act
-		var response = await _httpClient.PutAsJsonAsync($"/api/auctions/{GT_ID}", updateAuction);
+		var response = await _httpClient.PutAsJsonAsync($"/api/auctions/{GtId}", updateAuction);
 
 		// assert
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -170,7 +170,7 @@ public class AuctionControllerTests : IAsyncLifetime // BaseTest
 		_httpClient.SetFakeJwtBearerToken(AuthHelper.GetBearerForUser("not-bob"));
 
 		// act
-		var response = await _httpClient.PutAsJsonAsync($"/api/auctions/{GT_ID}", updateAuction);
+		var response = await _httpClient.PutAsJsonAsync($"/api/auctions/{GtId}", updateAuction);
 
 		// assert
 		Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
