@@ -78,3 +78,8 @@ catch (Exception ex)
 }
 
 app.Run();
+
+// Added so it can be used in Integration tests
+public partial class Program
+{
+}

@@ -50,13 +50,15 @@ public class AuctionsController : ControllerBase
 	/// </summary>
 	/// <param name="id">The unique identifier of the auction.</param>
 	/// <returns>An auction DTO.</returns>
-	[HttpGet("{id:guid}")]
+	[HttpGet("{id}")]
+	// [HttpGet("{id:guid}")]
 	public async Task<ActionResult<AuctionDto>> GetAuctionById(Guid id)
 	{
 		var auction = await _repo.GetAuctionByIdAsync(id);
 
 		if (auction is null) return NotFound();
 
+		return auction;
 		return _mapper.Map<AuctionDto>(auction);
 	}
 
