@@ -14,7 +14,7 @@ namespace AuctionService.IntegrationTests.Fixtures;
 
 public class CustomWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-	private PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder().Build();
+	private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder().Build();
 
 	public async Task InitializeAsync()
 	{
@@ -30,15 +30,16 @@ public class CustomWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetim
 			{
 				options.UseNpgsql(_postgreSqlContainer.GetConnectionString());
 			});
-
 			services.AddMassTransitTestHarness();
 			services.EnsureCreated<AuctionDbContext>();
-			services.AddAuthentication(FakeJwtBearerDefaults.AuthenticationScheme).AddFakeJwtBearer(opt =>
-			{
-				opt.BearerValueType = FakeJwtBearerBearerValueType.Jwt;
-			});
+			services.AddAuthentication(FakeJwtBearerDefaults.AuthenticationScheme)
+				.AddFakeJwtBearer(opt => { opt.BearerValueType = FakeJwtBearerBearerValueType.Jwt; });
 		});
 	}
 
-	public new async Task DisposeAsync() => await _postgreSqlContainer.DisposeAsync().AsTask();
+	public new Task DisposeAsync() => _postgreSqlContainer.DisposeAsync().AsTask();
+}
+
+internal class PostgresSqlContainer
+{
 }

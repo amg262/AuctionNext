@@ -3,6 +3,7 @@ using AuctionService.Data;
 using AuctionService.DTOs;
 using AuctionService.Entities;
 using AuctionService.RequestHelpers;
+using AuctionService.UnitTests.Util;
 using AutoFixture;
 using AutoMapper;
 using MassTransit;

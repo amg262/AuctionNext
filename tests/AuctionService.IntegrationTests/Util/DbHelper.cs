@@ -1,4 +1,5 @@
 ﻿using AuctionService.Data;
+using AuctionService.DTOs;
 using AuctionService.Entities;
 
 namespace AuctionService.IntegrationTests.Util;
@@ -103,5 +104,18 @@ public static class DbHelper
 				}
 			}
 		];
+	}
+
+	/// <summary>
+	/// Generates a CreateAuctionDto object with predefined test values.
+	/// </summary>
+	/// <returns>A populated CreateAuctionDto object.</returns>
+	public static CreateAuctionDto GetAuctionForCreate()
+	{
+		return new CreateAuctionDto
+		{
+			Model = "testModel", Color = "test", Make = "test", ImageUrl = "test", Mileage = 10, Year = 10,
+			ReservePrice = 10
+		};
 	}
 }
