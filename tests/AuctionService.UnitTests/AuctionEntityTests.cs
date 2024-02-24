@@ -1,4 +1,5 @@
 using AuctionService.Entities;
+using AuctionService.UnitTests.Util;
 
 namespace AuctionService.UnitTests;
 

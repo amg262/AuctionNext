@@ -1,11 +1,13 @@
-import Image from "next/image";
-
+// import Image from "next/image";
+'use client'
 export default function Home() {
-    return (
-        <div>
-            <h3 className='text-3xl'>
-                AuctionNext
-            </h3>
-        </div>
-    );
+
+  console.log('Home');
+  return (
+      <div>
+        <h3 className='text-3xl'>
+          Content goes here.
+        </h3>
+      </div>
+  );
 }
