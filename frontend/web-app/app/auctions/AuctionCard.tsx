@@ -1,6 +1,6 @@
 import React from 'react';
 import {CountdownTimer} from "@/app/auctions/CountdownTimer";
-import {CarImage} from "@/app/auctions/CarImage";
+import CarImage from "@/app/auctions/CarImage";
 import {Auction} from "@/types";
 
 type Props = {

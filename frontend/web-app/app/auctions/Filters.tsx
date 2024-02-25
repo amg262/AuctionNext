@@ -3,7 +3,7 @@ import {useParamsStore} from "@/hooks/useParamsStore";
 
 const pageSizeButtons = [4, 8, 12]
 
-export function Filters() {
+export default function Filters() {
   const pageSize = useParamsStore(state => state.pageSize);
   const setParams = useParamsStore(state => state.setParams);
 

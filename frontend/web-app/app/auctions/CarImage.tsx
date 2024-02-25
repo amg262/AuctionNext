@@ -8,7 +8,7 @@ type Props = {
 
 }
 
-export function CarImage({imageUrl}: Props) {
+export default function CarImage({imageUrl}: Props) {
   const [isLoading, setIsLoading] = React.useState(true);
 
   return (

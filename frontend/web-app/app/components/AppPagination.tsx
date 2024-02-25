@@ -9,7 +9,7 @@ type Props = {
   pageChanged: (page: number) => void;
 }
 
-export function AppPagination({currentPage, pageCount, pageChanged}: Props) {
+export default function AppPagination({currentPage, pageCount, pageChanged}: Props) {
   const [pageNumber, setPageNumber] = useState(currentPage);
 
   return (

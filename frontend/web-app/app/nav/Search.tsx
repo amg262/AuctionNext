@@ -1,14 +1,29 @@
-import {FaSearch} from "react-icons/fa";
+'use client';
 
-export function Search() {
+import {FaSearch} from "react-icons/fa";
+import {useParamsStore} from "@/hooks/useParamsStore";
+
+export default function Search() {
+  const setParams = useParamsStore(state => state.setParams);
+  const setSearchValue = useParamsStore(state => state.setSearchValue);
+  const searchValue = useParamsStore(state => state.searchValue);
+
+  function onChange(event: any) {
+    setSearchValue(event.target.value);
+  }
+
+  function search() {
+    setParams({searchTerm: searchValue});
+  }
+
   return (
       <div className='flex items-center border-2 rounded-full py-2 shadow-sm'>
         <input
-            // onKeyDown={(e: any) => {
-            //   if (e.key === 'Enter') search();
-            // }}
-            // value={searchValue}
-            // onChange={onChange}
+            onKeyDown={(e: any) => {
+              if (e.key === 'Enter') search();
+            }}
+            value={searchValue}
+            onChange={onChange}
             type="text"
             placeholder='Search for cars by make, model or color'
             className='
