@@ -11,9 +11,9 @@ import {Auction, PagedResult} from "@/types";
  * @return {Promise<PagedResult<Auction>>} A promise that resolves to a paged result containing auction items.
  * @throws {Error} When the fetch operation fails or the response status is not OK.
  */
-export async function getData(pageNumber: number = 1, pageSize: number = 4): Promise<PagedResult<Auction>> {
+export async function getData(query: string): Promise<PagedResult<Auction>> {
   // Sends a fetch request to the server to get auction data.
-  const res = await fetch(`http://localhost:6001/search?pageSize=${pageSize}&pageNumber=${pageNumber}`);
+  const res = await fetch(`http://localhost:6001/search${query}`);
 
   // Checks if the response was not OK and throws an error.
   if (!res.ok) throw new Error('Failed to fetch data');
