@@ -1,26 +1,12 @@
+'use client';
+
 import * as React from 'react';
+import {useEffect, useState} from 'react';
 import AuctionCard from "@/app/auctions/AuctionCard";
-import {Auction, PagedResult} from "@/types";
+import {Auction} from "@/types";
+import {AppPagination} from "@/app/components/AppPagination";
+import {getData} from "../actions/auctionActions";
 
-/**
- * Asynchronously fetches auction data from the server.
- *
- * This function sends a GET request to a predefined URL, expecting to fetch a paged list of auction items.
- * It handles the network response, ensuring that any non-OK response throws an error.
- *
- * @return {Promise<PagedResult<Auction>>} A promise that resolves to a paged result containing auction items.
- * @throws {Error} When the fetch operation fails or the response status is not OK.
- */
-async function getData(): Promise<PagedResult<Auction>> {
-  // Sends a fetch request to the server to get auction data.
-  const res = await fetch('http://localhost:6001/search?pageSize=10');
-
-  // Checks if the response was not OK and throws an error.
-  if (!res.ok) throw new Error('Failed to fetch data');
-
-  // Parses the JSON response and returns it as a promise.
-  return res.json();
-}
 
 /**
  * The Listings component asynchronously fetches auction listings and renders them using AuctionCard components.
@@ -30,16 +16,34 @@ async function getData(): Promise<PagedResult<Auction>> {
  *
  * @return {Promise<JSX.Element>} A promise that resolves to the JSX.Element representing the listings grid.
  */
-export default async function Listings(): Promise<JSX.Element> {
-  // Fetches auction data using the getData function.
-  const data = await getData();
+export default function Listings(): React.JSX.Element {
+  const [auctions, setAuctions] = useState<Auction[]>([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [pageNumber, setPageNumber] = useState(1);
 
-  // Renders the auction data as a grid of AuctionCard components.
+  // // code we put inside here will load once and potentially more than once
+  useEffect(() => {
+    // Fetches auction data from the server and updates the state.
+    getData(pageNumber).then(data => {
+      setAuctions(data.results);
+      setPageCount(data.pageCount);
+    });
+  }, [pageNumber]); // This will run once when the component mounts and then every time pageNumber changes
+
+
+  if (auctions.length === 0) return <div>Loading...</div>;
+
   return (
-      <div className="grid grid-cols-4 gap-6">
-        {data && data.results.map(auction => (
-            <AuctionCard key={auction.id} auction={auction}/>
-        ))}
-      </div>
+      <>
+        <div className="grid grid-cols-4 gap-6">
+          {auctions.map(auction => (
+              <AuctionCard key={auction.id} auction={auction}/>
+          ))}
+        </div>
+        <div className="flex justify-center mt-4 ">
+          <AppPagination pageChanged={setPageNumber} currentPage={pageNumber} pageCount={pageCount}/>
+        </div>
+      </>
+
   );
 }
