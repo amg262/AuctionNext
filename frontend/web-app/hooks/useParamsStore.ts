@@ -26,6 +26,7 @@ const initialState: State = {
   filterBy: 'live'
 }
 
+
 export const useParamsStore = create<State & Actions>()((set) => ({
   ...initialState,
 

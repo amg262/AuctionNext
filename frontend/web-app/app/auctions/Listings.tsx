@@ -10,6 +10,7 @@ import Filters from "@/app/auctions/Filters";
 import {useParamsStore} from "@/hooks/useParamsStore";
 import {shallow} from 'zustand/shallow';
 import qs from 'query-string';
+import EmptyFilter from "@/app/components/EmptyFilter";
 
 /**
  * The Listings component asynchronously fetches auction listings and renders them using AuctionCard components.
@@ -20,11 +21,6 @@ import qs from 'query-string';
  * @return {Promise<JSX.Element>} A promise that resolves to the JSX.Element representing the listings grid.
  */
 export default function Listings(): React.JSX.Element {
-  // const [auctions, setAuctions] = useState<Auction[]>([]);
-  // const [pageCount, setPageCount] = useState(0);
-  // const [pageNumber, setPageNumber] = useState(1);
-  // const [pageSize, setPageSize] = useState(4);
-
   const [data, setData] = useState<PagedResult<Auction>>();
   const params = useParamsStore(state => ({
     pageNumber: state.pageNumber,
@@ -53,15 +49,24 @@ export default function Listings(): React.JSX.Element {
 
   return (
       <>
-        <Filters></Filters>
-        <div className="grid grid-cols-4 gap-6">
-          {data.results.map(auction => (
-              <AuctionCard key={auction.id} auction={auction}/>
-          ))}
-        </div>
-        <div className="flex justify-center mt-4 ">
-          <AppPagination pageChanged={setPageNumber} currentPage={params.pageNumber} pageCount={data.pageCount}/>
-        </div>
+        <Filters/>
+        {data.totalCount === 0 ? (
+            <EmptyFilter showReset/>
+        ) : (
+            <>
+              <div className='grid grid-cols-4 gap-6'>
+                {data.results.map(auction => (
+                    <AuctionCard auction={auction} key={auction.id}/>
+                ))}
+              </div>
+              <div className='flex justify-center mt-4'>
+                <AppPagination pageChanged={setPageNumber}
+                               currentPage={params.pageNumber}
+                               pageCount={data.pageCount}/>
+              </div>
+            </>
+        )}
+
       </>
 
   );
