@@ -26,7 +26,7 @@ public class SearchController : ControllerBase
 	{
 		// Initialize a query against the items collection.
 		var query = DB.PagedSearch<Item, Item>();
-		
+
 		// Sort items by the 'Make' field in ascending order.
 		query.Sort(x => x.Ascending(a => a.Make));
 
@@ -35,21 +35,22 @@ public class SearchController : ControllerBase
 		{
 			query.Match(Search.Full, searchParams.SearchTerm).SortByTextScore();
 		}
-		
+
 		// Apply ordering based on the 'OrderBy' parameter.
 		query = searchParams.OrderBy switch
 		{
-			"make" => query.Sort(x => x.Ascending(a => a.Make)),
+			"make" => query.Sort(x => x.Ascending(a => a.Make))
+				.Sort(x => x.Ascending(a => a.Model)),
 			"new" => query.Sort(x => x.Descending(a => a.CreatedAt)),
 			_ => query.Sort(x => x.Ascending(a => a.AuctionEnd))
 		};
-		
+
 		// Apply filtering based on the 'FilterBy' parameter.
 		query = searchParams.FilterBy switch
 		{
-			"finished" => query.Match(x => x.Where(a => a.AuctionEnd < DateTime.UtcNow)),
+			"finished" => query.Match(x => x.AuctionEnd < DateTime.UtcNow),
 			"endingSoon" => query.Match(x =>
-				x.Where(a => a.AuctionEnd < DateTime.UtcNow.AddHours(6) && a.AuctionEnd > DateTime.UtcNow)),
+				x.AuctionEnd < DateTime.UtcNow.AddHours(6) && x.AuctionEnd > DateTime.UtcNow),
 			_ => query.Match(x => x.AuctionEnd > DateTime.UtcNow)
 		};
 
@@ -58,13 +59,13 @@ public class SearchController : ControllerBase
 		{
 			query.Match(x => x.Where(a => a.Seller == searchParams.Seller));
 		}
-		
+
 		// Apply additional filtering by seller or winner if provided.
 		if (!string.IsNullOrEmpty(searchParams.Winner))
 		{
 			query.Match(x => x.Where(a => a.Winner == searchParams.Winner));
 		}
-		
+
 		// Set the pagination parameters.
 		query.PageNumber(searchParams.PageNumber);
 		query.PageSize(searchParams.PageSize);

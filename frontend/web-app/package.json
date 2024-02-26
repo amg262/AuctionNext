@@ -12,6 +12,7 @@
     "flowbite": "^2.3.0",
     "flowbite-react": "^0.7.2",
     "next": "14.1.0",
+    "next-auth": "^4.24.6",
     "query-string": "^8.2.0",
     "react": "^18",
     "react-countdown": "^2.3.5",

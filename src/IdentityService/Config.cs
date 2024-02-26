@@ -40,6 +40,7 @@ public static class Config
 				RequirePkce = false,
 				AllowOfflineAccess = true,
 				AccessTokenLifetime = 3600 * 24 * 30, // 30 days
+				AlwaysIncludeUserClaimsInIdToken = true,
 			}
 			// m2m client credentials flow client
 			// new Client
