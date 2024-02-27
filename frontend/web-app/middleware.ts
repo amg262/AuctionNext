@@ -6,6 +6,5 @@ export const config = {
   ],
   pages: {
     signIn: '/api/auth/signin',
-    redirect: '/session',
   },
 }
