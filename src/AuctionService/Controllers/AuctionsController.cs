@@ -96,7 +96,7 @@ public class AuctionsController : ControllerBase
 	/// <param name="id">The unique identifier of the auction to update.</param>
 	/// <param name="updateAuctionDto">The auction data transfer object containing the update data.</param>
 	/// <returns>A response indicating the outcome of the operation.</returns>
-	[HttpPut("{id:guid}")]
+	[HttpPut("{id}")]
 	[Authorize]
 	public async Task<ActionResult> UpdateAuction(Guid id, UpdateAuctionDto updateAuctionDto)
 	{
