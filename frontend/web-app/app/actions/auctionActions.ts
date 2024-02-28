@@ -3,6 +3,7 @@
 import {Auction, PagedResult} from "@/types";
 import {fetchWrapper} from "@/lib/fetchWrapper";
 import {FieldValues} from "react-hook-form";
+import {revalidatePath} from "next/cache";
 
 /**
  * Asynchronously fetches auction data from the server.
@@ -14,14 +15,6 @@ import {FieldValues} from "react-hook-form";
  * @throws {Error} When the fetch operation fails or the response status is not OK.
  */
 export async function getData(query: string): Promise<PagedResult<Auction>> {
-  // Sends a fetch request to the server to get auction data.
-  // const res = await fetch(`http://localhost:6001/search${query}`);
-  //
-  // // Checks if the response was not OK and throws an error.
-  // if (!res.ok) throw new Error('Failed to fetch data');
-  //
-  // // Parses the JSON response and returns it as a promise.
-  // return res.json();
   return await fetchWrapper.get(`search${query}`);
 }
 
@@ -35,4 +28,14 @@ export async function updateAuctionTest() {
 
 export async function createAuction(data: FieldValues) {
   return await fetchWrapper.post('auctions', data);
+}
+
+export async function getDetailedViewData(id: string): Promise<Auction> {
+  return await fetchWrapper.get(`auctions/${id}`);
+}
+
+export async function updateAuction(data: FieldValues, id: string): Promise<Auction> {
+  const res = await fetchWrapper.put(`auctions/${id}`, data);
+  revalidatePath(`/auctions/${id}`);
+  return res;
 }
