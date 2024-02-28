@@ -1,0 +1,31 @@
+﻿// Specifies the syntax version for this proto file, which is proto3.
+syntax = "proto3";
+
+// Sets the C# namespace for the generated classes from this proto file.
+option csharp_namespace = "AuctionService";
+
+// Defines a gRPC service named GrpcAuction.
+service GrpcAuction {
+  // Declares a remote procedure call (RPC) method named GetAuction,
+  // which takes a GetAuctionRequest message and returns a GrpcAuctionResponse message.
+  rpc GetAuction (GetAuctionRequest) returns (GrpcAuctionResponse);
+}
+
+// Defines a message for the GetAuction request, containing a single field 'id'.
+message GetAuctionRequest {
+  string id = 1; // The unique identifier for the auction to retrieve.
+}
+
+// Defines a message representing the model of an auction used in the response.
+message GrpcAuctionModel {
+  string id = 1;          // The unique identifier of the auction.
+  string seller = 2;      // The seller's identifier or name.
+  string auctionEnd = 3;  // The end time of the auction in a string format.
+  int32 reservePrice = 4; // The reserve price for the auction.
+}
+
+// Defines a message for the response of the GetAuction RPC,
+// which includes a single field 'auction' of type GrpcAuctionModel.
+message GrpcAuctionResponse {
+  GrpcAuctionModel auction = 1; // The auction object returned in the response.
+}
