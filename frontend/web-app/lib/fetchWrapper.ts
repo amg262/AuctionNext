@@ -50,7 +50,7 @@ async function getHeaders() {
   } as any;
 
   if (token) {
-    headers.Authorization = 'Bearer ' + token.access_token;
+    headers.Authorization = `Bearer ${token.access_token}`;
   }
   return headers;
 }
@@ -63,8 +63,10 @@ async function handleResponse(response: Response) {
     return data || response.statusText;
   } else {
     return {
-      status: response.status,
-      message: response.statusText
+      error: {
+        status: response.status,
+        message: response.statusText
+      }
     };
     // return Promise.reject(error);
   }
