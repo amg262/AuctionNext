@@ -39,3 +39,7 @@ export async function updateAuction(data: FieldValues, id: string): Promise<Auct
   revalidatePath(`/auctions/${id}`);
   return res;
 }
+
+export async function deleteAuction(id: string): Promise<any> {
+  return await fetchWrapper.del(`auctions/${id}`);
+}
