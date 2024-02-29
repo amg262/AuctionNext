@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHostedService<CheckAuctionFinished>();
+builder.Services.AddScoped<GrpcAuctionClient>();
 builder.Services.AddMassTransit(x =>
 {
 	x.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
