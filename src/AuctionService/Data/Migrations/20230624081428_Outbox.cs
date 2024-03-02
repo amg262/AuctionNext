@@ -12,22 +12,6 @@ namespace AuctionService.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
-                name: "Winner",
-                table: "Auctions",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Seller",
-                table: "Auctions",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text");
-
             migrationBuilder.CreateTable(
                 name: "InboxState",
                 columns: table => new
@@ -66,7 +50,6 @@ namespace AuctionService.Data.Migrations
                     OutboxId = table.Column<Guid>(type: "uuid", nullable: true),
                     MessageId = table.Column<Guid>(type: "uuid", nullable: false),
                     ContentType = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    MessageType = table.Column<string>(type: "text", nullable: false),
                     Body = table.Column<string>(type: "text", nullable: false),
                     ConversationId = table.Column<Guid>(type: "uuid", nullable: true),
                     CorrelationId = table.Column<Guid>(type: "uuid", nullable: true),
@@ -143,26 +126,6 @@ namespace AuctionService.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "OutboxState");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Winner",
-                table: "Auctions",
-                type: "text",
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Seller",
-                table: "Auctions",
-                type: "text",
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
         }
     }
 }

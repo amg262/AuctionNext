@@ -1,6 +1,3 @@
-// Copyright (c) Duende Software. All rights reserved.
-// See LICENSE in the project root for license information.
-
 using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +17,7 @@ public class Challenge : PageModel
         _interactionService = interactionService;
     }
         
-    public IActionResult OnGet(string scheme, string? returnUrl)
+    public IActionResult OnGet(string scheme, string returnUrl)
     {
         if (string.IsNullOrEmpty(returnUrl)) returnUrl = "~/";
 
@@ -28,7 +25,7 @@ public class Challenge : PageModel
         if (Url.IsLocalUrl(returnUrl) == false && _interactionService.IsValidReturnUrl(returnUrl) == false)
         {
             // user might have clicked on a malicious link - should be logged
-            throw new ArgumentException("invalid return URL");
+            throw new Exception("invalid return URL");
         }
             
         // start challenge and roundtrip the return URL and scheme 

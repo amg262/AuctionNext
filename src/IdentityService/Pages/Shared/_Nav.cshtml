@@ -1,7 +1,6 @@
 @using Duende.IdentityServer.Extensions
 @{
-    #nullable enable
-    string? name = null;
+    string name = null;
     if (!true.Equals(ViewData["signed-out"]))
     {
         name = Context.User?.GetDisplayName();
@@ -13,7 +12,7 @@
 
         <a href="~/" class="navbar-brand">
             <img src="~/duende-logo.svg" class="icon-banner">
-            AuctionNext Identity SSO
+            Carsties Identity SSO
         </a>
 
         @if (!string.IsNullOrWhiteSpace(name))

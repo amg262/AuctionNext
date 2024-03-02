@@ -1,6 +1,3 @@
-// Copyright (c) Duende Software. All rights reserved.
-// See LICENSE in the project root for license information.
-
 using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,7 +11,7 @@ public class Index : PageModel
     private readonly IIdentityServerInteractionService _interaction;
     private readonly IWebHostEnvironment _environment;
         
-    public ViewModel View { get; set; } = new();
+    public ViewModel View { get; set; }
         
     public Index(IIdentityServerInteractionService interaction, IWebHostEnvironment environment)
     {
@@ -22,8 +19,10 @@ public class Index : PageModel
         _environment = environment;
     }
         
-    public async Task OnGet(string? errorId)
+    public async Task OnGet(string errorId)
     {
+        View = new ViewModel();
+
         // retrieve error details from identityserver
         var message = await _interaction.GetErrorContextAsync(errorId);
         if (message != null)

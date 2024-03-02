@@ -1,26 +1,39 @@
 ﻿services:
   postgres:
-    image: postgres
+    image: postgres:latest
+    container_name: postgres
     environment:
-      - POSTGRES_PASSWORD=postgrespw
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgrespw"
+      POSTGRES_DB: "Auctions"
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
-      - /var/lib/postresql/data
-  mongodb:
-    image: mongo
+      - /var/lib/postgresql/data
+  #      - postgresdata:/var/lib/postgresql/data
+  mongo:
+    image: mongo:latest
+    container_name: mongo
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=mongopw
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "rootpw"
     ports:
-      - 27017:27017
+      - "27017:27017"
     volumes:
-      - /var/lib/mongodb/data
+      - /var/lib/mongo
+  #      - mongodata:/var/lib/mongo
+
   rabbitmq:
     image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+    volumes:
+      - /var/lib/rabbitmq
   auction-svc:
     image: amg31/auction-svc:latest
     build:
@@ -29,14 +42,9 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ASPNETCORE_URLS=http://+:7777
       - RabbitMq__Host=rabbitmq
-      - ConnectionStrings__DefaultConnection=Server=postgres:5432;User Id=postgres;Password=postgrespw;Database=auctions
+      - ConnectionStrings__DefaultConnection=Server=postgres:5432;Database=postgres;User Id=postgres;Password=postgrespw;Database=Auctions
       - IdentityServiceUrl=http://identity-svc
-      - Kestrel__Endpoints__Grpc__Protocols=Http2
-      - Kestrel__Endpoints__Grpc__Url=http://+:7777
-      - Kestrel__Endpoints__WebApi__Protocols=Http1
-      - Kestrel__Endpoints__WebApi__Url=Http://+:80
     ports:
       - 7001:80
       - 7777:7777
@@ -52,12 +60,12 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - RabbitMq__Host=rabbitmq
-      - ConnectionStrings__MongoDbConnection=mongodb://root:mongopw@mongodb
+      - ConnectionStrings__DefaultConnection=mongodb://root:rootpw@mongo:27017
       - AuctionServiceUrl=http://auction-svc
     ports:
       - 7002:80
     depends_on:
-      - mongodb
+      - mongo
       - rabbitmq
   identity-svc:
     image: amg31/identity-svc:latest
@@ -67,7 +75,7 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__DefaultConnection=Server=postgres:5432;User Id=postgres;Password=postgrespw;Database=identity
+      - ConnectionStrings__DefaultConnection=Server=postgres:5432;Database=postgres;User Id=postgres;Password=postgrespw;Database=Identity
     ports:
       - 5000:80
     depends_on:
@@ -91,11 +99,21 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - RabbitMq__Host=rabbitmq
-      - ConnectionStrings__BidDbConnection=mongodb://root:mongopw@mongodb
+      - ConnectionStrings__BidDbConnection=mongodb://root:rootpw@mongodb
       - IdentityServiceUrl=http://identity-svc
       - GrpcAuction=http://auction-svc:7777
     ports:
       - 7003:80
     depends_on:
-      - mongodb
+      - mongo
       - rabbitmq
+
+
+
+#      - rabbitmq:/var/lib/rabbitmq
+#volumes:
+#  postgresdata:
+#  mongodata:
+#  rabbitmq:
+
+

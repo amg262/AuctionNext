@@ -1,6 +1,4 @@
-// Copyright (c) Duende Software. All rights reserved.
-// See LICENSE in the project root for license information.
-
+using System.ComponentModel.DataAnnotations;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Services;
@@ -31,7 +29,7 @@ public class Index : PageModel
         _events = events;
     }
 
-    public ViewModel View { get; set; } = default!;
+    public ViewModel View { get; set; }
         
     public async Task OnGet()
     {
@@ -52,7 +50,7 @@ public class Index : PageModel
                     ClientLogoUrl = client.LogoUri,
                     ClientUrl = client.ClientUri,
                     Description = grant.Description,
-                    Created = grant.CreationTime, 
+                    Created = grant.CreationTime,
                     Expires = grant.Expiration,
                     IdentityGrantNames = resources.IdentityResources.Select(x => x.DisplayName ?? x.Name).ToArray(),
                     ApiGrantNames = resources.ApiScopes.Select(x => x.DisplayName ?? x.Name).ToArray()
@@ -69,13 +67,13 @@ public class Index : PageModel
     }
 
     [BindProperty]
-    public string? ClientId { get; set; }
+    [Required]
+    public string ClientId { get; set; }
 
     public async Task<IActionResult> OnPost()
     {
         await _interaction.RevokeUserConsentAsync(ClientId);
         await _events.RaiseAsync(new GrantsRevokedEvent(User.GetSubjectId(), ClientId));
-        Telemetry.Metrics.GrantsRevoked(ClientId);
 
         return RedirectToPage("/Grants/Index");
     }

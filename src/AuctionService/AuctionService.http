@@ -1,6 +1,0 @@
-@AuctionService_HostAddress = http://localhost:7001
-
-GET {{AuctionService_HostAddress}}/api/auctions/
-Accept: application/json
-
-###
