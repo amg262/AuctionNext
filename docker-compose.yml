@@ -47,6 +47,7 @@
       - IdentityServiceUrl=http://identity-svc
     ports:
       - 7001:80
+      - 7777:7777
     depends_on:
       - postgres
       - rabbitmq
@@ -89,6 +90,23 @@
       - ASPNETCORE_URLS=http://+:80
     ports:
       - 6001:80
+  bid-svc:
+    image: amg31/bid-svc:latest
+    build:
+      context: .
+      dockerfile: src/BiddingService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMq__Host=rabbitmq
+      - ConnectionStrings__BidDbConnection=mongodb://root:rootpw@mongodb
+      - IdentityServiceUrl=http://identity-svc
+      - GrpcAuction=http://auction-svc:7777
+    ports:
+      - 7003:80
+    depends_on:
+      - mongo
+      - rabbitmq
 
 
 
