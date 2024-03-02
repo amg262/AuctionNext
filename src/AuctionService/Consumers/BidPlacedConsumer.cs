@@ -2,7 +2,7 @@
 using Contracts;
 using MassTransit;
 
-namespace AuctionService;
+namespace AuctionService.Consumers;
 
 public class BidPlacedConsumer : IConsumer<BidPlaced>
 {

@@ -71,6 +71,7 @@ public class SeedData
             {
                 throw new Exception(result.Errors.First().Description);
             }
+
             Log.Debug("bob created");
         }
         else

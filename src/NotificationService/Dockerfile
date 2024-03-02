@@ -20,13 +20,14 @@ COPY tests/SearchService.UnitTests/SearchService.UnitTests.csproj tests/SearchSe
 RUN dotnet restore AuctionNext.sln
 
 # Copy the app folders over
-COPY src/AuctionService src/AuctionService
+COPY src/NotificationService src/NotificationService
 COPY src/Contracts src/Contracts
-WORKDIR /app/src/AuctionService
+
+WORKDIR /app/src/NotificationService
 RUN dotnet publish -c Release -o /app/src/out
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build /app/src/out .
-ENTRYPOINT [ "dotnet", "AuctionService.dll" ]
+ENTRYPOINT [ "dotnet", "NotificationService.dll" ]
