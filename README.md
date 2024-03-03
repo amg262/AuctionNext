@@ -16,12 +16,6 @@ AuctionNext is an online auction service that allows users to buy and sell items
 
 AuctionNext is a web application built using ASP.NET Core and Entity Framework Core. It provides a platform for users to create auctions, bid on items, and monitor auction status. The application uses a PostgreSQL database to store auction and item data.
 
-## Docker
-
-```markdown
-docker compose up -d
-```
-
 ## Technologies
 
 The following technologies and libraries are used in this project:
@@ -37,7 +31,7 @@ The following technologies and libraries are used in this project:
 
 The project structure is organized as follows:
 
-- `src/AuctionService/`: The main project folder.
+- `src/AuctionService/`: The main project folder for the AuctionService.
   - `Entities/`: Contains the entity classes representing auctions and items.
   - `Data/`: Contains the database context and migrations.
   - `Migrations/`: Contains the database migration files.
@@ -47,22 +41,47 @@ The project structure is organized as follows:
   - `DbInitializer.cs`: Contains the database initializer class.
   - `Program.cs`: Contains the entry point of the application.
   - `Status.cs`: Contains the enum representing auction status.
-- `test/AuctionService.Tests/`: Contains the unit tests for the application.
+
+- `src/SearchService/`: The main project folder for the SearchService.
+  - `Data/`: Contains the data access layer for the search service.
+  - `Services/`: Contains the business logic layer for the search service.
+  - `Consumers/`: Contains the message consumers for the search service.
+  - `Program.cs`: Contains the entry point of the application.
+
+- `src/IdentityService/`: The main project folder for the IdentityService.
+  - `Data/`: Contains the data access layer for the identity service.
+  - `Models/`: Contains the models used in the identity service.
+  - `Pages/`: Contains the Razor Pages for the identity service.
+  - `Program.cs`: Contains the entry point of the application.
+
+- `src/GatewayService/`: The main project folder for the GatewayService.
+  - `Controllers/`: Contains the controllers for the gateway service.
+  - `Services/`: Contains the services used in the gateway service.
+  - `Program.cs`: Contains the entry point of the application.
+
+- `tests/AuctionService.Tests/`: Contains the unit tests for the AuctionService.
 
 ## Getting Started
 
 To get started with the AuctionNext project, follow these steps:
 
 1. Clone the repository: `git clone <repository-url>`
-2. Navigate to the project directory: `cd AuctionNext/src/AuctionService`
+2. Navigate to the project directory: `cd AuctionNext`
 3. Restore the dependencies: `dotnet restore`
-4. Update the database connection string in `appsettings.Development.json` to match your PostgreSQL database configuration.
-5. Apply the database migrations: `dotnet ef database update`
-6. Run the application: `dotnet run`
+4. Update the database connection string in the respective `appsettings.Development.json` files to match your PostgreSQL database configuration.
+5. Apply the database migrations for each project: `dotnet ef database update` (e.g., `dotnet ef database update --project src/AuctionService`)
+6. Run each project individually using the `dotnet run` command (e.g., `dotnet run --project src/AuctionService`)
 
 ## Usage
 
-Once the application is running, you can access the API documentation using Swagger UI. Open your web browser and navigate to `https://localhost:5001/swagger/index.html`. Here, you can explore the available endpoints and test them.
+Once the application is running, you can access the API documentation using Swagger UI. Open your web browser and navigate to the respective URLs for each project:
+
+- AuctionService: `https://localhost:5001/swagger/index.html`
+- SearchService: `https://localhost:7002/swagger/index.html`
+- IdentityService: `https://localhost:5000/swagger/index.html`
+- GatewayService: `https://localhost:6001/swagger/index.html`
+
+Here, you can explore the available endpoints and test them.
 
 ## Contributing
 
@@ -73,3 +92,7 @@ Contributions to the AuctionNext project are welcome. To contribute, follow thes
 3. Make your changes and commit them: `git commit -am 'Add some feature'`
 4. Push the changes to your fork: `git push origin feature/your-feature-name`
 5. Create a new pull request
+
+## License
+
+The AuctionNext project is licensed under the [MIT License](LICENSE).

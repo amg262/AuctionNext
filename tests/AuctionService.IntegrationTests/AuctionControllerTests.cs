@@ -2,10 +2,15 @@
 using System.Net.Http.Json;
 using AuctionService.Data;
 using AuctionService.DTOs;
+using AuctionService.IntegrationTests.Fixtures;
+using AuctionService.IntegrationTests.Util;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AuctionService.IntegrationTests;
 
+/// <summary>
+/// Integration tests for AuctionController, focusing on API endpoints to ensure they behave as expected under various scenarios.
+/// </summary>
 [Collection("Shared collection")]
 public class AuctionControllerTests : IAsyncLifetime
 {
@@ -13,12 +18,19 @@ public class AuctionControllerTests : IAsyncLifetime
 	private readonly HttpClient _httpClient;
 	private const string GtId = "afbee524-5972-4075-8800-7d1f9d7b0a0c";
 
+	/// <summary>
+	/// Initializes a new instance of the AuctionControllerTests class using the provided CustomWebAppFactory.
+	/// </summary>
+	/// <param name="factory">The factory used to create instances of the test server and client.</param>
 	public AuctionControllerTests(CustomWebAppFactory factory)
 	{
 		_factory = factory;
 		_httpClient = factory.CreateClient();
 	}
 
+	/// <summary>
+	/// Tests the GetAuctions endpoint to ensure it returns the expected number of auction DTOs.
+	/// </summary>
 	[Fact]
 	public async Task GetAuctions_ShouldReturn3Auctions()
 	{
@@ -31,6 +43,9 @@ public class AuctionControllerTests : IAsyncLifetime
 		Assert.Equal(3, response.Count);
 	}
 
+	/// <summary>
+	/// Tests the GetAuctionById endpoint with a valid ID, expecting to successfully retrieve the auction DTO.
+	/// </summary>
 	[Fact]
 	public async Task GetAuctionById_WithValidId_ShouldReturnAuction()
 	{
@@ -43,6 +58,9 @@ public class AuctionControllerTests : IAsyncLifetime
 		Assert.Equal("GT", response.Model);
 	}
 
+	/// <summary>
+	/// Tests the GetAuctionById endpoint with an invalid ID, expecting a 404 Not Found response.
+	/// </summary>
 	[Fact]
 	public async Task GetAuctionById_WithInvalidId_ShouldReturn404()
 	{
@@ -55,6 +73,9 @@ public class AuctionControllerTests : IAsyncLifetime
 		Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 	}
 
+	/// <summary>
+	/// Tests the GetAuctionById endpoint with an invalid GUID format, expecting a 400 Bad Request response.
+	/// </summary>
 	[Fact]
 	public async Task GetAuctionById_WithInvalidGuid_ShouldReturn400()
 	{
@@ -67,6 +88,9 @@ public class AuctionControllerTests : IAsyncLifetime
 		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 	}
 
+	/// <summary>
+	/// Tests the CreateAuction endpoint without authentication, expecting a 401 Unauthorized response.
+	/// </summary>
 	[Fact]
 	public async Task CreateAuction_WithNoAuth_ShouldReturn401()
 	{
@@ -80,6 +104,9 @@ public class AuctionControllerTests : IAsyncLifetime
 		Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 	}
 
+	/// <summary>
+	/// Tests the CreateAuction endpoint with authentication, expecting a 201 Created response and verifying the seller name matches.
+	/// </summary>
 	[Fact]
 	public async Task CreateAuction_WithAuth_ShouldReturn201()
 	{
@@ -97,6 +124,9 @@ public class AuctionControllerTests : IAsyncLifetime
 		Assert.Equal("bob", createdAuction.Seller);
 	}
 
+	/// <summary>
+	/// Tests the CreateAuction endpoint with an invalid CreateAuctionDto, expecting a 400 Bad Request response.
+	/// </summary>
 	[Fact]
 	public async Task CreateAuction_WithInvalidCreateAuctionDto_ShouldReturn400()
 	{
@@ -112,6 +142,9 @@ public class AuctionControllerTests : IAsyncLifetime
 		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 	}
 
+	/// <summary>
+	/// Tests the UpdateAuction endpoint with a valid UpdateAuctionDto and user, expecting a 200 OK response.
+	/// </summary>
 	[Fact]
 	public async Task UpdateAuction_WithValidUpdateDtoAndUser_ShouldReturn200()
 	{
@@ -126,6 +159,9 @@ public class AuctionControllerTests : IAsyncLifetime
 		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 	}
 
+	/// <summary>
+	/// Tests the UpdateAuction endpoint with an invalid UpdateAuctionDto, expecting a 400 Bad Request response.
+	/// </summary>
 	[Fact]
 	public async Task UpdateAuction_WithValidUpdateDtoAndInvalidUser_ShouldReturn403()
 	{
@@ -140,8 +176,16 @@ public class AuctionControllerTests : IAsyncLifetime
 		Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
 	}
 
+	/// <summary>
+	/// Placeholder for asynchronous initialization logic before each test method is executed.
+	/// </summary>
+	/// <returns>A completed task</returns>
 	public Task InitializeAsync() => Task.CompletedTask;
 
+	/// <summary>
+	/// Cleans up resources after tests are executed, specifically reinitializing the database to a known clean state.
+	/// </summary>
+	/// <returns>A completed task</returns>
 	public Task DisposeAsync()
 	{
 		using var scope = _factory.Services.CreateScope();
@@ -150,6 +194,10 @@ public class AuctionControllerTests : IAsyncLifetime
 		return Task.CompletedTask;
 	}
 
+	/// <summary>
+	/// Returns a new CreateAuctionDto object for use in tests.
+	/// </summary>
+	/// <returns>A new CreatedAuctionDto object</returns>
 	private static CreateAuctionDto GetAuctionForCreate()
 	{
 		return new CreateAuctionDto
