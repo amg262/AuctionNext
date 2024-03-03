@@ -3,6 +3,9 @@ using MassTransit;
 using Polly;
 using Polly.Extensions.Http;
 using SearchService;
+using SearchService.Consumers;
+using SearchService.Data;
+using SearchService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +59,7 @@ app.Lifetime.ApplicationStarted.Register(async () =>
 });
 
 app.Run();
+return;
 
 static IAsyncPolicy<HttpResponseMessage> GetPolicy()
     => HttpPolicyExtensions

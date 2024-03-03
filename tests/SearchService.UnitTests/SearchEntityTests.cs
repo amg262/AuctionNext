@@ -1,3 +1,5 @@
+using SearchService.Models;
+
 namespace SearchService.UnitTests;
 
 public class SearchEntityTests
