@@ -1,20 +1,20 @@
 import React from 'react'
 
 type Props = {
-    title: string
-    subtitle?: string
-    center?: boolean
+  title: string
+  subtitle?: string
+  center?: boolean
 }
 
 export default function Heading({title, subtitle, center}: Props) {
   return (
-    <div className={center ? 'text-center' : 'text-start'}>
+      <div className={center ? 'text-center' : 'text-start'}>
         <div className='text-2xl font-bold'>
-            {title}
+          {title}
         </div>
         <div className='font-light text-neutral-500 mt-2'>
-            {subtitle}
+          {subtitle}
         </div>
-    </div>
+      </div>
   )
 }
