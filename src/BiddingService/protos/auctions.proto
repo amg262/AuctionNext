@@ -2,21 +2,26 @@ syntax = "proto3";
 
 option csharp_namespace = "AuctionService";
 
+// Defines the gRPC service for auction operations.
 service GrpcAuction {
-    rpc GetAuction (GetAuctionRequest) returns (GrpcAuctionResponse);
+  // RPC method to retrieve auction details by auction ID.
+  rpc GetAuction (GetAuctionRequest) returns (GrpcAuctionResponse);
 }
 
+// Request message for getting auction details, containing the auction's ID.
 message GetAuctionRequest {
-    string id = 1;
+  string id = 1; // The unique identifier of the auction.
 }
 
+// Represents the auction data model for gRPC communication.
 message GrpcAuctionModel {
-    string id = 1;
-    string seller = 2;
-    string auctionEnd = 3;
-    int32 reservePrice = 4;
+  string id = 1; // The unique identifier of the auction.
+  string seller = 2; // The seller's identifier or name.
+  string auctionEnd = 3; // The end time of the auction.
+  int32 reservePrice = 4; // The reserve price of the auction.
 }
 
+// Response message containing auction details.
 message GrpcAuctionResponse {
-    GrpcAuctionModel auction = 1;
+  GrpcAuctionModel auction = 1; // The auction details.
 }

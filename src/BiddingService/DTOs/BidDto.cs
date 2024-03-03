@@ -1,4 +1,4 @@
-﻿namespace BiddingService;
+﻿namespace BiddingService.DTOs;
 
 public class BidDto
 {
