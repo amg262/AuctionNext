@@ -1,7 +1,8 @@
-import NextAuth, {NextAuthOptions} from 'next-auth';
-import DuendeIdentityServer6 from "next-auth/providers/duende-identity-server6";
+import NextAuth, {NextAuthOptions} from "next-auth"
+import DuendeIdentityServer6 from 'next-auth/providers/duende-identity-server6';
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET as string,
   session: {
     strategy: 'jwt'
   },
@@ -35,4 +36,4 @@ export const authOptions: NextAuthOptions = {
 }
 
 const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST }
+export {handler as GET, handler as POST}
