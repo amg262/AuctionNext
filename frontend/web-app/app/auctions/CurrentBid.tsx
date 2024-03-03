@@ -1,6 +1,6 @@
 type Props = {
   amount?: number;
-  reservePrice?: number;
+  reservePrice: number;
 }
 export default function CurrentBid({amount, reservePrice}: Props): React.JSX.Element {
   const text = amount ? `$${amount}` : 'No bids';

@@ -1,4 +1,4 @@
-import {getDetailedViewData} from "@/app/actions/auctionActions";
+import {getBidsForAuction, getDetailedViewData} from "@/app/actions/auctionActions";
 import Heading from "@/app/components/Heading";
 import {CountdownTimer} from "@/app/auctions/CountdownTimer";
 import CarImage from "@/app/auctions/CarImage";
@@ -6,10 +6,12 @@ import DetailedSpecs from "@/app/auctions/details/[id]/DetailedSpecs";
 import {getCurrentUser} from "@/app/actions/authActions";
 import EditButton from "@/app/auctions/details/[id]/EditButton";
 import DeleteButton from "@/app/auctions/update/[id]/DeleteButton";
+import BidItem from "@/app/auctions/details/[id]/BidItem";
 
 export default async function Details({params}: { params: { id: string } }) {
   const user = await getCurrentUser();
   const data = await getDetailedViewData(params.id);
+  const bids = await getBidsForAuction(params.id);
   return (
       <div>
         <div className="flex justify-between">
@@ -17,8 +19,8 @@ export default async function Details({params}: { params: { id: string } }) {
             <Heading title={`${data.make} ${data.model}`}/>
             {user?.username === data.seller && (
                 <>
-                <EditButton id={data.id}/>
-                <DeleteButton id={data.id}/>
+                  <EditButton id={data.id}/>
+                  <DeleteButton id={data.id}/>
                 </>
             )}
           </div>
@@ -37,14 +39,16 @@ export default async function Details({params}: { params: { id: string } }) {
 
           <div className="border-2 rounded-lg p-2 bg-gray-100">
             <Heading title="Bids"/>
+            {bids.map(bid => (
+                <BidItem key={bid.id} bid={bid}/>
+            ))}
           </div>
 
+          <div className="mt-3 grid grid-cols-1 rounded-lg">
+            <DetailedSpecs auction={data}/>
+          </div>
+          Details for {params.id}
         </div>
-
-        <div className="mt-3 grid grid-cols-1 rounded-lg">
-          <DetailedSpecs auction={data}/>
-        </div>
-        Details for {params.id}
       </div>
   );
 }
