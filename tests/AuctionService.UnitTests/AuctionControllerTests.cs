@@ -1,4 +1,5 @@
 ﻿using AuctionService.Controllers;
+using AuctionService.Data;
 using AuctionService.DTOs;
 using AuctionService.Entities;
 using AuctionService.RequestHelpers;

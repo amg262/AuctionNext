@@ -1,22 +1,28 @@
 syntax = "proto3";
 
+// Defines the namespace for the generated C# classes.
 option csharp_namespace = "AuctionService";
 
+// The GrpcAuction service provides operations related to auctions.
 service GrpcAuction {
-    rpc GetAuction (GetAuctionRequest) returns (GrpcAuctionResponse);
+  // Retrieves auction details for a given auction ID.
+  rpc GetAuction (GetAuctionRequest) returns (GrpcAuctionResponse);
 }
 
+// Request message for getting auction details. Requires an auction ID.
 message GetAuctionRequest {
-    string id = 1;
+  string id = 1; // The unique identifier for the auction.
 }
 
+// Represents the detailed model of an auction.
 message GrpcAuctionModel {
-    string id = 1;
-    string seller = 2;
-    string auctionEnd = 3;
-    int32 reservePrice = 4;
+  string id = 1; // The unique identifier of the auction.
+  string seller = 2; // The seller's username or identifier.
+  string auctionEnd = 3; // The end time of the auction in ISO 8601 format.
+  int32 reservePrice = 4; // The reserve price of the auction.
 }
 
+// Response message containing the requested auction's details.
 message GrpcAuctionResponse {
-    GrpcAuctionModel auction = 1;
+  GrpcAuctionModel auction = 1; // The auction model with detailed information.
 }

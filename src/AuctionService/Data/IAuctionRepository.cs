@@ -1,7 +1,7 @@
 ﻿using AuctionService.DTOs;
 using AuctionService.Entities;
 
-namespace AuctionService;
+namespace AuctionService.Data;
 
 public interface IAuctionRepository
 {
