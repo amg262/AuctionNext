@@ -7,7 +7,8 @@ const nextConfig = {
         domains: [
             'cdn.pixabay.com'
         ]
-    }
+    },
+    outDir: 'standalone',
 }
 
 module.exports = nextConfig

@@ -19,7 +19,7 @@ export const authOptions: NextAuthOptions = {
       id: 'id-server', // Unique identifier for the identity server
       clientId: 'nextApp',
       clientSecret: 'secret',
-      issuer: 'http://localhost:5000', // URL of the Duende Identity Server
+      issuer: process.env.ID_URL, // URL of the Duende Identity Server
       authorization: {params: {scope: 'openid profile auctionApp'}}, // OAuth scopes
       idToken: true // Indicates if id_token should be obtained
     })
