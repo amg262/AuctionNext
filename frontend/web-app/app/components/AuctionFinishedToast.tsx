@@ -29,6 +29,7 @@ export default function AuctionFinishedToast({auction, finishedAuction}: Props) 
                 <p>This item did not sell</p>
             )}
           </div>
+
         </div>
       </Link>
   )

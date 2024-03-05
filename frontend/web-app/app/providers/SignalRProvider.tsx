@@ -11,39 +11,27 @@ import AuctionCreatedToast from '../components/AuctionCreatedToast';
 import {getDetailedViewData} from '../actions/auctionActions';
 import AuctionFinishedToast from '../components/AuctionFinishedToast';
 
-/**
- * Props for the SignalRProvider component.
- *
- * @type {Object} Props
- * @property {ReactNode} children - The child components to be rendered within the SignalRProvider.
- * @property {User | null} user - The current user, if authenticated, or null otherwise.
- */
 type Props = {
   children: ReactNode
   user: User | null
 }
 
-/**
- * A React component that establishes a SignalR connection and listens for server-side events
- * related to auctions and bids. It provides a context for child components to interact with
- * real-time updates such as new bids and auction status changes.
- *
- * @param {Props} props - The props for the SignalRProvider component.
- * @returns {ReactNode} The children elements to be rendered.
- */
-export default function SignalRProvider({children, user}: Props): ReactNode {
+export default function SignalRProvider({children, user}: Props) {
   const [connection, setConnection] = useState<HubConnection | null>(null);
   const setCurrentPrice = useAuctionStore(state => state.setCurrentPrice);
   const addBid = useBidStore(state => state.addBid);
+  const apiUrl = process.env.NODE_ENV === 'production'
+      ? 'https://api.carsties.com/notifications'
+      : process.env.NEXT_PUBLIC_NOTIFY_URL
 
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
-        .withUrl(process.env.NEXT_PUBLIC_NOTIFY_URL as string)
+        .withUrl(apiUrl!)
         .withAutomaticReconnect()
         .build();
 
     setConnection(newConnection);
-  }, []);
+  }, [apiUrl]);
 
   useEffect(() => {
     if (connection) {
@@ -85,7 +73,7 @@ export default function SignalRProvider({children, user}: Props): ReactNode {
     return () => {
       connection?.stop();
     }
-  }, [addBid, connection, setCurrentPrice, user?.username])
+  }, [connection, setCurrentPrice, addBid, user?.username])
 
   return (
       children

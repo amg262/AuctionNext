@@ -8,7 +8,7 @@ const nextConfig = {
             'cdn.pixabay.com'
         ]
     },
-    outDir: 'standalone',
+    output: 'standalone'
 }
 
 module.exports = nextConfig
