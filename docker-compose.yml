@@ -1,4 +1,9 @@
-﻿services:
+﻿networks:
+  custom:
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+services:
   postgres:
     image: postgres
     environment:
@@ -7,6 +12,8 @@
       - 5432:5432
     volumes:
       - /var/lib/postresql/data
+    networks:
+        custom:
   mongodb:
     image: mongo
     environment:
@@ -16,11 +23,15 @@
       - 27017:27017
     volumes:
       - /var/lib/mongodb/data
+    networks:
+      custom:
   rabbitmq:
     image: rabbitmq:3-management-alpine
     ports:
       - 5672:5672
       - 15672:15672
+    networks:
+      custom:
   auction-svc:
     image: amg31/auction-svc:latest
     build:
@@ -43,6 +54,8 @@
     depends_on:
       - postgres
       - rabbitmq
+    networks:
+      custom:
   search-svc:
     image: amg31/search-svc:latest
     build:
@@ -59,6 +72,8 @@
     depends_on:
       - mongodb
       - rabbitmq
+    networks:
+      custom:
   identity-svc:
     image: amg31/identity-svc:latest
     build:
@@ -72,6 +87,9 @@
       - 80:80
     depends_on:
       - postgres
+    networks:
+      custom:
+        ipv4_address: 10.5.0.200
   gateway-svc:
     image: amg31/gateway-svc:latest
     build:
@@ -82,6 +100,8 @@
       - ASPNETCORE_URLS=http://+:80
     ports:
       - 6001:80
+    networks:
+      custom:
   bid-svc:
     image: amg31/bid-svc:latest
     build:
@@ -99,6 +119,8 @@
     depends_on:
       - mongodb
       - rabbitmq
+    networks:
+      custom:
   notify-svc:
     image: amg31/notify-svc:latest
     build:
@@ -112,6 +134,8 @@
       - 7004:80
     depends_on:
       - rabbitmq
+    networks:
+      custom:
   web-app:
     image: amg31/web-app
     build:
@@ -122,7 +146,7 @@
     ports:
       - 3000:3000
     extra_hosts: 
-      - id.auctionnext.com:172.18.0.9
+      - id.auctionnext.com:10.5.0.200
     environment:
       - NEXTAUTH_SECRET=somethingreallyreallysecret
       - NEXTAUTH_URL=http://localhost:3000
@@ -130,3 +154,5 @@
       - API_URL=http://gateway-svc/
       - ID_URL=http://id.auctionnext.com
       - NEXT_PUBLIC_NOTIFY_URL=http://gateway-svc/notifications
+    networks:
+      custom:
