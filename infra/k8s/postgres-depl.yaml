@@ -1,0 +1,40 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      name: postgresk
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+#          resources:
+#            limits:
+#              memory: "128Mi"
+#              cpu: "500m"
+#          imagePullPolicy: IfNotPresent
+          env:
+#            - name: POSTGRES_DB
+#              value: "identity"
+#            - name: POSTGRES_USER
+#              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: postgrespw
+          ports:
+            - containerPort: 5432
+
+#          volumeMounts:
+#            - name: postgres-storage
+#              mountPath: /var/lib/postgresql/data
+#      restartPolicy: Always
+#      
