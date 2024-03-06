@@ -31,6 +31,7 @@ try
 	var retryPolicy = Policy.Handle<NpgsqlException>().WaitAndRetry(5, retryAttempt => TimeSpan.FromSeconds(10));
 	retryPolicy.ExecuteAndCapture(() => SeedData.EnsureSeedData(app));
 
+	// comment for git
 
 	app.Run();
 }
