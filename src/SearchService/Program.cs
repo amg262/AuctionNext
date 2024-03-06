@@ -14,29 +14,35 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHttpClient<AuctionSvcHttpClient>().AddPolicyHandler(GetPolicy());
-builder.Services.AddMassTransit(x => 
+builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
+	x.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
 
-    x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search", false));
+	x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search", false));
 
-    x.UsingRabbitMq((context, cfg) => 
-    {
-        cfg.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
-        {
-            host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
-            host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
-        });
+	x.UsingRabbitMq((context, cfg) =>
+	{
+		cfg.UseRetry(r =>
+		{
+			r.Handle<RabbitMqConnectionException>();
+			r.Interval(5, TimeSpan.FromSeconds(10));
+		});
 
-        cfg.ReceiveEndpoint("search-auction-created", e => 
-        {
-            e.UseMessageRetry(r => r.Interval(5, 5));
+		cfg.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
+		{
+			host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
+			host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
+		});
 
-            e.ConfigureConsumer<AuctionCreatedConsumer>(context);
-        });
+		cfg.ReceiveEndpoint("search-auction-created", e =>
+		{
+			e.UseMessageRetry(r => r.Interval(5, 5));
 
-        cfg.ConfigureEndpoints(context);
-    });
+			e.ConfigureConsumer<AuctionCreatedConsumer>(context);
+		});
+
+		cfg.ConfigureEndpoints(context);
+	});
 });
 
 var app = builder.Build();
@@ -48,21 +54,15 @@ app.MapControllers();
 
 app.Lifetime.ApplicationStarted.Register(async () =>
 {
-    try
-    {
-        await DbInitializer.InitDb(app);
-    }
-    catch (Exception e)
-    {
-        Console.WriteLine(e);
-    }
+	await Policy.Handle<TimeoutException>().WaitAndRetryAsync(5, t => TimeSpan.FromSeconds(10))
+		.ExecuteAndCaptureAsync(async () => await DbInitializer.InitDb(app));
 });
 
 app.Run();
 return;
 
 static IAsyncPolicy<HttpResponseMessage> GetPolicy()
-    => HttpPolicyExtensions
-        .HandleTransientHttpError()
-        .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
-        .WaitAndRetryForeverAsync(_ => TimeSpan.FromSeconds(3));
+	=> HttpPolicyExtensions
+		.HandleTransientHttpError()
+		.OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
+		.WaitAndRetryForeverAsync(_ => TimeSpan.FromSeconds(3));
