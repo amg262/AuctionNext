@@ -18,23 +18,39 @@ spec:
       containers:
         - name: postgres
           image: postgres
-#          resources:
-#            limits:
-#              memory: "128Mi"
-#              cpu: "500m"
-#          imagePullPolicy: IfNotPresent
           env:
-#            - name: POSTGRES_DB
-#              value: "identity"
-#            - name: POSTGRES_USER
-#              value: "postgres"
             - name: POSTGRES_PASSWORD
               value: postgrespw
           ports:
             - containerPort: 5432
-
-#          volumeMounts:
-#            - name: postgres-storage
-#              mountPath: /var/lib/postgresql/data
-#      restartPolicy: Always
-#      
+          volumeMounts:
+            - mountPath: /var/data/postgres
+              name: postgresdata
+      volumes:
+        - name: postgresdata
+          persistentVolumeClaim:
+            claimName: postgres-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-lb
+spec:
+  type: LoadBalancer
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
