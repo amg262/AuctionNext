@@ -167,3 +167,8 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./devcerts:/etc/nginx/certs
+#      - rabbitmq:/var/lib/rabbitmq
+#volumes:
+#  postgresdata:
+#  mongodata:
+#  rabbitmq:
