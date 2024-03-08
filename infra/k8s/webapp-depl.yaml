@@ -17,7 +17,15 @@ spec:
           imagePullPolicy: Never
           env:
             - name: NEXTAUTH_SECRET
-              value: somethingreallyreallysecret
+              valueFrom:
+                secretKeyRef:
+                  name: webapp-secret
+                  key: authSecret
+            - name: CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: webapp-secret
+                  key: clientSecret
             - name: NEXTAUTH_URL
               value: https://app.auctionnext.com
             - name: API_URL
