@@ -22,9 +22,10 @@ public class Index : PageModel
 
 		Console.WriteLine($"Local IP: {HttpContext.Connection.LocalIpAddress}");
 		Console.WriteLine($"Remote IP: {HttpContext.Connection.RemoteIpAddress}");
+		
 		if (!localAddresses.Contains(HttpContext.Connection.RemoteIpAddress.ToString()))
 		{
-			return NotFound();
+			// return NotFound();
 		}
 
 		View = new ViewModel(await HttpContext.AuthenticateAsync());
