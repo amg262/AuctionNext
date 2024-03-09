@@ -350,3 +350,5 @@ __pycache__/
 # Cake - Uncomment if you are using it
 # tools/
 
+
+infra/prod-k8s/prod-secrets.yaml

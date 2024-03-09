@@ -14,7 +14,7 @@ spec:
       containers:
         - name: notify-svc
           image: amg31/notify-svc
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           env:
             - name: RabbitMq__Host
               value: rabbit-clusterip

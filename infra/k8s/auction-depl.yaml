@@ -14,7 +14,7 @@ spec:
       containers:
         - name: auction-svc
           image: amg31/auction-svc
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           env:
             - name: RabbitMq__Host
               value: rabbit-clusterip

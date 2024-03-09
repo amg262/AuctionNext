@@ -14,7 +14,7 @@ spec:
       containers:
         - name: search-svc
           image: amg31/search-svc
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           env:
             - name: RabbitMq__Host
               value: rabbit-clusterip
