@@ -8,11 +8,11 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - app.auctionnext.com
-        - api.auctionnext.com
+        - app.reactiv3.net
+        - api.reactiv3.net
       secretName: auctionnext-app-tls
   rules:
-    - host: app.auctionnext.com
+    - host: app.reactiv3.net
       http:
         paths:
           - pathType: Prefix
