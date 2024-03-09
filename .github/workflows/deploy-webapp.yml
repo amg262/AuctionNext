@@ -22,13 +22,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Build and push the Docker image
-        uses: docker/build-push-action@v3
-        with:
-          context: "{{defaultContext}}"
-          file: ${{ env.DOCKERFILE }}
-          push: true
-          tags: ${{ env.REGISTRY_IMAGE }}:latest
+#      - name: Build and push the Docker image
+#        uses: docker/build-push-action@v3
+#        with:
+#          context: "{{defaultContext}}"
+#          file: ${{ env.DOCKERFILE }}
+#          push: true
+#          tags: ${{ env.REGISTRY_IMAGE }}:latest
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
