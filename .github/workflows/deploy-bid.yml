@@ -6,7 +6,7 @@ on:
     branches: [ "master" ]
     paths:
       - 'src/BiddingService/**'
-
+ 
 env:
   REGISTRY_IMAGE: amg31/bid-svc
   DOCKERFILE: src/BiddingService/Dockerfile

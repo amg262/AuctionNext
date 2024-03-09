@@ -6,7 +6,7 @@ on:
     branches: [ "master" ]
     paths:
       - 'src/SearchService/**'
-
+ 
 env:
   REGISTRY_IMAGE: amg31/search-svc
   DOCKERFILE: src/SearchService/Dockerfile

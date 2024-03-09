@@ -24,7 +24,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Build and push the Docker image
         uses: docker/build-push-action@v3
-        with:
+        with: 
           context: "{{defaultContext}}"
           file: ${{env.DOCKERFILE}}
           push: true
