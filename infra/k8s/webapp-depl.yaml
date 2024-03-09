@@ -14,7 +14,7 @@ spec:
       containers:
         - name: webapp
           image: amg31/web-app
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           env:
             - name: NEXTAUTH_SECRET
               valueFrom:
