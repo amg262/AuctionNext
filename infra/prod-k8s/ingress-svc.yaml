@@ -2,6 +2,8 @@
 kind: Ingress
 metadata:
   name: ingress-svc
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
   labels:
     name: ingress-svc
 spec:
@@ -22,7 +24,7 @@ spec:
                 name: webapp-clusterip
                 port:
                   number: 3000
-    - host: api.auctionnext.com
+    - host: api.reactiv3.net
       http:
         paths:
           - pathType: Prefix
