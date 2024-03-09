@@ -1,6 +1,6 @@
 import {getCurrentUser} from './actions/authActions'
 import './globals.css'
-import Navbar from './nav/Navbar'
+import Navbar from './Nav/Navbar'
 import SignalRProvider from './providers/SignalRProvider'
 import ToasterProvider from './providers/ToasterProvider'
 
