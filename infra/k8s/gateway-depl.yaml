@@ -17,7 +17,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: ClientApp
-              value: https://app.auctionnext.com
+              value: https://app.reactiv3.net
             - name: IdentityServiceUrl
               value: https://id.milwaukeesoftware.net
 ---

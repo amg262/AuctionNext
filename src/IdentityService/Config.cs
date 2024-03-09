@@ -33,11 +33,11 @@ public static class Config
 			{
 				ClientId = "nextApp",
 				ClientName = "nextApp",
-				ClientSecrets = {new Secret("secret".Sha256())},
+				ClientSecrets = {new Secret(config["ClientSecret"].Sha256())},
 				AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
 				RequirePkce = false,
 				// RedirectUris = {config["ClientApp"] + "https://app.auctionnext.com/api/auth/callback/id-server"},
-				RedirectUris = {"https://app.auctionnext.com/api/auth/callback/id-server"},
+				RedirectUris = {"https://app.auctionnext.com/api/auth/callback/id-server", config["ClientApp"] + "/api/auth/callback/id-server"},
 				AllowOfflineAccess = true,
 				AllowedScopes = {"openid", "profile", "auctionApp"},
 				AccessTokenLifetime = 3600 * 24 * 30,

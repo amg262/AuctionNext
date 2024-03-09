@@ -27,11 +27,12 @@ spec:
                   name: webapp-secret
                   key: clientSecret
             - name: NEXTAUTH_URL
-              value: https://app.auctionnext.com
+              value: https://app.reactiv3.net
             - name: API_URL
               value: http://gateway-clusterip/
             - name: ID_URL
               value: https://id.milwaukeesoftware.net
+
           ports:
             - containerPort: 3000
 ---
