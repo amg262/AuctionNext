@@ -167,8 +167,34 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./devcerts:/etc/nginx/certs
+    
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      custom:
+        ipv4_address: 10.5.0.100
+        
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=1dV5AXIWxfsx79rn  # Change this to a strong password
+    ports:
+      - "3000:3000"
+    networks:
+      custom:
+        ipv4_address: 10.5.0.101
+    depends_on:
+      - prometheus
+        
 #      - rabbitmq:/var/lib/rabbitmq
-#volumes:
+volumes:
+  grafana-data:
 #  postgresdata:
 #  mongodata:
 #  rabbitmq:
