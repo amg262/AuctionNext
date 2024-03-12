@@ -3373,7 +3373,7 @@
 								}
 							}
 						},
-						"url": "https://app.auctionnext.com/auctions"
+						"url": "http://app.auctionnext.com/auctions"
 					},
 					"response": []
 				},
