@@ -3452,27 +3452,55 @@
 				}
 			],
 			"id": "4ddb4d78-d09a-483b-a23a-2cf1e94de11e"
+		},
+		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "New Request",
+					"id": "d7428d96-93f7-4afe-b64b-7bdd4338f035",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{paymentApi}}api/payment/create"
+					},
+					"response": []
+				}
+			],
+			"id": "f0d2eff2-5432-401d-bf40-4716ad693246"
 		}
 	],
 	"event": [
 		{
 			"listen": "prerequest",
 			"script": {
+				"id": "db1b4ca9-20b1-4ec1-87bd-80e55b71b6e4",
 				"type": "text/javascript",
 				"exec": [
 					""
-				],
-				"id": "4a95e80c-f7a5-4e3b-b515-16766eba94b9"
+				]
 			}
 		},
 		{
 			"listen": "test",
 			"script": {
+				"id": "e83ad09a-47c1-44df-afd2-5f024b753ffd",
 				"type": "text/javascript",
 				"exec": [
 					""
-				],
-				"id": "d16b6bea-2559-4c7d-97a3-6ef7b6fe0d4b"
+				]
 			}
 		}
 	],
@@ -3529,6 +3557,11 @@
 		{
 			"key": "createdItemMileage",
 			"value": ""
+		},
+		{
+			"key": "paymentApi",
+			"value": "http://localhost:7005/",
+			"type": "string"
 		}
 	]
 }
