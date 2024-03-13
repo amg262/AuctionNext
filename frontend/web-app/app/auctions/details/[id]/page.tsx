@@ -8,6 +8,7 @@ import {getCurrentUser} from '@/app/actions/authActions';
 import EditButton from './EditButton';
 import DeleteButton from './DeleteButton';
 import BidList from './BidList';
+import PaymentButton from "@/app/auctions/details/[id]/PaymentButton";
 
 export default async function Details({params}: { params: { id: string } }) {
   const data = await getDetailedViewData(params.id);
@@ -23,9 +24,14 @@ export default async function Details({params}: { params: { id: string } }) {
                   <EditButton id={data.id}/>
                   <DeleteButton id={data.id}/>
                 </>
-
+            )}
+            {user?.username === data.winner && (
+                <>
+                  <PaymentButton model={data.model} price={data.soldAmount} id={data.id} key={data.id}/>
+                </>
             )}
           </div>
+
 
           <div className='flex gap-3'>
             <h3 className='text-2xl font-semibold'>Time remaining:</h3>

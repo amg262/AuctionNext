@@ -6,7 +6,7 @@ namespace AuctionService.Data;
 /// <summary>
 /// Provides functionality to initialize and seed the database at application startup.
 /// </summary>
-public class DbInitializer
+public static class DbInitializer
 {
 	/// <summary>
 	/// Initializes and seeds the auction database. This method is called during the application startup.
@@ -38,7 +38,7 @@ public class DbInitializer
 		var auctions = new List<Auction>()
 		{
 			// 1 Ford GT
-			new Auction
+			new()
 			{
 				Id = Guid.Parse("afbee524-5972-4075-8800-7d1f9d7b0a0c"),
 				Status = Status.Live,
@@ -56,7 +56,7 @@ public class DbInitializer
 				}
 			},
 			// 2 Bugatti Veyron
-			new Auction
+			new()
 			{
 				Id = Guid.Parse("c8c3ec17-01bf-49db-82aa-1ef80b833a9f"),
 				Status = Status.Live,
@@ -74,7 +74,7 @@ public class DbInitializer
 				}
 			},
 			// 3 Ford mustang
-			new Auction
+			new()
 			{
 				Id = Guid.Parse("bbab4d5a-8565-48b1-9450-5ac2a5c4a654"),
 				Status = Status.Live,
@@ -91,12 +91,13 @@ public class DbInitializer
 				}
 			},
 			// 4 Mercedes SLK
-			new Auction
+			new()
 			{
 				Id = Guid.Parse("155225c1-4448-4066-9886-6786536e05ea"),
 				Status = Status.ReserveNotMet,
 				ReservePrice = 50000,
 				Seller = "tom",
+				Winner = "bob",
 				AuctionEnd = DateTime.UtcNow.AddDays(-10),
 				Item = new Item
 				{
@@ -109,7 +110,7 @@ public class DbInitializer
 				}
 			},
 			// 5 BMW X1
-			new Auction
+			new()
 			{
 				Id = Guid.Parse("466e4744-4dc5-4987-aae0-b621acfc5e39"),
 				Status = Status.Live,
@@ -127,7 +128,7 @@ public class DbInitializer
 				}
 			},
 			// 6 Ferrari spider
-			new Auction
+			new()
 			{
 				Id = Guid.Parse("dc1e4071-d19d-459b-b848-b5c3cd3d151f"),
 				Status = Status.Live,
@@ -145,7 +146,7 @@ public class DbInitializer
 				}
 			},
 			// 7 Ferrari F-430
-			new Auction
+			new()
 			{
 				Id = Guid.Parse("47111973-d176-4feb-848d-0ea22641c31a"),
 				Status = Status.Live,
@@ -163,7 +164,7 @@ public class DbInitializer
 				}
 			},
 			// 8 Audi R8
-			new Auction
+			new()
 			{
 				Id = Guid.Parse("6a5011a1-fe1f-47df-9a32-b5346b289391"),
 				Status = Status.Live,
@@ -180,7 +181,7 @@ public class DbInitializer
 				}
 			},
 			// 9 Audi TT
-			new Auction
+			new()
 			{
 				Id = Guid.Parse("40490065-dac7-46b6-acc4-df507e0d6570"),
 				Status = Status.Live,
@@ -198,13 +199,82 @@ public class DbInitializer
 				}
 			},
 			// 10 Ford Model T
-			new Auction
+			new()
+			{
+				Id = Guid.Parse("678650ee-bb8c-4adb-9f00-183ee05da8d2"),
+				Status = Status.Live,
+				ReservePrice = 20000,
+				Seller = "alice",
+				AuctionEnd = DateTime.UtcNow.AddMinutes(1),
+				Item = new Item
+				{
+					Make = "Toyota",
+					Model = "Camry",
+					Color = "Red",
+					Mileage = 150150,
+					Year = 2001,
+					ImageUrl = "https://cdn.pixabay.com/photo/2014/05/18/19/13/toyota-347288_1280.jpg"
+				}
+			},
+			new()
 			{
 				Id = Guid.Parse("3659ac24-29dd-407a-81f5-ecfe6f924b9b"),
 				Status = Status.Live,
 				ReservePrice = 20000,
+				Seller = "tom",
+				AuctionEnd = DateTime.UtcNow.AddMinutes(11),
+				Item = new Item
+				{
+					Make = "Lexus",
+					Model = "ES 350",
+					Color = "Gray",
+					Mileage = 88000,
+					Year = 2016,
+					ImageUrl = "https://cdn.pixabay.com/photo/2023/01/12/15/30/car-7714372_1280.jpg"
+				}
+			},
+			new()
+			{
+				Id = Guid.Parse("24e79e07-5278-492b-ab60-122b8d5220f1"),
+				Status = Status.Live,
+				ReservePrice = 20000,
+				Seller = "alice",
+				AuctionEnd = DateTime.UtcNow.AddMinutes(11),
+				Item = new Item
+				{
+					Make = "Dodge",
+					Model = "Sprinter",
+					Color = "White",
+					Mileage = 150150,
+					Year = 2009,
+					ImageUrl = "https://cdn.pixabay.com/photo/2010/12/16/20/56/van-3676_1280.jpg"
+				}
+			},
+			new Auction
+			{
+				Id = Guid.Parse("b1239818-2414-4844-be7c-e74e048cda7d"),
+				Status = Status.Live,
+				ReservePrice = 20000,
 				Seller = "bob",
-				AuctionEnd = DateTime.UtcNow.AddDays(48),
+				AuctionEnd = DateTime.UtcNow.AddMinutes(11),
+				Item = new Item
+				{
+					Make = "Volkswagen",
+					Model = "Bus",
+					Color = "Yellow",
+					Mileage = 150150,
+					Year = 1971,
+					ImageUrl = "https://cdn.pixabay.com/photo/2022/07/31/20/32/volkswagen-7356817_1280.jpg"
+				}
+			},
+			new Auction
+			{
+				Id = Guid.Parse("0bab0135-d91d-4120-a1b9-83e6da262957"),
+				Status = Status.Finished,
+				ReservePrice = 20000,
+				Seller = "alice",
+				Winner = "bob",
+				AuctionEnd = DateTime.UtcNow.AddMinutes(-11),
 				Item = new Item
 				{
 					Make = "Ford",
@@ -212,7 +282,7 @@ public class DbInitializer
 					Color = "Rust",
 					Mileage = 150150,
 					Year = 1938,
-					ImageUrl = "https://cdn.pixabay.com/photo/2017/08/02/19/47/vintage-2573090_960_720.jpg"
+					ImageUrl = "https://cdn.pixabay.com/photo/2014/07/13/19/45/edsel-ranger-392745_1280.jpg"
 				}
 			}
 		};

@@ -136,6 +136,22 @@ services:
       - rabbitmq
     networks:
       custom:
+  payments-svc:
+    image: amg31/payments-svc:latest
+    build:
+      context: .
+      dockerfile: src/PaymentService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - IdentityServiceUrl=http://identity-svc
+      - RabbitMq__Host=rabbitmq
+    ports:
+      - 7005:80
+    depends_on:
+      - rabbitmq
+    networks:
+      custom:
   web-app:
     image: amg31/web-app
     build:

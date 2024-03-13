@@ -9,6 +9,14 @@ export async function getData(query: string): Promise<PagedResult<Auction>> {
   return await fetchWrapper.get(`search/${query}`)
 }
 
+export async function createPayment(id: string, price: number, model: string) {
+  return await fetchWrapper.post("payments/create", JSON.stringify({
+    soldAmount: price * 100, // Stripe expects amount in cents
+    model: model,
+    auctionId: id,
+  }));
+}
+
 export async function updateAuctionTest() {
   const data = {
     mileage: Math.floor(Math.random() * 100000) + 1
@@ -20,6 +28,8 @@ export async function updateAuctionTest() {
 export async function createAuction(data: FieldValues) {
   return await fetchWrapper.post('auctions', data);
 }
+
+
 
 export async function getDetailedViewData(id: string): Promise<Auction> {
   return await fetchWrapper.get(`auctions/${id}`);
