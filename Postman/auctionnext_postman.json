@@ -3475,12 +3475,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:7005/api/payments/create",
-							"protocol": "http",
+							"raw": "https://localhost:6001/api/payments/create",
+							"protocol": "https",
 							"host": [
 								"localhost"
 							],
-							"port": "7005",
+							"port": "6001",
 							"path": [
 								"api",
 								"payments",
