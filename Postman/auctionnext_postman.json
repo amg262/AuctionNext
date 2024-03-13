@@ -3475,14 +3475,14 @@
 							}
 						},
 						"url": {
-							"raw": "https://api.auctionnext.com/payments/create",
-							"protocol": "https",
+							"raw": "http://localhost:7005/api/payments/create",
+							"protocol": "http",
 							"host": [
-								"api",
-								"auctionnext",
-								"com"
+								"localhost"
 							],
+							"port": "7005",
 							"path": [
+								"api",
 								"payments",
 								"create"
 							],
