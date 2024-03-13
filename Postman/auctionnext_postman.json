@@ -3463,11 +3463,11 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\r\n  \"stripeSessionUrl\": \"string\",\r\n  \"stripeSessionId\": \"string\",\r\n  \"approvedUrl\": \"string\",\r\n  \"cancelUrl\": \"string\",\r\n  \"auctionId\": \"0bab0135-d91d-4120-a1b9-83e6da262957\",\r\n  \"model\": \"string\",\r\n  \"soldAmount\": 100000\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
