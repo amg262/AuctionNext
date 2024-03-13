@@ -3474,7 +3474,28 @@
 								}
 							}
 						},
-						"url": "{{paymentApi}}api/payment/create"
+						"url": {
+							"raw": "{{paymentApi}}api/payment/create",
+							"host": [
+								"{{paymentApi}}api"
+							],
+							"path": [
+								"payment",
+								"create"
+							],
+							"query": [
+								{
+									"key": "auctionId",
+									"value": "0bab0135-d91d-4120-a1b9-83e6da262957",
+									"disabled": true
+								},
+								{
+									"key": "soldAmount",
+									"value": "100000",
+									"disabled": true
+								}
+							]
+						}
 					},
 					"response": []
 				}
