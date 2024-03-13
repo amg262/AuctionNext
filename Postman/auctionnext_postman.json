@@ -3313,6 +3313,71 @@
 					"response": []
 				},
 				{
+					"name": "Create 10 second Auction as Bob Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "38f5833f-0719-4710-884d-799a1f028db0",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response body contains Alice as seller\", function () {",
+									"    pm.expect(jsonData).to.haveOwnProperty('seller');",
+									"    pm.expect(jsonData.seller).to.eq('bob');",
+									"});",
+									"",
+									"pm.collectionVariables.set(\"createdItemId\", jsonData.id);",
+									"pm.collectionVariables.set(\"createdItemMileage\", jsonData.mileage);",
+									"pm.collectionVariables.set(\"createdItemModel\", jsonData.model);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3dad9145-cbdc-4312-9ac2-a4015f82d3cf",
+								"exec": [
+									"var date = new Date(new Date().getTime() + 20000);",
+									"var dateString = date.toISOString();",
+									"pm.variables.set(\"dateString\", dateString);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "3294b6e5-aa42-4daa-aea1-ac54a763b0b4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{BobToken}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"make\": \"Ford\",\n  \"model\": \"{{$randomFirstName}}\",\n  \"color\": \"White\",\n  \"year\": \"2021\",\n  \"mileage\": \"10000\",\n  \"imageUrl\": \"https://cdn.pixabay.com/photo/2018/02/04/15/45/car-3130111_960_720.jpg\",\n  \"reservePrice\": 10,\n  \"auctionEnd\": \"{{dateString}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://app.auctionnext.com/auctions"
+					},
+					"response": []
+				},
+				{
 					"name": "Get Created Auction with finished filter",
 					"id": "5077a206-d09d-45b8-b1cd-083107e4520a",
 					"protocolProfileBehavior": {
@@ -3387,27 +3452,125 @@
 				}
 			],
 			"id": "4ddb4d78-d09a-483b-a23a-2cf1e94de11e"
+		},
+		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "New Request",
+					"id": "d7428d96-93f7-4afe-b64b-7bdd4338f035",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"auctionId\": \"0bab0135-d91d-4120-a1b9-83e6da262957\",\r\n  \"model\": \"string\",\r\n  \"soldAmount\": 100000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://api.auctionnext.com/payments/create",
+							"protocol": "http",
+							"host": [
+								"api",
+								"auctionnext",
+								"com"
+							],
+							"path": [
+								"payments",
+								"create"
+							],
+							"query": [
+								{
+									"key": "auctionId",
+									"value": "0bab0135-d91d-4120-a1b9-83e6da262957",
+									"disabled": true
+								},
+								{
+									"key": "soldAmount",
+									"value": "100000",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request Copy",
+					"id": "e71c54f4-9614-45bc-adeb-346cfd9c2f2b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"stripeSessionUrl\": \"string\",\r\n  \"stripeSessionId\": \"string\",\r\n  \"approvedUrl\": \"string\",\r\n  \"cancelUrl\": \"string\",\r\n  \"auctionId\": \"0bab0135-d91d-4120-a1b9-83e6da262957\",\r\n  \"model\": \"string\",\r\n  \"soldAmount\": 100000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://api.auctionnext.com/payments/",
+							"protocol": "http",
+							"host": [
+								"api",
+								"auctionnext",
+								"com"
+							],
+							"path": [
+								"payments",
+								""
+							],
+							"query": [
+								{
+									"key": "auctionId",
+									"value": "0bab0135-d91d-4120-a1b9-83e6da262957",
+									"disabled": true
+								},
+								{
+									"key": "soldAmount",
+									"value": "100000",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "f0d2eff2-5432-401d-bf40-4716ad693246"
 		}
 	],
 	"event": [
 		{
 			"listen": "prerequest",
 			"script": {
+				"id": "db1b4ca9-20b1-4ec1-87bd-80e55b71b6e4",
 				"type": "text/javascript",
 				"exec": [
 					""
-				],
-				"id": "4a95e80c-f7a5-4e3b-b515-16766eba94b9"
+				]
 			}
 		},
 		{
 			"listen": "test",
 			"script": {
+				"id": "e83ad09a-47c1-44df-afd2-5f024b753ffd",
 				"type": "text/javascript",
 				"exec": [
 					""
-				],
-				"id": "d16b6bea-2559-4c7d-97a3-6ef7b6fe0d4b"
+				]
 			}
 		}
 	],
@@ -3464,6 +3627,11 @@
 		{
 			"key": "createdItemMileage",
 			"value": ""
+		},
+		{
+			"key": "paymentApi",
+			"value": "http://localhost:7005/",
+			"type": "string"
 		}
 	]
 }
