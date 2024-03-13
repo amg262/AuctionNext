@@ -3467,7 +3467,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"stripeSessionUrl\": \"string\",\r\n  \"stripeSessionId\": \"string\",\r\n  \"approvedUrl\": \"string\",\r\n  \"cancelUrl\": \"string\",\r\n  \"auctionId\": \"0bab0135-d91d-4120-a1b9-83e6da262957\",\r\n  \"model\": \"string\",\r\n  \"soldAmount\": 100000\r\n}",
+							"raw": "{\r\n  \"auctionId\": \"0bab0135-d91d-4120-a1b9-83e6da262957\",\r\n  \"model\": \"string\",\r\n  \"soldAmount\": 100000\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3475,14 +3475,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:7005/api/payments/create",
+							"raw": "http://api.auctionnext.com/payments/create",
 							"protocol": "http",
 							"host": [
-								"localhost"
-							],
-							"port": "7005",
-							"path": [
 								"api",
+								"auctionnext",
+								"com"
+							],
+							"path": [
 								"payments",
 								"create"
 							],
