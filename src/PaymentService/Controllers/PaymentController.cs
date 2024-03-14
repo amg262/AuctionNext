@@ -30,10 +30,11 @@ public class PaymentController : ControllerBase
 		{
 			SuccessUrl = "https://app.auctionnext.com/success",
 			CancelUrl = "https://app.auctionnext.com/cancel",
-			PaymentMethodTypes = new List<string> {"card",},
+			Mode = "payment",
+			// PaymentMethodTypes = new List<string> {"card",},
 			LineItems = new List<SessionLineItemOptions>
 			{
-				new SessionLineItemOptions
+				new()
 				{
 					PriceData = new SessionLineItemPriceDataOptions
 					{
@@ -47,7 +48,6 @@ public class PaymentController : ControllerBase
 					Quantity = 1,
 				},
 			},
-			Mode = "payment",
 		};
 
 		var service = new SessionService();
