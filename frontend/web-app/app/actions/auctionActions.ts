@@ -14,6 +14,7 @@ export async function getPayment() {
 }
 
 export async function createPayment(data: any) {
+  console.log(data);
   return await fetchWrapper.post("payment/create", data);
 }
 
