@@ -5,7 +5,7 @@ using Stripe.Checkout;
 
 namespace PaymentService.Controllers;
 
-[Route("api/payments")]
+[Route("api/[controller]")]
 [ApiController]
 public class PaymentController : ControllerBase
 {
@@ -24,7 +24,7 @@ public class PaymentController : ControllerBase
 	}
 
 	[HttpPost("create")]
-	public async Task<IActionResult> Create(StripeRequestDto request)
+	public async Task<IActionResult> Create([FromBody] StripeRequestDto request)
 	{
 		var options = new SessionCreateOptions
 		{

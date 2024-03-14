@@ -2,16 +2,17 @@
 
 import React from 'react';
 import {loadStripe} from '@stripe/stripe-js';
-import {createPayment} from "@/app/actions/auctionActions";
+import {createPayment, getPayment} from "@/app/actions/auctionActions";
 
 type Props = {
   id: string;
   price: number;
   model: string;
+  data: any;
 }
 
 
-export default function PaymentButton({id, price, model}: Props) {
+export default function PaymentButton({id, price, model, data}: Props) {
   const stripePromise = loadStripe(
       process.env.NEXTAUTH_STRIPE_SECRET || 'pk_test_51NKl9DJCh47a7Nh113trEHxzNk32tOgF5qtNOCfO2Jb5Hc7D8lC7kY4pVm6L7cQkaY5di4VNw0UPAuGrMSb4e9XB00NfTT04a5');
 
@@ -40,7 +41,11 @@ export default function PaymentButton({id, price, model}: Props) {
     //   model: model,
     //   auctionId: id,
     // }));
-    const response = await createPayment(id, price, model);
+
+    const res = await getPayment()
+    console.log(res);
+
+    const response = await createPayment(data);
     console.log(response);
 
     const session = await response.json();

@@ -136,8 +136,8 @@ services:
       - rabbitmq
     networks:
       custom:
-  payments-svc:
-    image: amg31/payments-svc:latest
+  payment-svc:
+    image: amg31/payment-svc:latest
     build:
       context: .
       dockerfile: src/PaymentService/Dockerfile
