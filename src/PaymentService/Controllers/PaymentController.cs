@@ -30,6 +30,7 @@ public class PaymentController : ControllerBase
 		{
 			SuccessUrl = "https://app.auctionnext.com/success",
 			CancelUrl = "https://app.auctionnext.com/cancel",
+			PaymentMethodTypes = new List<string> {"card"}, // Force card payment collection
 			Mode = "payment",
 			// PaymentMethodTypes = new List<string> {"card",},
 			LineItems = new List<SessionLineItemOptions>
@@ -53,6 +54,6 @@ public class PaymentController : ControllerBase
 		var service = new SessionService();
 		Session session = await service.CreateAsync(options);
 
-		return Ok(new {id = session.Id});
+		return Ok(new {session});
 	}
 }

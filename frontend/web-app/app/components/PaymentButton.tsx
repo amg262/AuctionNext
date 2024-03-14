@@ -3,6 +3,7 @@
 import React from 'react';
 import {loadStripe} from '@stripe/stripe-js';
 import {createPayment, getPayment} from "@/app/actions/auctionActions";
+import {Button} from "flowbite-react";
 
 type Props = {
   id: string;
@@ -61,8 +62,8 @@ export default function PaymentButton({id, price, model, data}: Props) {
   };
 
   return (
-      <button role="link" onClick={handleCheckout}>
+      <Button onClick={handleCheckout}>
         Make Payment
-      </button>
+      </Button>
   );
 }

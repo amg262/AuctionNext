@@ -8,7 +8,7 @@ import {getCurrentUser} from '@/app/actions/authActions';
 import EditButton from './EditButton';
 import DeleteButton from './DeleteButton';
 import BidList from './BidList';
-import PaymentButton from "@/app/auctions/details/[id]/PaymentButton";
+import PaymentButton from "@/app/components/PaymentButton";
 
 export default async function Details({params}: { params: { id: string } }) {
   const data = await getDetailedViewData(params.id);
@@ -45,6 +45,10 @@ export default async function Details({params}: { params: { id: string } }) {
           </div>
 
           <BidList user={user} auction={data}/>
+        </div>
+
+        <div>
+
         </div>
 
         <div className='mt-3 grid grid-cols-1 rounded-lg'>
