@@ -3467,7 +3467,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"auctionId\": \"0bab0135-d91d-4120-a1b9-83e6da262957\",\r\n  \"model\": \"string\",\r\n  \"soldAmount\": 100000\r\n}",
+							"raw": "{\r\n  \"successUrl\": \"https://app.auctionnext.com/success\",\r\n  \"cancelUrl\": \"https://app.auctionnext.com/cancel\",\r\n  \"approvedUrl\": \"/\",\r\n  \"auctionId\": \"0bab0135-d91d-4120-a1b9-83e6da262957\",\r\n  \"model\": \"string\",\r\n  \"soldAmount\": 100000\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3475,15 +3475,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://api.auctionnext.com/payments/create",
-							"protocol": "http",
+							"raw": "https://api.auctionnext.com/payment/create",
+							"protocol": "https",
 							"host": [
 								"api",
 								"auctionnext",
 								"com"
 							],
 							"path": [
-								"payments",
+								"payment",
 								"create"
 							],
 							"query": [
@@ -3521,7 +3521,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://api.auctionnext.com/payments/",
+							"raw": "http://api.auctionnext.com/payment/",
 							"protocol": "http",
 							"host": [
 								"api",
@@ -3529,7 +3529,7 @@
 								"com"
 							],
 							"path": [
-								"payments",
+								"payment",
 								""
 							],
 							"query": [
