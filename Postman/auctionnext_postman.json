@@ -3475,15 +3475,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://api.auctionnext.com/payments/create",
-							"protocol": "http",
+							"raw": "https://api.auctionnext.com/payment/create",
+							"protocol": "https",
 							"host": [
 								"api",
 								"auctionnext",
 								"com"
 							],
 							"path": [
-								"payments",
+								"payment",
 								"create"
 							],
 							"query": [
@@ -3521,7 +3521,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://api.auctionnext.com/payments/",
+							"raw": "http://api.auctionnext.com/payment/",
 							"protocol": "http",
 							"host": [
 								"api",
@@ -3529,7 +3529,7 @@
 								"com"
 							],
 							"path": [
-								"payments",
+								"payment",
 								""
 							],
 							"query": [
