@@ -144,11 +144,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=postgres:5432;User Id=postgres;Password=postgrespw;Database=payments
       - IdentityServiceUrl=http://identity-svc
       - RabbitMq__Host=rabbitmq
     ports:
       - 7005:80
     depends_on:
+      - postgres
       - rabbitmq
     networks:
       custom:
