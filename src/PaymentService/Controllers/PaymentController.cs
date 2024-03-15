@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PaymentService.Data;
 using PaymentService.DTOs;
+using PaymentService.Entities;
 using Stripe;
 using Stripe.Checkout;
 
@@ -59,13 +60,38 @@ public class PaymentController : ControllerBase
 
 		var service = new SessionService();
 		Session session = await service.CreateAsync(options);
-		
+
 		if (session == null) return BadRequest("Failed to create session");
-		
+
+
 		request.StripeSessionUrl = session.Url;
 		request.StripeSessionId = session.Id;
-		
-		
+
+		// var payment = _mapper.Map<Payment>(request);
+
+		var payment2 = new Payment
+		{
+			StripeSessionId = session.Id,
+			AuctionId = request.AuctionId,
+			Name = request.Model,
+			Total = request.SoldAmount,
+		};
+
+		// Console.WriteLine($"Payment {payment}");
+
+		Console.WriteLine($"Payment2 {payment2}");
+
+		try
+		{
+			_db.Payments.Add(payment2);
+
+			await _db.SaveChangesAsync();
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e);
+			throw;
+		}
 
 		return Ok(new {session});
 	}

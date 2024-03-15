@@ -12,26 +12,24 @@ using PaymentService.Data;
 namespace PaymentService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240315142417_AddedPaymentNameMappingForModel")]
-    partial class AddedPaymentNameMappingForModel
+    [Migration("20240315181540_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.8")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("PaymentService.Entities.Payment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AuctionId")
                         .HasColumnType("uuid");
@@ -56,6 +54,9 @@ namespace PaymentService.Migrations
 
                     b.Property<double?>("Total")
                         .HasColumnType("double precision");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
                         .HasColumnType("text");
