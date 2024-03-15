@@ -67,38 +67,40 @@ public class PaymentController : ControllerBase
 
 		request.StripeSessionUrl = session.Url;
 		request.StripeSessionId = session.Id;
-		// var b = request.AuctionId.ToString();
+		// // var b = request.AuctionId.ToString();
+		//
+		// try
+		// {
+		// 	var payment = _mapper.Map<Payment>(request);
+		//
+		// 	Console.WriteLine($"Payment {payment}");
+		// }
+		// catch (Exception e)
+		// {
+		// 	Console.WriteLine(e);
+		// 	throw;
+		// }
+		//
+		//
+		// Guid? auctionId = string.IsNullOrEmpty(request.AuctionId) ? (Guid?) null : Guid.Parse(request.AuctionId);
+		//
+		// var payment2 = new Payment
+		// {
+		// 	StripeSessionId = session.Id,
+		// 	AuctionId = auctionId,
+		// 	Name = request.Model,
+		// 	Total = request.SoldAmount,
+		// };
+		//
+		// // Console.WriteLine($"Payment {payment}");
+		//
+		// Console.WriteLine($"Payment2 {payment2}");
 
 		try
 		{
 			var payment = _mapper.Map<Payment>(request);
 
-			Console.WriteLine($"Payment {payment}");
-		}
-		catch (Exception e)
-		{
-			Console.WriteLine(e);
-			throw;
-		}
-
-
-		Guid? auctionId = string.IsNullOrEmpty(request.AuctionId) ? (Guid?) null : Guid.Parse(request.AuctionId);
-
-		var payment2 = new Payment
-		{
-			StripeSessionId = session.Id,
-			AuctionId = auctionId,
-			Name = request.Model,
-			Total = request.SoldAmount,
-		};
-
-		// Console.WriteLine($"Payment {payment}");
-
-		Console.WriteLine($"Payment2 {payment2}");
-
-		try
-		{
-			_db.Payments.Add(payment2);
+			_db.Payments.Add(payment);
 
 			await _db.SaveChangesAsync();
 		}
