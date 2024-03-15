@@ -10,6 +10,7 @@ type Props = {
   price: number;
   model: string;
   data: any;
+  auctionId: string;
 }
 
 

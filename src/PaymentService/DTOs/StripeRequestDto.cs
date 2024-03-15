@@ -1,4 +1,6 @@
-﻿namespace PaymentService.DTOs;
+﻿using System.Text.Json.Serialization;
+
+namespace PaymentService.DTOs;
 
 public class StripeRequestDto
 {
@@ -6,7 +8,10 @@ public class StripeRequestDto
 	public string? StripeSessionId { get; set; }
 	public string? ApprovedUrl { get; set; }
 	public string? CancelUrl { get; set; }
-	public Guid? AuctionId { get; set; }
+
+	[JsonPropertyName("id")] public string? AuctionId { get; set; }
 	public string? Model { get; set; }
 	public int? SoldAmount { get; set; }
+
+	[JsonPropertyName("data")] public object? Data { get; set; }
 }

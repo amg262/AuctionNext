@@ -15,7 +15,10 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.Total, opt => opt.MapFrom(src => src.SoldAmount))
 			.ForMember(dest => dest.StripeSessionId, opt => opt.MapFrom(src => src.StripeSessionId))
 			.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Model))
-			.ForMember(dest => dest.AuctionId, opt => opt.MapFrom(src => src.AuctionId));
+			.ForMember(dest => dest.AuctionId,
+				opt => opt.MapFrom(
+					src => string.IsNullOrEmpty(src.AuctionId) ? (Guid?) null : Guid.Parse(src.AuctionId)))
+			.ReverseMap();
 		// Add other mappings as needed
 	}
 }

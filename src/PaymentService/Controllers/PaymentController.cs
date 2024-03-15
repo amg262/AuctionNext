@@ -17,11 +17,12 @@ public class PaymentController : ControllerBase
 	private readonly AppDbContext _db;
 	private readonly IMapper _mapper;
 
-	public PaymentController(IConfiguration config, AppDbContext db)
+	public PaymentController(IConfiguration config, AppDbContext db, IMapper mapper)
 	{
 		_config = config;
 		_db = db;
-		StripeConfiguration.ApiKey = _config["Stripe:SecretKey"];
+		_mapper = mapper;
+		// StripeConfiguration.ApiKey = _config["Stripe:SecretKey"];
 	}
 
 	[HttpGet]
@@ -46,7 +47,7 @@ public class PaymentController : ControllerBase
 				{
 					PriceData = new SessionLineItemPriceDataOptions
 					{
-						UnitAmount = request.SoldAmount, // Use the dynamic price from the request
+						UnitAmount = (long) request.SoldAmount * 100, // Use the dynamic price from the request
 						Currency = "usd",
 						ProductData = new SessionLineItemPriceDataProductDataOptions
 						{
@@ -66,13 +67,27 @@ public class PaymentController : ControllerBase
 
 		request.StripeSessionUrl = session.Url;
 		request.StripeSessionId = session.Id;
+		// var b = request.AuctionId.ToString();
 
-		// var payment = _mapper.Map<Payment>(request);
+		try
+		{
+			var payment = _mapper.Map<Payment>(request);
+
+			Console.WriteLine($"Payment {payment}");
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e);
+			throw;
+		}
+
+
+		Guid? auctionId = string.IsNullOrEmpty(request.AuctionId) ? (Guid?) null : Guid.Parse(request.AuctionId);
 
 		var payment2 = new Payment
 		{
 			StripeSessionId = session.Id,
-			AuctionId = request.AuctionId,
+			AuctionId = auctionId,
 			Name = request.Model,
 			Total = request.SoldAmount,
 		};

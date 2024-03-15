@@ -26,9 +26,10 @@ export default async function Details({params}: { params: { id: string } }) {
                 </>
             )}
             {/*{user?.username === data.winner && (*/}
-                <>
-                  <PaymentButton data={data} model={data.model} price={data.soldAmount} id={data.id} key={data.id}/>
-                </>
+            <>
+              <PaymentButton data={data} model={data.model} auctionId={data.id} price={data.soldAmount} id={data.id}
+                             key={data.id}/>
+            </>
             {/*)}*/}
           </div>
 

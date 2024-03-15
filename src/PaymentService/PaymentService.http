@@ -1,6 +1,6 @@
 @PaymentService_HostAddress = http://localhost:7005
 
-GET {{PaymentService_HostAddress}}/payment/
+GET {{PaymentService_HostAddress}}/api/payment/
 Accept: application/json
 
 ###
