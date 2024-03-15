@@ -7,6 +7,7 @@ public class Payment
 	public string? CouponCode { get; set; }
 	public double? Discount { get; set; }
 	public double? Total { get; set; }
+	public string? Name { get; set; }
 	public string? Status { get; set; }
 	public string? PaymentIntentId { get; set; }
 	public string? StripeSessionId { get; set; }

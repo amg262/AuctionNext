@@ -53,7 +53,7 @@ export default function PaymentButton({id, price, model, data}: Props) {
 
     // Redirect to Stripe Checkout
     const result = await stripe.redirectToCheckout({
-      sessionId: response.id,
+      sessionId: response.session.id,
     });
 
     if (result.error) {

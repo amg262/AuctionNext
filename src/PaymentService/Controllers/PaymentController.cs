@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PaymentService.Data;
 using PaymentService.DTOs;
 using Stripe;
 using Stripe.Checkout;
@@ -10,10 +13,13 @@ namespace PaymentService.Controllers;
 public class PaymentController : ControllerBase
 {
 	private readonly IConfiguration _config;
+	private readonly AppDbContext _db;
+	private readonly IMapper _mapper;
 
-	public PaymentController(IConfiguration config)
+	public PaymentController(IConfiguration config, AppDbContext db)
 	{
 		_config = config;
+		_db = db;
 		StripeConfiguration.ApiKey = _config["Stripe:SecretKey"];
 	}
 
@@ -53,7 +59,41 @@ public class PaymentController : ControllerBase
 
 		var service = new SessionService();
 		Session session = await service.CreateAsync(options);
+		
+		if (session == null) return BadRequest("Failed to create session");
+		
+		request.StripeSessionUrl = session.Url;
+		request.StripeSessionId = session.Id;
+		
+		
 
 		return Ok(new {session});
+	}
+
+	[HttpPost("validate")]
+	public async Task<IActionResult> Validate()
+	{
+		return null;
+	}
+
+	[HttpPost("webhook")]
+	public async Task<IActionResult> Webhook()
+	{
+		var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+		var stripeEvent =
+			EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"], _config["Stripe:WebhookSecret"]);
+
+		switch (stripeEvent.Type)
+		{
+			case "checkout.session.completed":
+				var session = stripeEvent.Data.Object as Session;
+				// Fulfill the purchase...
+				break;
+			default:
+				// Handle other event types...
+				break;
+		}
+
+		return Ok();
 	}
 }

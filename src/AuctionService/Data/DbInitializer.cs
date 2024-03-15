@@ -44,7 +44,7 @@ public static class DbInitializer
 				Status = Status.Live,
 				ReservePrice = 20000,
 				Seller = "bob",
-				AuctionEnd = DateTime.UtcNow.AddDays(10),
+				AuctionEnd = DateTime.UtcNow.AddMinutes(30),
 				Item = new Item
 				{
 					Make = "Ford",
@@ -62,7 +62,7 @@ public static class DbInitializer
 				Status = Status.Live,
 				ReservePrice = 90000,
 				Seller = "alice",
-				AuctionEnd = DateTime.UtcNow.AddDays(60),
+				AuctionEnd = DateTime.UtcNow.AddSeconds(45),
 				Item = new Item
 				{
 					Make = "Bugatti",
@@ -274,6 +274,7 @@ public static class DbInitializer
 				ReservePrice = 20000,
 				Seller = "alice",
 				Winner = "bob",
+				SoldAmount = 21000,
 				AuctionEnd = DateTime.UtcNow.AddMinutes(-11),
 				Item = new Item
 				{
