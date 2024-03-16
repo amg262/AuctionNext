@@ -3,7 +3,8 @@
 namespace PaymentService.DTOs;
 
 /// <summary>
-/// Represents data transfer object for a Stripe payment request, containing session and payment details as well as auction information. This DTO simplifies client-server data exchange for payment processing.
+/// Represents data transfer object for a Stripe payment request, containing session and payment details as well as auction information.
+/// This DTO simplifies client-server data exchange for payment processing.
 /// </summary>
 public class StripeRequestDto
 {

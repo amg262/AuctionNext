@@ -61,7 +61,7 @@ public class PaymentController : ControllerBase
 			{
 				Id = stripeRequestDto.Guid
 			};
-			
+
 
 			var options = new SessionCreateOptions
 			{
@@ -192,17 +192,31 @@ public class PaymentController : ControllerBase
 		return Ok();
 	}
 
+	/// <summary>
+	/// Gets a payment by its ID.
+	/// </summary>
+	/// <param name="id">Payment ID field</param>
+	/// <returns>Payment object</returns>
 	[HttpGet("{id}")]
 	public async Task<IActionResult> GetPaymentById(string? id)
 	{
 		var payment = await _db.Payments.FirstOrDefaultAsync(x => x.Id.ToString() == id);
+
+		if (payment == null) return NotFound();
+
 		return Ok(payment);
 	}
 
+	/// <summary>
+	/// Deletes a payment from the database.
+	/// </summary>
+	/// <param name="id">Payment ID</param>
+	/// <returns>200 status code</returns>
 	[HttpDelete("{id}")]
 	public async Task<IActionResult> DeletePayment(string? id)
 	{
 		var payment = await _db.Payments.FirstOrDefaultAsync(x => x.Id.ToString() == id);
+		if (payment == null) return NotFound();
 		_db.Payments.Remove(payment);
 		await _db.SaveChangesAsync();
 		return Ok();

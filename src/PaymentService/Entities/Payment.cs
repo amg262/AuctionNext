@@ -3,7 +3,8 @@
 namespace PaymentService.Entities;
 
 /// <summary>
-/// Provides a repository for managing Payment entities, encapsulating CRUD operations and business logic related to payments, utilizing Entity Framework Core for data access and AutoMapper for object mapping.
+/// Provides a repository for managing Payment entities, encapsulating CRUD operations and business logic related to payments,
+/// utilizing Entity Framework Core for data access and AutoMapper for object mapping.
 /// </summary>
 public class Payment
 {
