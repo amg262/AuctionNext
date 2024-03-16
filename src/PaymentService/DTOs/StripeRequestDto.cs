@@ -10,6 +10,9 @@ public class StripeRequestDto
 	public string? CancelUrl { get; set; }
 
 	[JsonPropertyName("id")] public string? AuctionId { get; set; }
+
+	public string? PaymentIntentId { get; set; }
+
 	public string? Model { get; set; }
 	public int? SoldAmount { get; set; }
 
