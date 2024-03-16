@@ -53,9 +53,11 @@ public class PaymentController : ControllerBase
 	[HttpPost("create")]
 	public async Task<IActionResult> Create([FromBody] StripeRequestDto stripeRequestDto)
 	{
+		var payment = new Payment();
+
 		var options = new SessionCreateOptions
 		{
-			SuccessUrl = "https://app.auctionnext.com/payment/details/",
+			SuccessUrl = $"https://app.auctionnext.com/payment/details/{payment.Id}",
 			CancelUrl = "https://app.auctionnext.com/cancel",
 			PaymentMethodTypes = new List<string> {"card"}, // Force card payment collection
 			Mode = "payment",
@@ -80,7 +82,6 @@ public class PaymentController : ControllerBase
 
 		var service = new SessionService();
 		Session session = await service.CreateAsync(options);
-		session.SuccessUrl = $"https://app.auctionnext.com/payment/details/{session.Id}";
 
 		var paymentIntentService = new PaymentIntentService();
 
@@ -100,12 +101,9 @@ public class PaymentController : ControllerBase
 		stripeRequestDto.StripeSessionId = session.Id;
 		stripeRequestDto.PaymentIntentId = paymentIntent.Id;
 
-		options.SuccessUrl = $"https://app.auctionnext.com/payment/details/{stripeRequestDto.StripeSessionId}";
-
-
 		try
 		{
-			var payment = _mapper.Map<Payment>(stripeRequestDto);
+			payment = _mapper.Map<Payment>(stripeRequestDto);
 
 			var paymentReferenceId = payment.Id.ToString();
 
@@ -114,11 +112,12 @@ public class PaymentController : ControllerBase
 			{
 				HttpOnly = true, // Makes the cookie inaccessible to client-side scripts, enhancing security
 				Secure = true, // Ensures the cookie is sent only over HTTPS
-				SameSite = SameSiteMode.Strict, // Limits the context in which the cookie can be sent to the same site only
+				SameSite = SameSiteMode
+					.Strict, // Limits the context in which the cookie can be sent to the same site only
 				Expires = DateTime.UtcNow.AddDays(1) // Sets the cookie expiration (adjust as necessary)
 			};
 			Response.Cookies.Append("PaymentReferenceId", paymentReferenceId, cookieOptions);
-			
+
 			Response.HttpContext.Response.Cookies.Append("PaymentReferenceId", paymentReferenceId, cookieOptions);
 
 			HttpContext.Response.Cookies.Append("PaymentReferenceId", paymentReferenceId, cookieOptions);
