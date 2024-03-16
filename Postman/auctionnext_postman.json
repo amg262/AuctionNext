@@ -3457,7 +3457,58 @@
 			"name": "Payment",
 			"item": [
 				{
-					"name": "New Request",
+					"name": "Create a payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8bc3a508-a442-4edb-82ee-8eb65f56f557",
+								"exec": [
+									"var response = pm.response.json();",
+									"",
+									"pm.collectionVariables.set(\"sessionId\", response.session.id);",
+									"pm.collectionVariables.set(\"paymentId\", response.payment.id);",
+									"",
+									"var template = `",
+									"<style type=\"text/css\">",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}",
+									"    .tftable tr {background-color:#ffffff;}",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}",
+									"    .tftable tr:hover {background-color:#e0ffff;}",
+									"</style>",
+									"",
+									"<table class=\"tftable\" border=\"1\">",
+									"    <tr>",
+									"        <th>Session ID</th>",
+									"        <th>Amount Subtotal</th>",
+									"        <th>Amount Total</th>",
+									"        <th>Automatic Tax Enabled</th>",
+									"        <th>Locale</th>",
+									"        <th>Payment Status</th>",
+									"    </tr>",
+									"    <tr>",
+									"        <td>{{response.session.id}}</td>",
+									"        <td>{{response.session.amountSubtotal}}</td>",
+									"        <td>{{response.session.amountTotal}}</td>",
+									"        <td>{{response.session.automaticTax.enabled}}</td>",
+									"        <td>{{response.session.locale}}</td>",
+									"        <td>{{response.session.paymentStatus}}</td>",
+									"    </tr>",
+									"</table>",
+									"`;",
+									"",
+									"function constructVisualizerPayload() {",
+									"    return {response: pm.response.json()};",
+									"}",
+									"",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"id": "d7428d96-93f7-4afe-b64b-7bdd4338f035",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -3467,7 +3518,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"successUrl\": \"https://app.auctionnext.com/success\",\r\n  \"cancelUrl\": \"https://app.auctionnext.com/cancel\",\r\n  \"approvedUrl\": \"/\",\r\n  \"auctionId\": \"0bab0135-d91d-4120-a1b9-83e6da262957\",\r\n  \"model\": \"string\",\r\n  \"soldAmount\": 100000\r\n}",
+							"raw": "{\r\n  \"id\": \"0bab0135-d91d-4120-a1b9-83e6da262957\",\r\n  \"model\": \"string\",\r\n  \"soldAmount\": 100000\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3503,7 +3554,89 @@
 					"response": []
 				},
 				{
-					"name": "New Request Copy",
+					"name": "Validate a payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8bc3a508-a442-4edb-82ee-8eb65f56f557",
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.collectionVariables.set(\"sessionId\", response.session.id);\r",
+									"var template = `\r",
+									"<div style=\"text-align: center; font-size: 20px; color: red;\">\r",
+									"    Error: {{response.title}}\r",
+									"</div>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "00d53d11-bc0d-4929-90ca-7c2e973c47ed",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.auctionnext.com/payment/validate?sessionId={{sessionId}}&paymentId={{paymentId}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"auctionnext",
+								"com"
+							],
+							"path": [
+								"payment",
+								"validate"
+							],
+							"query": [
+								{
+									"key": "auctionId",
+									"value": "0bab0135-d91d-4120-a1b9-83e6da262957",
+									"disabled": true
+								},
+								{
+									"key": "soldAmount",
+									"value": "100000",
+									"disabled": true
+								},
+								{
+									"key": "sessionId",
+									"value": "{{sessionId}}",
+									"type": "text"
+								},
+								{
+									"key": "paymentId",
+									"value": "{{paymentId}}",
+									"type": "text"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payments",
 					"id": "e71c54f4-9614-45bc-adeb-346cfd9c2f2b",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -3632,6 +3765,14 @@
 			"key": "paymentApi",
 			"value": "http://localhost:7005/",
 			"type": "string"
+		},
+		{
+			"key": "sessionId",
+			"value": ""
+		},
+		{
+			"key": "paymentId",
+			"value": "\"\""
 		}
 	]
 }
