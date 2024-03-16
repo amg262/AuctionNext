@@ -33,4 +33,6 @@ public class StripeRequestDto
 	public string? Color { get; set; }
 	public int Mileage { get; set; }
 	public string? ImageUrl { get; set; }
+
+	public Guid Guid { get; set; } = Guid.NewGuid();
 }

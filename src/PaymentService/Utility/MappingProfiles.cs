@@ -24,6 +24,7 @@ public class MappingProfile : Profile
 			// .ForMember(dest => dest.AuctionId,
 			// 	opt => opt.MapFrom(
 			// 		src => string.IsNullOrEmpty(src.AuctionId) ? (Guid?) null : Guid.Parse(src.AuctionId)))
+			.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Guid))
 			.ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
 			.ForMember(dest => dest.AuctionId, opt => opt.MapFrom(src => src.AuctionId))
 			.ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Winner))

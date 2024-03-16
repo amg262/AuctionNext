@@ -13,6 +13,9 @@ export async function getPayment() {
   return await fetchWrapper.get("payment");
 }
 
+export async function getPaymentById(id: string) {
+  return await fetchWrapper.get(`payment/${id}`);
+}
 export async function createPayment(data: any) {
   console.log("createPayment", {data});
   return await fetchWrapper.post("payment/create", data);

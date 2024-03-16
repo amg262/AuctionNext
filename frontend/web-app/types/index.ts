@@ -39,3 +39,18 @@ export type AuctionFinished = {
   seller: string
   amount?: number
 }
+
+export type Payment = {
+  id: string
+  couponCode: string
+  discount: number
+  total: number
+  name: string
+  updatedAt: string
+  status: string
+  auctionId: string
+  seller: string
+  buyer: string
+  paymentIntentId: string
+  stripeSessionId: string
+}

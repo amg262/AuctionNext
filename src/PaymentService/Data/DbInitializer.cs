@@ -34,12 +34,19 @@ public static class DbInitializer
 			return;
 		}
 
-
 		Console.WriteLine("=== Seeding data ===");
 		var payments = new List<Payment>()
 		{
-			new() {StripeSessionId = "stripe-id-1",},
-			new() {StripeSessionId = "stripe-id-2",},
+			new()
+			{
+				Id = Guid.Parse("a32cc985-f0d1-4569-baa0-36f02eca62c0"),
+				StripeSessionId = "stripe-id-1",
+			},
+			new()
+			{
+				Id = Guid.Parse("39ba17e3-23ae-441c-962c-ba17b65066da"),
+				StripeSessionId = "stripe-id-2",
+			},
 		};
 
 		context.Payments.AddRange(payments);

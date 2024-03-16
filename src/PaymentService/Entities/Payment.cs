@@ -7,8 +7,7 @@ namespace PaymentService.Entities;
 /// </summary>
 public class Payment
 {
-	public Guid Id { get; set; } = Guid.NewGuid();
-
+	public Guid Id { get; set; }
 	public string? UserId { get; set; }
 	public string? CouponCode { get; set; }
 	public double? Discount { get; set; }

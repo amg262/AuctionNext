@@ -53,71 +53,77 @@ public class PaymentController : ControllerBase
 	[HttpPost("create")]
 	public async Task<IActionResult> Create([FromBody] StripeRequestDto stripeRequestDto)
 	{
-		var payment = new Payment();
-
-		var options = new SessionCreateOptions
-		{
-			SuccessUrl = $"https://app.auctionnext.com/payment/details/{payment.Id}",
-			CancelUrl = "https://app.auctionnext.com/cancel",
-			PaymentMethodTypes = new List<string> {"card"}, // Force card payment collection
-			Mode = "payment",
-			// PaymentMethodTypes = new List<string> {"card",},
-			LineItems = new List<SessionLineItemOptions>
-			{
-				new()
-				{
-					PriceData = new SessionLineItemPriceDataOptions
-					{
-						UnitAmount = (long) stripeRequestDto.SoldAmount * 100,
-						Currency = "usd",
-						ProductData = new SessionLineItemPriceDataProductDataOptions
-						{
-							Name = stripeRequestDto.Model, // Optionally, pass the product name dynamically
-						},
-					},
-					Quantity = 1,
-				},
-			},
-		};
-
-		var service = new SessionService();
-		Session session = await service.CreateAsync(options);
-
-		var paymentIntentService = new PaymentIntentService();
-
-		// Create a new payment intent
-		var paymentIntentCreateOptions = new PaymentIntentCreateOptions
-		{
-			Amount = (long) stripeRequestDto.SoldAmount * 100, // Convert to cents
-			Currency = "usd",
-			PaymentMethodTypes = new List<string> {"card"},
-		};
-
-		PaymentIntent paymentIntent = await paymentIntentService.CreateAsync(paymentIntentCreateOptions);
-
-
-		if (session == null) return BadRequest("Failed to create session");
-
-		stripeRequestDto.StripeSessionUrl = session.Url;
-		stripeRequestDto.StripeSessionId = session.Id;
-		stripeRequestDto.PaymentIntentId = paymentIntent.Id;
-
-
 		try
 		{
+			var guid = Guid.NewGuid();
+
+			var payment = new Payment
+			{
+				Id = stripeRequestDto.Guid
+			};
+			
+
+			var options = new SessionCreateOptions
+			{
+				SuccessUrl = $"https://app.auctionnext.com/payment/details/{stripeRequestDto.Guid}",
+				CancelUrl = "https://app.auctionnext.com/",
+				PaymentMethodTypes = new List<string> {"card"}, // Force card payment collection
+				Mode = "payment",
+				// PaymentMethodTypes = new List<string> {"card",},
+				LineItems = new List<SessionLineItemOptions>
+				{
+					new()
+					{
+						PriceData = new SessionLineItemPriceDataOptions
+						{
+							UnitAmount = (long) stripeRequestDto.SoldAmount * 100,
+							Currency = "usd",
+							ProductData = new SessionLineItemPriceDataProductDataOptions
+							{
+								Name = stripeRequestDto.Model, // Optionally, pass the product name dynamically
+							},
+						},
+						Quantity = 1,
+					},
+				},
+			};
+
+			var service = new SessionService();
+			Session session = await service.CreateAsync(options);
+
+			var paymentIntentService = new PaymentIntentService();
+
+			// Create a new payment intent
+			var paymentIntentCreateOptions = new PaymentIntentCreateOptions
+			{
+				Amount = (long) stripeRequestDto.SoldAmount * 100, // Convert to cents
+				Currency = "usd",
+				PaymentMethodTypes = new List<string> {"card"},
+			};
+
+			PaymentIntent paymentIntent = await paymentIntentService.CreateAsync(paymentIntentCreateOptions);
+
+
+			if (session == null) return BadRequest("Failed to create session");
+
+			stripeRequestDto.StripeSessionUrl = session.Url;
+			stripeRequestDto.StripeSessionId = session.Id;
+			stripeRequestDto.PaymentIntentId = paymentIntent.Id;
+
+
 			payment = _mapper.Map<Payment>(stripeRequestDto);
 
 			_db.Payments.Add(payment);
 
 			await _db.SaveChangesAsync();
+
+			return Ok(new {payment, session});
 		}
 		catch (Exception e)
 		{
 			Console.WriteLine(e);
 			throw;
 		}
-
-		return Ok(new {payment, session});
 	}
 
 	/// <summary>
@@ -149,7 +155,7 @@ public class PaymentController : ControllerBase
 				payment.UpdatedAt = DateTime.UtcNow;
 				await _db.SaveChangesAsync();
 			}
-			
+
 			return Ok(payment);
 		}
 		catch (Exception e)
@@ -183,6 +189,22 @@ public class PaymentController : ControllerBase
 				break;
 		}
 
+		return Ok();
+	}
+
+	[HttpGet("{id}")]
+	public async Task<IActionResult> GetPaymentById(string? id)
+	{
+		var payment = await _db.Payments.FirstOrDefaultAsync(x => x.Id.ToString() == id);
+		return Ok(payment);
+	}
+
+	[HttpDelete("{id}")]
+	public async Task<IActionResult> DeletePayment(string? id)
+	{
+		var payment = await _db.Payments.FirstOrDefaultAsync(x => x.Id.ToString() == id);
+		_db.Payments.Remove(payment);
+		await _db.SaveChangesAsync();
 		return Ok();
 	}
 }
