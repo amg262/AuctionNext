@@ -42,7 +42,7 @@ public class PaymentController : ControllerBase
 	public async Task<IActionResult> Get()
 	{
 		var payments = await _db.Payments.ToListAsync();
-		return Ok($"Payment Service {payments.Count}");
+		return Ok(payments);
 	}
 
 	/// <summary>
@@ -95,32 +95,18 @@ public class PaymentController : ControllerBase
 
 		PaymentIntent paymentIntent = await paymentIntentService.CreateAsync(paymentIntentCreateOptions);
 
+
 		if (session == null) return BadRequest("Failed to create session");
 
 		stripeRequestDto.StripeSessionUrl = session.Url;
 		stripeRequestDto.StripeSessionId = session.Id;
 		stripeRequestDto.PaymentIntentId = paymentIntent.Id;
 
+
 		try
 		{
 			payment = _mapper.Map<Payment>(stripeRequestDto);
 
-			var paymentReferenceId = payment.Id.ToString();
-
-			// Set a cookie with the payment reference ID
-			var cookieOptions = new CookieOptions
-			{
-				HttpOnly = true, // Makes the cookie inaccessible to client-side scripts, enhancing security
-				Secure = true, // Ensures the cookie is sent only over HTTPS
-				SameSite = SameSiteMode
-					.Strict, // Limits the context in which the cookie can be sent to the same site only
-				Expires = DateTime.UtcNow.AddDays(1) // Sets the cookie expiration (adjust as necessary)
-			};
-			Response.Cookies.Append("PaymentReferenceId", paymentReferenceId, cookieOptions);
-
-			Response.HttpContext.Response.Cookies.Append("PaymentReferenceId", paymentReferenceId, cookieOptions);
-
-			HttpContext.Response.Cookies.Append("PaymentReferenceId", paymentReferenceId, cookieOptions);
 			_db.Payments.Add(payment);
 
 			await _db.SaveChangesAsync();
@@ -131,20 +117,22 @@ public class PaymentController : ControllerBase
 			throw;
 		}
 
-		return Ok(new {session});
+		return Ok(new {payment, session});
 	}
 
 	/// <summary>
 	/// Validates a payment session and updates the payment status in the database.
 	/// </summary>
-	/// <param name="sessionId">Stripe SessionId from Create</param>
+	/// <param name="paymentId">Stripe </param>
 	/// <returns>The completed payment</returns>
 	[HttpPost("validate")]
-	public async Task<IActionResult> Validate(string? sessionId)
+	public async Task<IActionResult> Validate(string? paymentId)
 	{
 		try
 		{
-			Payment payment = await _db.Payments.FirstOrDefaultAsync(x => x.StripeSessionId == sessionId);
+			Payment payment = await _db.Payments.FirstOrDefaultAsync(x => x.Id == Guid.Parse(paymentId));
+
+
 			var service = new SessionService();
 			Session session = await service.GetAsync(payment.StripeSessionId);
 
@@ -152,13 +140,17 @@ public class PaymentController : ControllerBase
 
 			PaymentIntent paymentIntent = await paymentIntentService.GetAsync(payment.PaymentIntentId);
 
-			if (paymentIntent.Status == PaymentHelper.StatusSucceeded.ToLower())
+			if (paymentIntent.Status == PaymentHelper.StatusSucceeded.ToLower() ||
+			    paymentIntent.Status == PaymentHelper.RequiresPaymentMethod.ToLower())
 			{
 				//then payment was successful
-				payment.PaymentIntentId = paymentIntent.Id;
+				// payment.PaymentIntentId = paymentIntent.Id;
 				payment.Status = PaymentHelper.StatusApproved;
+				payment.UpdatedAt = DateTime.UtcNow;
 				await _db.SaveChangesAsync();
 			}
+			
+			return Ok(payment);
 		}
 		catch (Exception e)
 		{
@@ -166,7 +158,7 @@ public class PaymentController : ControllerBase
 			throw;
 		}
 
-		return Ok("Hi");
+		return NotFound();
 	}
 
 	/// <summary>

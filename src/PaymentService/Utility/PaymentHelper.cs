@@ -13,4 +13,5 @@ public static class PaymentHelper
 	public const string StatusRefunded = "Refunded";
 	public const string StatusCancelled = "Cancelled";
 	public const string StatusSucceeded = "Succeeded";
+	public const string RequiresPaymentMethod = "requires_payment_method";
 }
