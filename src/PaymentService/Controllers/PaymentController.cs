@@ -55,7 +55,7 @@ public class PaymentController : ControllerBase
 	{
 		var options = new SessionCreateOptions
 		{
-			SuccessUrl = "https://app.auctionnext.com/success",
+			SuccessUrl = "https://app.auctionnext.com/payment/details/",
 			CancelUrl = "https://app.auctionnext.com/cancel",
 			PaymentMethodTypes = new List<string> {"card"}, // Force card payment collection
 			Mode = "payment",
@@ -80,6 +80,7 @@ public class PaymentController : ControllerBase
 
 		var service = new SessionService();
 		Session session = await service.CreateAsync(options);
+		session.SuccessUrl = $"https://app.auctionnext.com/payment/details/{session.Id}";
 
 		var paymentIntentService = new PaymentIntentService();
 
@@ -98,6 +99,9 @@ public class PaymentController : ControllerBase
 		stripeRequestDto.StripeSessionUrl = session.Url;
 		stripeRequestDto.StripeSessionId = session.Id;
 		stripeRequestDto.PaymentIntentId = paymentIntent.Id;
+		
+		options.SuccessUrl = $"https://app.auctionnext.com/payment/details/{stripeRequestDto.StripeSessionId}";
+
 
 		try
 		{

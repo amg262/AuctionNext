@@ -21,29 +21,6 @@ export default function PaymentButton({id, price, model, data}: Props) {
   const handleCheckout = async () => {
     const stripe = await stripePromise as any;
 
-    // const response = await fetchWrapper.post("payments/create", JSON.stringify({
-    //   soldAmount: price * 100, // Stripe expects amount in cents
-    //   model: model,
-    //   auctionId: id,
-    // }));
-    // const response = await fetch(process.env.'api/payments/create', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     soldAmount: price * 100, // Stripe expects amount in cents
-    //     model: model,
-    //     auctionId: id,
-    //   }),
-    // });
-
-    // const response = await createPayment(JSON.stringify({
-    //   soldAmount: price * 100,
-    //   model: model,
-    //   auctionId: id,
-    // }));
-
     const res = await getPayment()
     console.log(res);
 
