@@ -99,7 +99,7 @@ public class PaymentController : ControllerBase
 		stripeRequestDto.StripeSessionUrl = session.Url;
 		stripeRequestDto.StripeSessionId = session.Id;
 		stripeRequestDto.PaymentIntentId = paymentIntent.Id;
-		
+
 		options.SuccessUrl = $"https://app.auctionnext.com/payment/details/{stripeRequestDto.StripeSessionId}";
 
 
@@ -107,6 +107,21 @@ public class PaymentController : ControllerBase
 		{
 			var payment = _mapper.Map<Payment>(stripeRequestDto);
 
+			var paymentReferenceId = payment.Id.ToString();
+
+			// Set a cookie with the payment reference ID
+			var cookieOptions = new CookieOptions
+			{
+				HttpOnly = true, // Makes the cookie inaccessible to client-side scripts, enhancing security
+				Secure = true, // Ensures the cookie is sent only over HTTPS
+				SameSite = SameSiteMode.Strict, // Limits the context in which the cookie can be sent to the same site only
+				Expires = DateTime.UtcNow.AddDays(1) // Sets the cookie expiration (adjust as necessary)
+			};
+			Response.Cookies.Append("PaymentReferenceId", paymentReferenceId, cookieOptions);
+			
+			Response.HttpContext.Response.Cookies.Append("PaymentReferenceId", paymentReferenceId, cookieOptions);
+
+			HttpContext.Response.Cookies.Append("PaymentReferenceId", paymentReferenceId, cookieOptions);
 			_db.Payments.Add(payment);
 
 			await _db.SaveChangesAsync();
