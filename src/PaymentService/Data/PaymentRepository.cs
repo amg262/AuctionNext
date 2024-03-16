@@ -4,11 +4,20 @@ using PaymentService.Entities;
 
 namespace PaymentService.Data;
 
+/// <summary>
+/// Implements the IPaymentRepository interface,
+/// providing a concrete repository for managing payments using Entity Framework Core.
+/// </summary>
 public class PaymentRepository : IPaymentRepository
 {
 	private readonly AppDbContext _context;
 	private readonly IMapper _mapper;
 
+	/// <summary>
+	/// Initializes a new instance of the PaymentRepository class.
+	/// </summary>
+	/// <param name="context">The database context used for data access.</param>
+	/// <param name="mapper">The AutoMapper instance used for entity mapping.</param>
 	public PaymentRepository(AppDbContext context, IMapper mapper)
 	{
 		_context = context;

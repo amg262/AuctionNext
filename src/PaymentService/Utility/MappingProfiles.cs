@@ -5,10 +5,14 @@ using PaymentService.Entities;
 namespace PaymentService.Utility;
 
 /// <summary>
-/// Configures AutoMapper profiles for mapping between entity models and DTOs within the AuctionService.
+/// Configures AutoMapper profiles for mapping between data transfer objects (DTOs) and entity models within the PaymentService.
+/// This facilitates the conversion of data between the API layer and the database layer, improving the separation of concerns.
 /// </summary>
 public class MappingProfile : Profile
 {
+	/// <summary>
+	/// Configures the mappings between StripeRequestDto and Payment entity.
+	/// </summary>
 	public MappingProfile()
 	{
 		CreateMap<StripeRequestDto, Payment>()

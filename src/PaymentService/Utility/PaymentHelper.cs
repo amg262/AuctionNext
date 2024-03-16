@@ -1,5 +1,9 @@
 ﻿namespace PaymentService.Utility;
 
+/// <summary>
+/// Provides constants representing various statuses for payment transactions.
+/// These constants can be used throughout the PaymentService to maintain consistency in status representation.
+/// </summary>
 public static class PaymentHelper
 {
 	public const string StatusPending = "Pending";

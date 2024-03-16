@@ -10,6 +10,9 @@ using Stripe.Checkout;
 
 namespace PaymentService.Controllers;
 
+/// <summary>
+/// Handles payment-related requests, integrating Stripe for payment processing.
+/// </summary>
 [Route("api/[controller]")]
 [ApiController]
 public class PaymentController : ControllerBase
@@ -18,14 +21,23 @@ public class PaymentController : ControllerBase
 	private readonly AppDbContext _db;
 	private readonly IMapper _mapper;
 
+	/// <summary>
+	/// Initializes a new instance of the PaymentController class.
+	/// </summary>
+	/// <param name="config">Application configuration settings.</param>
+	/// <param name="db">Database context for accessing payment data.</param>
+	/// <param name="mapper">Automapper for DTO to entity mapping.</param>
 	public PaymentController(IConfiguration config, AppDbContext db, IMapper mapper)
 	{
 		_config = config;
 		_db = db;
 		_mapper = mapper;
-		// StripeConfiguration.ApiKey = _config["Stripe:SecretKey"];
 	}
 
+	/// <summary>
+	/// Retrieves a count of all payments in the system.
+	/// </summary>
+	/// <returns>A count of payments.</returns>
 	[HttpGet]
 	public async Task<IActionResult> Get()
 	{
@@ -33,6 +45,11 @@ public class PaymentController : ControllerBase
 		return Ok($"Payment Service {payments.Count}");
 	}
 
+	/// <summary>
+	/// Creates a Stripe session for a payment request and saves the payment details in the database.
+	/// </summary>
+	/// <param name="stripeRequestDto">Data transfer object containing the payment request details.</param>
+	/// <returns>The created Stripe session.</returns>
 	[HttpPost("create")]
 	public async Task<IActionResult> Create([FromBody] StripeRequestDto stripeRequestDto)
 	{
@@ -49,7 +66,7 @@ public class PaymentController : ControllerBase
 				{
 					PriceData = new SessionLineItemPriceDataOptions
 					{
-						UnitAmount = (long) stripeRequestDto.SoldAmount * 100, 
+						UnitAmount = (long) stripeRequestDto.SoldAmount * 100,
 						Currency = "usd",
 						ProductData = new SessionLineItemPriceDataProductDataOptions
 						{
@@ -63,7 +80,7 @@ public class PaymentController : ControllerBase
 
 		var service = new SessionService();
 		Session session = await service.CreateAsync(options);
-		
+
 		var paymentIntentService = new PaymentIntentService();
 
 		// Create a new payment intent
@@ -71,7 +88,7 @@ public class PaymentController : ControllerBase
 		{
 			Amount = (long) stripeRequestDto.SoldAmount * 100, // Convert to cents
 			Currency = "usd",
-			PaymentMethodTypes = new List<string> { "card" },
+			PaymentMethodTypes = new List<string> {"card"},
 		};
 
 		PaymentIntent paymentIntent = await paymentIntentService.CreateAsync(paymentIntentCreateOptions);
@@ -99,6 +116,11 @@ public class PaymentController : ControllerBase
 		return Ok(new {session});
 	}
 
+	/// <summary>
+	/// Validates a payment session and updates the payment status in the database.
+	/// </summary>
+	/// <param name="sessionId">Stripe SessionId from Create</param>
+	/// <returns>The completed payment</returns>
 	[HttpPost("validate")]
 	public async Task<IActionResult> Validate(string? sessionId)
 	{
@@ -109,7 +131,7 @@ public class PaymentController : ControllerBase
 			Session session = await service.GetAsync(payment.StripeSessionId);
 
 			var paymentIntentService = new PaymentIntentService();
-			
+
 			PaymentIntent paymentIntent = await paymentIntentService.GetAsync(payment.PaymentIntentId);
 
 			if (paymentIntent.Status == PaymentHelper.StatusSucceeded.ToLower())
@@ -129,6 +151,10 @@ public class PaymentController : ControllerBase
 		return Ok("Hi");
 	}
 
+	/// <summary>
+	/// Handles webhook events sent by Stripe.
+	/// </summary>
+	/// <returns>A confirmation response.</returns>
 	[HttpPost("webhook")]
 	public async Task<IActionResult> Webhook()
 	{
