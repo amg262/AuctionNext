@@ -4,3 +4,10 @@ GET {{PaymentService_HostAddress}}/api/payment/
 Accept: application/json
 
 ###
+
+POST {{PaymentService_HostAddress}}/api/payment/validate
+Content-Type: application/json
+
+{
+  "paymentId": "ea2483be-5d8f-4fdd-ba65-13069c8626bc"
+}

@@ -5,8 +5,11 @@ using PaymentService.Data;
 using PaymentService.DTOs;
 using PaymentService.Entities;
 using PaymentService.Utility;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
 using Stripe;
 using Stripe.Checkout;
+using Coupon = PaymentService.Entities.Coupon;
 
 namespace PaymentService.Controllers;
 
@@ -55,8 +58,6 @@ public class PaymentController : ControllerBase
 	{
 		try
 		{
-			var guid = Guid.NewGuid();
-
 			var payment = new Payment
 			{
 				Id = stripeRequestDto.Guid
@@ -91,24 +92,26 @@ public class PaymentController : ControllerBase
 			var service = new SessionService();
 			Session session = await service.CreateAsync(options);
 
-			var paymentIntentService = new PaymentIntentService();
-
-			// Create a new payment intent
-			var paymentIntentCreateOptions = new PaymentIntentCreateOptions
-			{
-				Amount = (long) stripeRequestDto.SoldAmount * 100, // Convert to cents
-				Currency = "usd",
-				PaymentMethodTypes = new List<string> {"card"},
-			};
-
-			PaymentIntent paymentIntent = await paymentIntentService.CreateAsync(paymentIntentCreateOptions);
+			// var paymentIntentService = new PaymentIntentService();
+			//
+			// // Create a new payment intent
+			// var paymentIntentCreateOptions = new PaymentIntentCreateOptions
+			// {
+			// 	Amount = (long) stripeRequestDto.SoldAmount * 100, // Convert to cents
+			// 	Currency = "usd",
+			// 	PaymentMethodTypes = new List<string> {"card"},
+			// };
+			//
+			// PaymentIntent paymentIntent = await paymentIntentService.CreateAsync(paymentIntentCreateOptions);
 
 
 			if (session == null) return BadRequest("Failed to create session");
 
+			// session.PaymentIntent = paymentIntent;
+
 			stripeRequestDto.StripeSessionUrl = session.Url;
 			stripeRequestDto.StripeSessionId = session.Id;
-			stripeRequestDto.PaymentIntentId = paymentIntent.Id;
+			// stripeRequestDto.PaymentIntentId = paymentIntent.Id;
 
 
 			payment = _mapper.Map<Payment>(stripeRequestDto);
@@ -132,19 +135,36 @@ public class PaymentController : ControllerBase
 	/// <param name="paymentId">Stripe </param>
 	/// <returns>The completed payment</returns>
 	[HttpPost("validate")]
-	public async Task<IActionResult> Validate(string? paymentId)
+	public async Task<IActionResult> Validate(Guid? paymentId)
 	{
 		try
 		{
-			Payment payment = await _db.Payments.FirstOrDefaultAsync(x => x.Id == Guid.Parse(paymentId));
+			Payment payment = await _db.Payments.FirstOrDefaultAsync(x => x.Id == paymentId);
 
 
 			var service = new SessionService();
 			Session session = await service.GetAsync(payment.StripeSessionId);
 
+			// Create a new payment intent
+			var paymentIntentCreateOptions = new PaymentIntentCreateOptions
+			{
+				Amount = (long) payment.Total, // Convert to cents
+				Currency = "usd",
+				PaymentMethodTypes = new List<string> {"card"},
+			};
 			var paymentIntentService = new PaymentIntentService();
 
-			PaymentIntent paymentIntent = await paymentIntentService.GetAsync(payment.PaymentIntentId);
+			PaymentIntent paymentIntent = await paymentIntentService.CreateAsync(paymentIntentCreateOptions);
+
+
+			payment.PaymentIntentId = paymentIntent.Id;
+
+			_db.Payments.Update(payment);
+			await _db.SaveChangesAsync();
+
+			// PaymentIntent paymentIntent = await paymentIntentService.GetAsync(payment.PaymentIntentId);
+
+			var id = paymentIntent.Id;
 
 			if (paymentIntent.Status == PaymentHelper.StatusSucceeded.ToLower() ||
 			    paymentIntent.Status == PaymentHelper.RequiresPaymentMethod.ToLower())
@@ -220,5 +240,93 @@ public class PaymentController : ControllerBase
 		_db.Payments.Remove(payment);
 		await _db.SaveChangesAsync();
 		return Ok();
+	}
+
+	[HttpGet("receipt/{id}")]
+	public async Task<IActionResult> GenerateReceipt(Guid id)
+	{
+		var payment = await _db.Payments.FirstOrDefaultAsync(x => x.Id == id);
+		if (payment == null)
+		{
+			return NotFound("Payment not found.");
+		}
+
+		// Create a new PDF document
+		PdfDocument document = new PdfDocument();
+		document.Info.Title = $"Payment Receipt - {payment.Id}";
+
+		// Create an empty page
+		PdfPage page = document.AddPage();
+
+		// Get an XGraphics object for drawing
+		XGraphics gfx = XGraphics.FromPdfPage(page);
+
+		// Create a font
+		XFont font = new XFont("Verdana", 20, XFontStyleEx.Bold);
+
+		// Draw the text
+		gfx.DrawString("Payment Receipt", font, XBrushes.Black, new XRect(0, 20, page.Width, page.Height),
+			XStringFormats.TopCenter);
+
+		// Draw more details about the payment
+		XFont detailsFont = new XFont("Verdana", 12, XFontStyleEx.Regular);
+		gfx.DrawString($"Payment ID: {payment.Id}", detailsFont, XBrushes.Black, new XPoint(40, 100));
+		gfx.DrawString($"User ID: {payment.UserId}", detailsFont, XBrushes.Black, new XPoint(40, 130));
+		gfx.DrawString($"Total: ${payment.Total}", detailsFont, XBrushes.Black, new XPoint(40, 160));
+		gfx.DrawString($"Status: {payment.Status}", detailsFont, XBrushes.Black, new XPoint(40, 190));
+		gfx.DrawString($"Date: {payment.UpdatedAt:yyyy-MM-dd HH:mm:ss}", detailsFont, XBrushes.Black,
+			new XPoint(40, 220));
+
+		// Save the document into a memory stream
+		using MemoryStream stream = new MemoryStream();
+		document.Save(stream, false);
+		return File(stream.ToArray(), "application/pdf", $"PaymentReceipt-{payment.Id}.pdf");
+	}
+
+
+	[HttpPost("coupon")]
+	public async Task<IActionResult> Coupon()
+	{
+		return Ok("coupon");
+	}
+
+	[HttpPost("create-coupon")]
+	public async Task<IActionResult> CreateCoupon([FromBody] CouponDto? couponDto)
+	{
+		var b = couponDto;
+		Console.WriteLine(b);
+		try
+		{
+			Coupon coupon = _mapper.Map<Coupon>(couponDto);
+			_db.Coupons.Add(coupon);
+			await _db.SaveChangesAsync();
+
+			// Create the coupon in Stripe
+			var options = new Stripe.CouponCreateOptions
+			{
+				AmountOff = (long) (couponDto.DiscountAmount * 100),
+				Name = couponDto.CouponCode,
+				Currency = "usd",
+				Id = couponDto.CouponCode,
+			};
+			var service = new Stripe.CouponService();
+			await service.CreateAsync(options);
+
+			var result = _mapper.Map<CouponDto>(coupon);
+
+			return Ok(result);
+		}
+		catch (StripeException se)
+		{
+			Console.WriteLine(se);
+			throw;
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e);
+			throw;
+		}
+
+		return BadRequest();
 	}
 }

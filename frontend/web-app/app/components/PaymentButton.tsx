@@ -49,7 +49,6 @@ export default function PaymentButton({data}: Props) {
       if (result.error) {
         setStripeError(result.error.message);
       }
-
     });
   };
 

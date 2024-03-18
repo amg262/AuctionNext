@@ -30,6 +30,8 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.AuctionId, opt => opt.MapFrom(src => src.AuctionId))
 			.ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Winner))
 			.ReverseMap();
+
+		CreateMap<CouponDto, Coupon>().ReverseMap();
 		// Add other mappings as needed
 	}
 }

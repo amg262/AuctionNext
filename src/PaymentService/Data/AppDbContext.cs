@@ -25,6 +25,8 @@ public class AppDbContext : DbContext
 	/// </summary>
 	public DbSet<Payment> Payments { get; set; }
 
+	public DbSet<Coupon> Coupons { get; set; }
+
 	/// <summary>
 	/// Configures the model that was discovered by convention from the entity types
 	/// exposed in DbSet properties on your derived context. The resulting model may be cached

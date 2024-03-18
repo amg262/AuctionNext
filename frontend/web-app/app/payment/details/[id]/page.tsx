@@ -1,9 +1,10 @@
 import Heading from '@/app/components/Heading'
 import React from 'react'
 import {Payment} from "@/types";
+import {getCurrentUser} from "@/app/actions/authActions";
 
 export default async function Update({params}: { params: { id: string } }) {
-
+  const user = await getCurrentUser();
 
   return (
       <div className='mx-auto max-w-[75%] shadow-lg p-10 bg-white rounded-lg'>
