@@ -70,7 +70,13 @@ public class PaymentController : ControllerBase
 				CancelUrl = "https://app.auctionnext.com/",
 				PaymentMethodTypes = new List<string> {"card"}, // Force card payment collection
 				Mode = "payment",
-				// PaymentMethodTypes = new List<string> {"card",},
+				// Discounts = new List<SessionDiscountOptions>()
+				// {
+				// 	new()
+				// 	{
+				// 		Coupon = stripeRequestDto.CouponCode ?? "10OFF"
+				// 	}
+				// },
 				LineItems = new List<SessionLineItemOptions>
 				{
 					new()
@@ -148,7 +154,7 @@ public class PaymentController : ControllerBase
 			// Create a new payment intent
 			var paymentIntentCreateOptions = new PaymentIntentCreateOptions
 			{
-				Amount = (long) payment.Total, // Convert to cents
+				Amount = (long) payment.Total * 100, // Convert to cents
 				Currency = "usd",
 				PaymentMethodTypes = new List<string> {"card"},
 			};

@@ -34,7 +34,7 @@ public static class DbInitializer
 			return;
 		}
 
-		Console.WriteLine("=== Seeding data ===");
+		Console.WriteLine("=== Seeding Payments ===");
 		var payments = new List<Payment>()
 		{
 			new()
@@ -49,7 +49,25 @@ public static class DbInitializer
 			},
 		};
 
+		Console.WriteLine("=== Seeding Coupons ===");
+		var coupons = new List<Coupon>()
+		{
+			new()
+			{
+				DiscountAmount = 10,
+				CouponCode = "10OFF",
+				MinAmount = 10
+			},
+			new()
+			{
+				DiscountAmount = 20,
+				CouponCode = "20OFF",
+				MinAmount = 20
+			},
+		};
+
 		context.Payments.AddRange(payments);
+		context.Coupons.AddRange(coupons);
 
 		context.SaveChanges();
 	}

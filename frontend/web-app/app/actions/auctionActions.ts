@@ -14,7 +14,7 @@ export async function getPayment() {
 }
 
 export async function completePayment(id: string) {
-  return await fetchWrapper.post(`payment/validate`, id);
+  return await fetchWrapper.post(`payment/validate?paymentId=${id}`, {});
 }
 
 export async function getPaymentById(id: string) {
