@@ -21,9 +21,6 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Model))
 			.ForMember(dest => dest.Total, opt => opt.MapFrom(src => src.SoldAmount))
 			.ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.Year} {src.Color} {src.Make} {src.Model}"))
-			// .ForMember(dest => dest.AuctionId,
-			// 	opt => opt.MapFrom(
-			// 		src => string.IsNullOrEmpty(src.AuctionId) ? (Guid?) null : Guid.Parse(src.AuctionId)))
 			.ForMember(dest => dest.Status, opt => opt.Ignore())
 			.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Guid))
 			.ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
@@ -32,6 +29,12 @@ public class MappingProfile : Profile
 			.ReverseMap();
 
 		CreateMap<CouponDto, Coupon>().ReverseMap();
+
+		CreateMap<Stripe.Coupon, Coupon>()
+			.ForMember(dest => dest.CouponCode, opt => opt.MapFrom(src => src.Name))
+			.ForMember(dest => dest.DiscountAmount, opt => opt.MapFrom(src => src.AmountOff / 100.0))
+			.ForMember(dest => dest.MinAmount, opt => opt.MapFrom(src => src.AmountOff / 100.0))
+			.ReverseMap();
 		// Add other mappings as needed
 	}
 }

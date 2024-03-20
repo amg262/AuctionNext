@@ -161,6 +161,7 @@ public class PaymentController : ControllerBase
 			var paymentIntentService = new PaymentIntentService();
 
 			PaymentIntent paymentIntent = await paymentIntentService.CreateAsync(paymentIntentCreateOptions);
+			
 
 
 			payment.PaymentIntentId = paymentIntent.Id;
