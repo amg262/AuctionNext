@@ -21,9 +21,11 @@ export default function PaymentButton({data}: Props) {
   //     process.env.NEXTAUTH_STRIPE_SECRET || 'pk_test_51NKl9DJCh47a7Nh113trEHxzNk32tOgF5qtNOCfO2Jb5Hc7D8lC7kY4pVm6L7cQkaY5di4VNw0UPAuGrMSb4e9XB00NfTT04a5');
 
   useEffect(() => {
+
+    const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
     const initializeStripe = async () => {
       if (!stripe) {
-        const stripeTmp = await loadStripe('pk_test_51NKl9DJCh47a7Nh113trEHxzNk32tOgF5qtNOCfO2Jb5Hc7D8lC7kY4pVm6L7cQkaY5di4VNw0UPAuGrMSb4e9XB00NfTT04a5');
+        const stripeTmp = await loadStripe(key as string);
         setStripe(stripeTmp);
       }
     };

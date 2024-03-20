@@ -11,7 +11,6 @@
   "dependencies": {
     "@microsoft/signalr": "^7.0.7",
     "@stripe/stripe-js": "^3.0.8",
-    "@types/node": "20.3.3",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
     "autoprefixer": "10.4.14",
@@ -38,6 +37,7 @@
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@types/node": "^20.11.30",
     "@types/react-datepicker": "^4.11.2"
   }
 }
