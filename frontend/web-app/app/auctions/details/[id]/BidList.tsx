@@ -7,10 +7,10 @@ import {Auction, Bid} from '@/types'
 import {User} from 'next-auth'
 import React, {useEffect, useState} from 'react'
 import {toast} from 'react-hot-toast'
-import BidItem from './BidItem'
 import {numberWithCommas} from '@/app/lib/numberWithComma'
 import EmptyFilter from '@/app/components/EmptyFilter'
-import BidForm from './BidForm'
+import BidItem from "@/app/auctions/details/[id]/BidItem";
+import BidForm from "@/app/auctions/details/[id]/BidForm";
 
 type Props = {
   user: User | null

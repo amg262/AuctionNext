@@ -2,9 +2,9 @@
 
 import {useParamsStore} from '@/hooks/useParamsStore'
 import React from 'react'
-import Heading from './Heading'
 import {Button} from 'flowbite-react'
 import {signIn} from 'next-auth/react'
+import Heading from "@/app/components/Heading";
 
 type Props = {
   title?: string

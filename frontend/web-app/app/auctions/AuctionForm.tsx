@@ -1,14 +1,15 @@
 'use client'
 
-import {Button} from 'flowbite-react';
-import React, {useEffect} from 'react'
-import {FieldValues, useForm} from 'react-hook-form'
-import Input from '../components/Input';
-import DateInput from '../components/DateInput';
-import {createAuction, updateAuction} from '../actions/auctionActions';
-import {usePathname, useRouter} from 'next/navigation';
-import {toast} from 'react-hot-toast';
-import {Auction} from '@/types';
+
+import {Auction} from "@/types";
+import {usePathname, useRouter} from "next/navigation";
+import {FieldValues, useForm} from "react-hook-form";
+import {useEffect} from "react";
+import {createAuction, updateAuction} from "@/app/actions/auctionActions";
+import {toast} from "react-hot-toast";
+import Input from "@/app/components/Input";
+import DateInput from "@/app/components/DateInput";
+import {Button} from "flowbite-react";
 
 type Props = {
   auction?: Auction
@@ -88,7 +89,6 @@ export default function AuctionForm({auction}: Props) {
                     rules={{required: 'Auction end date is required'}}/>
               </div>
             </>}
-
 
         <div className='flex justify-between'>
           <Button outline color='gray'>Cancel</Button>

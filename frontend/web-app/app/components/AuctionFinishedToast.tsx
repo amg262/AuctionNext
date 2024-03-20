@@ -2,7 +2,7 @@ import {Auction, AuctionFinished} from '@/types'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import {numberWithCommas} from '../lib/numberWithComma'
+import {numberWithCommas} from "@/app/lib/numberWithComma";
 
 type Props = {
   finishedAuction: AuctionFinished

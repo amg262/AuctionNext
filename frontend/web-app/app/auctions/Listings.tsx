@@ -1,15 +1,17 @@
 'use client'
 
-import React, {useEffect, useState} from 'react'
-import AuctionCard from './AuctionCard';
-import AppPagination from '../components/AppPagination';
-import {getData} from '../actions/auctionActions';
-import Filters from './Filters';
-import {useParamsStore} from '@/hooks/useParamsStore';
-import {shallow} from 'zustand/shallow';
+
+import {useEffect, useState} from "react";
+import {useParamsStore} from "@/hooks/useParamsStore";
+import {shallow} from "zustand/shallow";
+import {useAuctionStore} from "@/hooks/useAuctionStore";
+import {getData} from "@/app/actions/auctionActions";
+import Filters from "@/app/auctions/Filters";
+import EmptyFilter from "@/app/components/EmptyFilter";
+import AuctionCard from "@/app/auctions/AuctionCard";
+import AppPagination from "@/app/components/AppPagination";
 import qs from 'query-string';
-import EmptyFilter from '../components/EmptyFilter';
-import {useAuctionStore} from '@/hooks/useAuctionStore';
+
 
 export default function Listings() {
   const [loading, setLoading] = useState(true);

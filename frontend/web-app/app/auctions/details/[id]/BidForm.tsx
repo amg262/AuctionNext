@@ -1,16 +1,16 @@
 'use client'
 
-type Props = {
-  auctionId: string;
-  highBid: number;
-}
-
 import {placeBidForAuction} from '@/app/actions/auctionActions';
 import {numberWithCommas} from '@/app/lib/numberWithComma';
 import {useBidStore} from '@/hooks/useBidStore';
 import React from 'react'
 import {FieldValues, useForm} from 'react-hook-form';
 import {toast} from 'react-hot-toast';
+
+type Props = {
+  auctionId: string;
+  highBid: number;
+}
 
 export default function BidForm({auctionId, highBid}: Props) {
   const {register, handleSubmit, reset, formState: {errors}} = useForm();

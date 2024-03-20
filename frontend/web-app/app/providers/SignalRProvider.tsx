@@ -7,9 +7,10 @@ import {HubConnection, HubConnectionBuilder} from '@microsoft/signalr'
 import {User} from 'next-auth';
 import React, {ReactNode, useEffect, useState} from 'react'
 import {toast} from 'react-hot-toast';
-import AuctionCreatedToast from '../components/AuctionCreatedToast';
-import {getDetailedViewData} from '../actions/auctionActions';
-import AuctionFinishedToast from '../components/AuctionFinishedToast';
+import AuctionCreatedToast from "@/app/components/AuctionCreatedToast";
+import {getDetailedViewData} from "@/app/actions/auctionActions";
+import AuctionFinishedToast from "@/app/components/AuctionFinishedToast";
+
 
 type Props = {
   children: ReactNode
@@ -22,7 +23,7 @@ export default function SignalRProvider({children, user}: Props) {
   const addBid = useBidStore(state => state.addBid);
   const apiUrl = process.env.NODE_ENV === 'production'
       ? 'https://api.auctionnext.com/notifications'
-          // ? 'https://api.reactiv3.net/notifications'
+      // ? 'https://api.reactiv3.net/notifications'
       : process.env.NEXT_PUBLIC_NOTIFY_URL
 
   useEffect(() => {
