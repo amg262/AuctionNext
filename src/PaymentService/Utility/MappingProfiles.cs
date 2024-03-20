@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using PaymentService.DTOs;
 using PaymentService.Entities;
+using StripeCoupon = Stripe.Coupon;
 
 namespace PaymentService.Utility;
 
@@ -30,7 +31,13 @@ public class MappingProfile : Profile
 
 		CreateMap<CouponDto, Coupon>().ReverseMap();
 
-		CreateMap<Stripe.Coupon, Coupon>()
+		CreateMap<StripeCoupon, CouponDto>()
+			.ForMember(dest => dest.CouponCode, opt => opt.MapFrom(src => src.Name))
+			.ForMember(dest => dest.DiscountAmount, opt => opt.MapFrom(src => src.AmountOff / 100.0))
+			.ForMember(dest => dest.MinAmount, opt => opt.MapFrom(src => src.AmountOff / 100.0))
+			.ReverseMap();
+
+		CreateMap<StripeCoupon, Coupon>()
 			.ForMember(dest => dest.CouponCode, opt => opt.MapFrom(src => src.Name))
 			.ForMember(dest => dest.DiscountAmount, opt => opt.MapFrom(src => src.AmountOff / 100.0))
 			.ForMember(dest => dest.MinAmount, opt => opt.MapFrom(src => src.AmountOff / 100.0))

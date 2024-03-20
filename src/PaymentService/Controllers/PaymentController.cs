@@ -70,13 +70,13 @@ public class PaymentController : ControllerBase
 				CancelUrl = "https://app.auctionnext.com/",
 				PaymentMethodTypes = new List<string> {"card"}, // Force card payment collection
 				Mode = "payment",
-				// Discounts = new List<SessionDiscountOptions>()
-				// {
-				// 	new()
-				// 	{
-				// 		Coupon = stripeRequestDto.CouponCode ?? "10OFF"
-				// 	}
-				// },
+				Discounts = new List<SessionDiscountOptions>()
+				{
+					new()
+					{
+						Coupon = stripeRequestDto.CouponCode ?? "10OFF"
+					}
+				},
 				LineItems = new List<SessionLineItemOptions>
 				{
 					new()
@@ -151,37 +151,41 @@ public class PaymentController : ControllerBase
 			var service = new SessionService();
 			Session session = await service.GetAsync(payment.StripeSessionId);
 
-			// Create a new payment intent
-			var paymentIntentCreateOptions = new PaymentIntentCreateOptions
-			{
-				Amount = (long) payment.Total * 100, // Convert to cents
-				Currency = "usd",
-				PaymentMethodTypes = new List<string> {"card"},
-			};
-			var paymentIntentService = new PaymentIntentService();
-
-			PaymentIntent paymentIntent = await paymentIntentService.CreateAsync(paymentIntentCreateOptions);
-			
+			// session.PaymentIntent = await new PaymentIntentService().GetAsync(session.PaymentIntentId);
 
 
-			payment.PaymentIntentId = paymentIntent.Id;
+			// // Create a new payment intent
+			// var paymentIntentCreateOptions = new PaymentIntentCreateOptions
+			// {
+			// 	Amount = (long) payment.Total * 100, // Convert to cents
+			// 	Currency = "usd",
+			// 	PaymentMethodTypes = new List<string> {"card"},
+			// };
+			// var paymentIntentService = new PaymentIntentService();
+			//
+			// PaymentIntent paymentIntent = await paymentIntentService.CreateAsync(paymentIntentCreateOptions);
+			//
+			//
+			//
+			// payment.PaymentIntentId = paymentIntent.Id;
 
+			payment.PaymentIntentId = session.PaymentIntentId;
 			_db.Payments.Update(payment);
 			await _db.SaveChangesAsync();
 
 			// PaymentIntent paymentIntent = await paymentIntentService.GetAsync(payment.PaymentIntentId);
 
-			var id = paymentIntent.Id;
-
-			if (paymentIntent.Status == PaymentHelper.StatusSucceeded.ToLower() ||
-			    paymentIntent.Status == PaymentHelper.RequiresPaymentMethod.ToLower())
-			{
-				//then payment was successful
-				// payment.PaymentIntentId = paymentIntent.Id;
-				payment.Status = PaymentHelper.StatusApproved;
-				payment.UpdatedAt = DateTime.UtcNow;
-				await _db.SaveChangesAsync();
-			}
+			// var id = paymentIntent.Id;
+			//
+			// if (paymentIntent.Status == PaymentHelper.StatusSucceeded.ToLower() ||
+			//     paymentIntent.Status == PaymentHelper.RequiresPaymentMethod.ToLower())
+			// {
+			// 	//then payment was successful
+			// 	// payment.PaymentIntentId = paymentIntent.Id;
+			// 	payment.Status = PaymentHelper.StatusApproved;
+			// 	payment.UpdatedAt = DateTime.UtcNow;
+			// 	await _db.SaveChangesAsync();
+			// }
 
 			return Ok(payment);
 		}
