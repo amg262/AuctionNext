@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using PaymentService.Entities;
 
 namespace PaymentService.Data;
@@ -27,6 +28,8 @@ public class AppDbContext : DbContext
 
 	public DbSet<Coupon> Coupons { get; set; }
 
+	public DbSet<Reward> Rewards { get; set; }
+
 	/// <summary>
 	/// Configures the model that was discovered by convention from the entity types
 	/// exposed in DbSet properties on your derived context. The resulting model may be cached
@@ -38,5 +41,14 @@ public class AppDbContext : DbContext
 		// This method would include any model configuration not discovered by conventions.
 		// For example, you could use this method to configure the primary key, foreign key, and index properties of each entity type.
 		base.OnModelCreating(modelBuilder);
+
+		// Configures the entity model for the inbox feature of MassTransit, used to ensure reliable message consumption.
+		modelBuilder.AddInboxStateEntity();
+
+		// Configures the entity model for the outbox message feature of MassTransit, enabling reliable messaging by storing messages before they are published.
+		modelBuilder.AddOutboxMessageEntity();
+
+		// Configures the entity model for the outbox state feature of MassTransit, used to track the state of messages in the outbox.
+		modelBuilder.AddOutboxStateEntity();
 	}
 }
