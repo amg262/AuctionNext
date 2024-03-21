@@ -44,6 +44,20 @@ public class CouponController : ControllerBase
 		return Ok(coupons);
 	}
 
+
+	/// <summary>
+	/// Retrieves a coupon by its coupon code.
+	/// </summary>
+	/// <param name="code">String containing coupon code</param>
+	/// <returns>A 200 status code with the coupon object</returns>
+	[HttpGet("code/{code}")]
+	public async Task<IActionResult> GetCouponByCode(string? code)
+	{
+		if (code == null) return BadRequest();
+		var coupon = await _db.Coupons.FirstOrDefaultAsync(c => c.CouponCode == code);
+		return Ok(coupon);
+	}
+
 	/// <summary>
 	/// Placeholder method for coupon operations. Currently returns a simple string.
 	/// </summary>

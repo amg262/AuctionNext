@@ -9,6 +9,7 @@ import DeleteButton from "@/app/auctions/details/[id]/DeleteButton";
 import CountdownTimer from "@/app/auctions/CountdownTimer";
 import CarImage from "@/app/auctions/CarImage";
 import BidList from "@/app/auctions/details/[id]/BidList";
+import CouponField from "@/app/components/CouponField";
 
 export default async function Details({params}: { params: { id: string } }) {
   const data = await getDetailedViewData(params.id);
@@ -27,6 +28,7 @@ export default async function Details({params}: { params: { id: string } }) {
             )}
             {user?.username === data.winner && (
                 <>
+                  <CouponField key={data.id} />
                   <PaymentButton data={data} key={data.id}/>
                 </>
             )}
