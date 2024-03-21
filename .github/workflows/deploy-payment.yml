@@ -1,0 +1,39 @@
+﻿name: deploy-payment
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'src/PaymentService/**'
+ 
+env:
+  REGISTRY_IMAGE: amg31/payment-svc
+  DOCKERFILE: src/PaymentService/Dockerfile
+  DEPLOYMENT_NAME: payment-svc
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker/setup-buildx-action@v2
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Build and push the Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: "{{defaultContext}}"
+          file: ${{env.DOCKERFILE}}
+          push: true
+          tags: ${{ env.REGISTRY_IMAGE }}:latest
+#      - name: Install doctl
+#        uses: digitalocean/action-doctl@v2
+#        with:
+#          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+#      - name: Save DigitalOcean kubeconfig
+#        run: doctl kubernetes cluster kubeconfig save auctionnext
+#      - name: Restart Kubernetes deployment
+#        run: kubectl rollout restart deployment ${{ env.DEPLOYMENT_NAME }}
