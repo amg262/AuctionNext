@@ -1,0 +1,8 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+
+<router AppAssembly="@typeof(App).Assembly">
+	<found Context="routeData">
+		<routeview DefaultLayout="@typeof(Layout.MainLayout)" RouteData="routeData"/>
+		<focusonnavigate Selector="h1" RouteData="routeData"/>
+	</found>
+</router>
