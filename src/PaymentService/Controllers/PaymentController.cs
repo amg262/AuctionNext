@@ -63,7 +63,6 @@ public class PaymentController : ControllerBase
 				Id = stripeRequestDto.Guid
 			};
 
-
 			var options = new SessionCreateOptions
 			{
 				SuccessUrl = $"https://app.auctionnext.com/payment/details/{stripeRequestDto.Guid}",
@@ -113,6 +112,11 @@ public class PaymentController : ControllerBase
 
 			return Ok(new {payment, session});
 		}
+		catch (StripeException se)
+		{
+			Console.WriteLine(se);
+			throw;
+		}
 		catch (Exception e)
 		{
 			Console.WriteLine(e);
@@ -140,10 +144,26 @@ public class PaymentController : ControllerBase
 			payment.Status = PaymentHelper.StatusApproved;
 			payment.UpdatedAt = DateTime.UtcNow;
 			payment.PaymentIntentId = session.PaymentIntentId;
+
+			Reward reward = new()
+			{
+				UserId = payment.UserId,
+				RewardsDate = DateTime.UtcNow,
+				RewardsActivity = (double) (payment.Total / 100),
+				PaymentId = payment.Id
+			};
+
 			_db.Payments.Update(payment);
+			_db.Rewards.Add(reward);
+
 			await _db.SaveChangesAsync();
 
-			return Ok(payment);
+			return Ok(new {payment, reward});
+		}
+		catch (StripeException se)
+		{
+			Console.WriteLine(se);
+			throw;
 		}
 		catch (Exception e)
 		{

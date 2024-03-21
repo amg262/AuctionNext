@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PaymentService.Entities;
 
@@ -12,5 +13,6 @@ public class Reward
 	public string? UserId { get; set; }
 	public DateTime RewardsDate { get; set; } = DateTime.UtcNow;
 	public double? RewardsActivity { get; set; } = 0;
-	public Guid? PaymentId { get; set; }
+	[ForeignKey("Payment")] public Guid? PaymentId { get; set; }
+	public Payment Payment { get; set; }
 }
