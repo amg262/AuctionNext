@@ -54,3 +54,10 @@ export type Payment = {
   paymentIntentId: string
   stripeSessionId: string
 }
+
+export type Coupon = {
+  couponId: number
+  couponCode: string
+  discountAmount: number
+  minAmount: number
+}

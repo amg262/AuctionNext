@@ -1,4 +1,4 @@
-import {getDetailedViewData} from '@/app/actions/auctionActions'
+import {getCoupon, getDetailedViewData} from '@/app/actions/auctionActions'
 import Heading from '@/app/components/Heading';
 import React from 'react'
 import DetailedSpecs from './DetailedSpecs';
@@ -14,6 +14,10 @@ import CouponField from "@/app/components/CouponField";
 export default async function Details({params}: { params: { id: string } }) {
   const data = await getDetailedViewData(params.id);
   const user = await getCurrentUser();
+  const coupon = await getCoupon('10OFF');
+
+  console.log('coupon', coupon);
+
 
   return (
       <div>
@@ -28,8 +32,8 @@ export default async function Details({params}: { params: { id: string } }) {
             )}
             {user?.username === data.winner && (
                 <>
-                  <CouponField key={data.id} />
-                  <PaymentButton data={data} key={data.id}/>
+                  <CouponField/>
+                  <PaymentButton data={data} coupon={coupon} key={data.id}/>
                 </>
             )}
           </div>
