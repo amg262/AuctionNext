@@ -22,10 +22,10 @@
         <Nullable>enable</Nullable>
 
         <!-- Display name -->
-        <ApplicationTitle>BlazorHybrid</ApplicationTitle>
+        <ApplicationTitle>AuctionNext</ApplicationTitle>
 
         <!-- App Identifier -->
-        <ApplicationId>com.companyname.blazorhybrid</ApplicationId>
+        <ApplicationId>net.milwaukeesoftware.auctionnext</ApplicationId>
 
         <!-- Versions -->
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
