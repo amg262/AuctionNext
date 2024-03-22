@@ -11,6 +11,8 @@ builder.Services.AddMassTransit(x =>
 
 	x.UsingRabbitMq((context, cfg) =>
 	{
+		// cfg.UseJsonSerializer(); 
+		
 		cfg.UseMessageRetry(r =>
 		{
 			r.Handle<RabbitMqConnectionException>();

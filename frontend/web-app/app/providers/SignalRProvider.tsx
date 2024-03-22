@@ -49,7 +49,14 @@ export default function SignalRProvider({children, user}: Props) {
               addBid(bid);
             });
 
+            console.log("I'm here....");
+
+            connection.on("PaymentMade", () => {
+              console.log("PaymentMade");
+            });
+
             connection.on("PaymentMade", (payment: Payment) => {
+              console.log("PaymentMade", payment);
               return toast(<PaymentMadeToast payment={payment}/>, {duration: 10000})
             });
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Contracts;
 using PaymentService.DTOs;
 using PaymentService.Entities;
 using StripeCoupon = Stripe.Coupon;
@@ -45,5 +46,7 @@ public class MappingProfile : Profile
 			.ReverseMap();
 
 		CreateMap<RewardDto, Reward>().ReverseMap();
+
+		CreateMap<Payment, PaymentMade>().ReverseMap();
 	}
 }

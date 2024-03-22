@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Contracts;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -120,6 +121,9 @@ public class PaymentController : ControllerBase
 			payment.CouponCode ??= "10OFF";
 
 			_db.Payments.Add(payment);
+			
+			// await _publishEndpoint.Publish(payment);
+
 
 			await _db.SaveChangesAsync();
 
@@ -169,7 +173,7 @@ public class PaymentController : ControllerBase
 
 			_db.Payments.Update(payment);
 
-			await _publishEndpoint.Publish(payment);
+			await _publishEndpoint.Publish(_mapper.Map<PaymentMade>(payment));
 			_db.Rewards.Add(reward);
 
 			await _db.SaveChangesAsync();

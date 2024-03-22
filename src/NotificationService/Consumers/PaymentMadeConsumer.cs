@@ -18,6 +18,9 @@ public class PaymentMadeConsumer : IConsumer<PaymentMade>
 	{
 		Console.WriteLine("--> payment made message received");
 
+
+		await _hubContext.Clients.All.SendAsync("AuctionFinished", context.Message);
+
 		await _hubContext.Clients.All.SendAsync("PaymentMade", context.Message);
 	}
 }
