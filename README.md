@@ -1,7 +1,5 @@
 ﻿# AuctionNext
 
-AuctionNext is an online auction service that allows users to buy and sell items through an auction process.
-
 [![wakatime](https://wakatime.com/badge/github/amg262/AuctionNext.svg)](https://wakatime.com/badge/github/amg262/AuctionNext)
 
 ## How to run the project
