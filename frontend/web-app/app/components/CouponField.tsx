@@ -8,8 +8,9 @@ import {getCoupon} from "@/app/actions/auctionActions";
 
 export default function CouponField() {
 
-  const [couponCode, setCouponCode] = useState('10OFF');
+  const [couponCode, setCouponCode] = useState('');
   const [coupon, setCoupon] = useState<Coupon | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCodeChange = (event: ChangeEvent<HTMLInputElement>) => {
     console.log('handleCodeChange');
@@ -19,13 +20,16 @@ export default function CouponField() {
 
   const handleCouponApply = async () => {
     console.log('handleCouponApply');
+    setIsLoading(true);
     try {
-      const fetchedCoupon = await getCoupon(couponCode);
-      console.log(fetchedCoupon);
-      setCoupon(fetchedCoupon);
+      let coupon = await getCoupon(couponCode);
+      console.log(coupon);
+      setCoupon(coupon);
     } catch (error) {
       console.error('Error fetching coupon:', error);
       // Handle the error (e.g., display an error message)
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -43,9 +47,10 @@ export default function CouponField() {
             className="border p-2 rounded"
             value={couponCode}
             onChange={handleCodeChange}
+            disabled={isLoading}
         />
-        <Button outline onClick={handleCouponApply}>
-          Apply
+        <Button outline onClick={handleCouponApply} disabled={isLoading}>
+          {isLoading ? 'Applying...' : 'Apply'}
         </Button>
       </div>
   );

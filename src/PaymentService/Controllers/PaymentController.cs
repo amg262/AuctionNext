@@ -73,7 +73,7 @@ public class PaymentController : ControllerBase
 				{
 					new()
 					{
-						Coupon = stripeRequestDto.CouponCode ?? "10OFF"
+						Coupon = stripeRequestDto.CouponCode //?? "10OFF"
 					}
 				},
 				LineItems = new List<SessionLineItemOptions>

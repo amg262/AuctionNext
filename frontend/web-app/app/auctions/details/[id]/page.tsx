@@ -18,7 +18,7 @@ export default async function Details({params}: { params: { id: string } }) {
 
   console.log('coupon', coupon);
 
-
+  
   return (
       <div>
         <div className='flex justify-between'>

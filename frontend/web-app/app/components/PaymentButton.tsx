@@ -40,6 +40,7 @@ export default function PaymentButton({data, coupon}: Props) {
   }, [coupon?.couponCode, stripe]);
   const handleCheckout = async () => {
     setStripeError(null);
+    data.couponCode = couponCode;
     // const stripe = await stripePromise as any;
 
     const res = await getPayment()
