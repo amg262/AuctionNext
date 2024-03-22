@@ -33,7 +33,31 @@ public class AuctionCreatedConsumer : IConsumer<AuctionCreated>
 	/// <returns>A task that represents the asynchronous operation of message consumption and client notification.</returns>
 	public async Task Consume(ConsumeContext<AuctionCreated> context)
 	{
+		const string jsonString = """
+		                          {
+		                              "Id": "9f8d98c9-3f7f-4a4a-b9ed-11b92cf629a3",
+		                              "UserId": "user123",
+		                              "CouponId": 1,
+		                              "CouponCode": "10OFF",
+		                              "Coupon": {
+		                                  "CouponId": 1,
+		                                  "CouponCode": "10OFF",
+		                                  "DiscountAmount": 10.0,
+		                                  "MinAmount": 10
+		                              },
+		                              "Discount": 10.0,
+		                              "Total": 100.0,
+		                              "Name": "John Doe",
+		                              "UpdatedAt": "2024-03-22T12:34:56Z",
+		                              "Status": "Completed",
+		                              "PaymentIntentId": "pi_123456789",
+		                              "StripeSessionId": "si_123456789",
+		                              "AuctionId": "ae7a3c77-7622-4da7-b1f3-123456789012"
+		                          }
+		                          """;
+
 		Console.WriteLine($"--> Auction created: message received");
 		await _hubContext.Clients.All.SendAsync("AuctionCreated", context.Message);
+		// await _hubContext.Clients.All.SendAsync("PaymentMade", jsonString);
 	}
 }

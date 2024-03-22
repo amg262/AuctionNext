@@ -42,11 +42,14 @@ export default function SignalRProvider({children, user}: Props) {
           .then(() => {
             console.log('Connected to notification hub');
 
-            connection.on('BidPlaced', (bid: Bid) => {
+            connection.on('BidPlaced', (auction: Auction, bid: Bid) => {
               if (bid.bidStatus.includes('Accepted')) {
                 setCurrentPrice(bid.auctionId, bid.amount);
               }
               addBid(bid);
+
+              return toast(<AuctionCreatedToast auction={auction}/>,
+                  {duration: 10000})
             });
 
             console.log("I'm here....");

@@ -5,7 +5,7 @@ public class PaymentMade
 	public Guid Id { get; set; }
 	public string? UserId { get; set; }
 	public int? CouponId { get; set; }
-	public object? Coupon { get; set; }
+	public Coupon? Coupon { get; set; }
 	public string? CouponCode { get; set; }
 	public double? Discount { get; set; }
 	public double? Total { get; set; }

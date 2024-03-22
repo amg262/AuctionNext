@@ -3,6 +3,7 @@ using Contracts;
 using PaymentService.DTOs;
 using PaymentService.Entities;
 using StripeCoupon = Stripe.Coupon;
+using Coupon = PaymentService.Entities.Coupon;
 
 namespace PaymentService.Utility;
 
