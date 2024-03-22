@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Contracts;
+﻿namespace Contracts;
 
 /// <summary>
 /// Represents a coupon entity in the database.

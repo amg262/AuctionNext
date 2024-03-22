@@ -17,10 +17,6 @@ public class PaymentMadeConsumer : IConsumer<PaymentMade>
 	public async Task Consume(ConsumeContext<PaymentMade> context)
 	{
 		Console.WriteLine("--> payment made message received");
-
-
-		await _hubContext.Clients.All.SendAsync("BidPlaced", context.Message);
-
 		await _hubContext.Clients.All.SendAsync("PaymentMade", context.Message);
 	}
 }

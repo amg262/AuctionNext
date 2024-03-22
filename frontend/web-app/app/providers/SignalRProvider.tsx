@@ -11,6 +11,7 @@ import AuctionCreatedToast from "@/app/components/AuctionCreatedToast";
 import {getDetailedViewData} from "@/app/actions/auctionActions";
 import AuctionFinishedToast from "@/app/components/AuctionFinishedToast";
 import PaymentMadeToast from "@/app/components/PaymentMadeToast";
+import BidPlacedToast from "@/app/components/BidPlacedToast";
 
 
 type Props = {
@@ -48,18 +49,10 @@ export default function SignalRProvider({children, user}: Props) {
               }
               addBid(bid);
 
-              return toast(<AuctionCreatedToast auction={auction}/>,
-                  {duration: 10000})
-            });
-
-            console.log("I'm here....");
-
-            connection.on("PaymentMade", () => {
-              console.log("PaymentMade");
+              return toast(<BidPlacedToast auction={auction} bid={bid}/>,)
             });
 
             connection.on("PaymentMade", (payment: Payment) => {
-              console.log("PaymentMade", payment);
               return toast(<PaymentMadeToast payment={payment}/>, {duration: 10000})
             });
 

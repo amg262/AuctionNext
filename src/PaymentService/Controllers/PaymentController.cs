@@ -26,6 +26,7 @@ public class PaymentController : ControllerBase
 	private readonly AppDbContext _db;
 	private readonly IMapper _mapper;
 	private readonly IPublishEndpoint _publishEndpoint;
+	public bool isPublished = false;
 
 	/// <summary>
 	/// Initializes a new instance of the PaymentController class.
@@ -70,7 +71,7 @@ public class PaymentController : ControllerBase
 
 			var discounts = new List<SessionDiscountOptions>();
 
-			if (stripeRequestDto.Coupons != null)
+			if (stripeRequestDto.Coupons != null && stripeRequestDto.Coupons.Any())
 			{
 				discounts.AddRange(stripeRequestDto.Coupons.Select(coupon => new SessionDiscountOptions
 					{Coupon = coupon.CouponCode}));
@@ -82,14 +83,6 @@ public class PaymentController : ControllerBase
 				CancelUrl = "https://app.auctionnext.com/",
 				PaymentMethodTypes = new List<string> {"card"}, // Force card payment collection
 				Mode = "payment",
-				Discounts = discounts,
-				// Discounts = new List<SessionDiscountOptions>()
-				// {
-				// 	new()
-				// 	{
-				// 		Coupon = stripeRequestDto.CouponCode //?? "10OFF"
-				// 	}
-				// },
 				LineItems = new List<SessionLineItemOptions>
 				{
 					new()
@@ -108,6 +101,11 @@ public class PaymentController : ControllerBase
 				},
 			};
 
+			if (discounts.Any())
+			{
+				options.Discounts = discounts;
+			}
+
 			var service = new SessionService();
 			Session session = await service.CreateAsync(options);
 
@@ -121,7 +119,8 @@ public class PaymentController : ControllerBase
 			payment.CouponCode ??= "10OFF";
 
 			_db.Payments.Add(payment);
-			
+			// await _publishEndpoint.Publish(_mapper.Map<PaymentMade>(payment));
+
 			// await _publishEndpoint.Publish(payment);
 
 
@@ -159,6 +158,11 @@ public class PaymentController : ControllerBase
 			var service = new SessionService();
 			Session session = await service.GetAsync(payment.StripeSessionId);
 
+			if (payment.Status != PaymentHelper.StatusApproved)
+			{
+				await _publishEndpoint.Publish(_mapper.Map<PaymentMade>(payment));
+			}
+
 			payment.Status = PaymentHelper.StatusApproved;
 			payment.UpdatedAt = DateTime.UtcNow;
 			payment.PaymentIntentId = session.PaymentIntentId;
@@ -172,10 +176,7 @@ public class PaymentController : ControllerBase
 			};
 
 			_db.Payments.Update(payment);
-
-			await _publishEndpoint.Publish(_mapper.Map<PaymentMade>(payment));
 			_db.Rewards.Add(reward);
-
 			await _db.SaveChangesAsync();
 
 			return Ok(new {payment, reward});

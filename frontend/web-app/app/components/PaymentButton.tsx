@@ -46,24 +46,26 @@ export default function PaymentButton({data, coupon}: Props) {
   const handleCheckout = async () => {
     setStripeError(null);
     console.log("coupon", coupons);
-    console.log("coupon2", coupons2);
+    // console.log("coupon2", coupons2);
 
-    let couponCode = coupons[0].couponCode
+    let couponCode;
 
-    // setCouponCode(coupon?.couponCode)
-    // console.log('couponCode', coupon?.couponCode);
+    // Check if there are any coupons and assign the first coupon's code to couponCode
+    if (coupons.length > 0) {
+      couponCode = coupons[0].couponCode;
+      console.log("couponCode", couponCode);
 
-    // data.push({"couponCode": couponCode});
-    // const stripe = await stripePromise as any;
-
-    const label = "couponCode"
-    console.log("couponCode", couponCode);
+      // Assuming you want to attach the coupons to the `data` object only if there are any coupons
+      data["couponCode"] = couponCode;
+      data["coupons"] = coupons;
+    } else {
+      // If there are no coupons, you might want to handle the case accordingly
+      console.log("No coupons available");
+    }
 
     const res = await getPayment()
     console.log("res", res);
 
-    data["couponCode"] = couponCode;
-    data["coupons"] = coupons;
 
     console.log("Updated data object with dynamic label and value:", data);
 
