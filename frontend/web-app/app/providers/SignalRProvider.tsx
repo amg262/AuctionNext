@@ -2,7 +2,7 @@
 
 import {useAuctionStore} from '@/hooks/useAuctionStore';
 import {useBidStore} from '@/hooks/useBidStore';
-import {Auction, AuctionFinished, Bid} from '@/types';
+import {Auction, AuctionFinished, Bid, Payment} from '@/types';
 import {HubConnection, HubConnectionBuilder} from '@microsoft/signalr'
 import {User} from 'next-auth';
 import React, {ReactNode, useEffect, useState} from 'react'
@@ -10,6 +10,7 @@ import {toast} from 'react-hot-toast';
 import AuctionCreatedToast from "@/app/components/AuctionCreatedToast";
 import {getDetailedViewData} from "@/app/actions/auctionActions";
 import AuctionFinishedToast from "@/app/components/AuctionFinishedToast";
+import PaymentMadeToast from "@/app/components/PaymentMadeToast";
 
 
 type Props = {
@@ -46,6 +47,10 @@ export default function SignalRProvider({children, user}: Props) {
                 setCurrentPrice(bid.auctionId, bid.amount);
               }
               addBid(bid);
+            });
+
+            connection.on("PaymentMade", (payment: Payment) => {
+              return toast(<PaymentMadeToast payment={payment}/>, {duration: 10000})
             });
 
             connection.on('AuctionCreated', (auction: Auction) => {

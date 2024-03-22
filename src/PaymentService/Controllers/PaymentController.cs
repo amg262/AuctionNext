@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PaymentService.Data;
@@ -23,6 +24,7 @@ public class PaymentController : ControllerBase
 	private readonly IConfiguration _config;
 	private readonly AppDbContext _db;
 	private readonly IMapper _mapper;
+	private readonly IPublishEndpoint _publishEndpoint;
 
 	/// <summary>
 	/// Initializes a new instance of the PaymentController class.
@@ -30,11 +32,13 @@ public class PaymentController : ControllerBase
 	/// <param name="config">Application configuration settings.</param>
 	/// <param name="db">Database context for accessing payment data.</param>
 	/// <param name="mapper">Automapper for DTO to entity mapping.</param>
-	public PaymentController(IConfiguration config, AppDbContext db, IMapper mapper)
+	/// <param name="publishEndpoint">The MassTransit publish endpoint for messaging.</param>
+	public PaymentController(IConfiguration config, AppDbContext db, IMapper mapper, IPublishEndpoint publishEndpoint)
 	{
 		_config = config;
 		_db = db;
 		_mapper = mapper;
+		_publishEndpoint = publishEndpoint;
 	}
 
 	/// <summary>
@@ -124,7 +128,7 @@ public class PaymentController : ControllerBase
 		catch (StripeException se)
 		{
 			Console.WriteLine(se);
-			
+
 			throw;
 		}
 		catch (Exception e)
@@ -164,6 +168,8 @@ public class PaymentController : ControllerBase
 			};
 
 			_db.Payments.Update(payment);
+
+			await _publishEndpoint.Publish(payment);
 			_db.Rewards.Add(reward);
 
 			await _db.SaveChangesAsync();
