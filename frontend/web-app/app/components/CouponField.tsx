@@ -4,6 +4,7 @@ import {Button} from "flowbite-react";
 import {ChangeEvent, useState} from "react";
 import {Coupon} from "@/types";
 import {getCoupon} from "@/app/actions/auctionActions";
+import {useCouponStore} from "@/hooks/useCouponStore";
 
 
 export default function CouponField() {
@@ -11,6 +12,8 @@ export default function CouponField() {
   const [couponCode, setCouponCode] = useState('');
   const [coupon, setCoupon] = useState<Coupon | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const setCoupons = useCouponStore(state => state.setCoupons);
+  const coupons = useCouponStore(state => state.coupons);
 
   const handleCodeChange = (event: ChangeEvent<HTMLInputElement>) => {
     console.log('handleCodeChange');
@@ -23,8 +26,10 @@ export default function CouponField() {
     setIsLoading(true);
     try {
       let coupon = await getCoupon(couponCode);
-      console.log(coupon);
-      setCoupon(coupon);
+      coupons.push(coupon);
+      console.log("coupon", coupon);
+      console.log("coupons", coupons);
+
     } catch (error) {
       console.error('Error fetching coupon:', error);
       // Handle the error (e.g., display an error message)
@@ -55,3 +60,5 @@ export default function CouponField() {
       </div>
   );
 }
+null
+null
