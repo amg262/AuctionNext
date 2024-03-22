@@ -17,7 +17,6 @@ export default function CouponField() {
 
   const handleCodeChange = (event: ChangeEvent<HTMLInputElement>) => {
     console.log('handleCodeChange');
-
     setCouponCode(event.target.value);
   };
 
@@ -38,12 +37,6 @@ export default function CouponField() {
     }
   };
 
-  // useEffect(() => {
-  //   console.log('useEffect');
-  //
-  //   handleCouponApply().then(r => console.log(r)).catch(e => console.error(e));
-  // });
-
   return (
       <div className="flex items-center space-x-2">
         <input
@@ -60,5 +53,3 @@ export default function CouponField() {
       </div>
   );
 }
-null
-null
