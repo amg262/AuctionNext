@@ -24,6 +24,7 @@ export default function CouponField() {
     console.log('handleCouponApply');
     setIsLoading(true);
     try {
+      setIsLoading(true);
       let coupon = await getCoupon(couponCode);
       coupons.push(coupon);
       console.log("coupon", coupon);

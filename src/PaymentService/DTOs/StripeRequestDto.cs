@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using PaymentService.Entities;
 
 namespace PaymentService.DTOs;
 
@@ -14,6 +15,7 @@ public class StripeRequestDto
 	public string? CancelUrl { get; set; }
 	public string? UserId { get; set; }
 
+	public List<Coupon>? Coupons { get; set; }
 	[JsonPropertyName("id")] public Guid? AuctionId { get; set; }
 
 	public string? PaymentIntentId { get; set; }

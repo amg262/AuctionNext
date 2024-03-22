@@ -63,19 +63,28 @@ public class PaymentController : ControllerBase
 				Id = stripeRequestDto.Guid
 			};
 
+			var discounts = new List<SessionDiscountOptions>();
+
+			if (stripeRequestDto.Coupons != null)
+			{
+				discounts.AddRange(stripeRequestDto.Coupons.Select(coupon => new SessionDiscountOptions
+					{Coupon = coupon.CouponCode}));
+			}
+
 			var options = new SessionCreateOptions
 			{
 				SuccessUrl = $"https://app.auctionnext.com/payment/details/{stripeRequestDto.Guid}",
 				CancelUrl = "https://app.auctionnext.com/",
 				PaymentMethodTypes = new List<string> {"card"}, // Force card payment collection
 				Mode = "payment",
-				Discounts = new List<SessionDiscountOptions>()
-				{
-					new()
-					{
-						Coupon = stripeRequestDto.CouponCode //?? "10OFF"
-					}
-				},
+				Discounts = discounts,
+				// Discounts = new List<SessionDiscountOptions>()
+				// {
+				// 	new()
+				// 	{
+				// 		Coupon = stripeRequestDto.CouponCode //?? "10OFF"
+				// 	}
+				// },
 				LineItems = new List<SessionLineItemOptions>
 				{
 					new()
@@ -115,6 +124,7 @@ public class PaymentController : ControllerBase
 		catch (StripeException se)
 		{
 			Console.WriteLine(se);
+			
 			throw;
 		}
 		catch (Exception e)

@@ -63,6 +63,7 @@ export default function PaymentButton({data, coupon}: Props) {
     console.log("res", res);
 
     data["couponCode"] = couponCode;
+    data["coupons"] = coupons;
 
     console.log("Updated data object with dynamic label and value:", data);
 
