@@ -4,7 +4,8 @@ import {getCurrentUser} from "@/app/actions/authActions";
 
 export default async function Update({params}: { params: { id: string } }) {
   const user = await getCurrentUser();
-
+  // I'm trying to do something here cmon man
+  
   return (
       <div className='mx-auto max-w-[75%] shadow-lg p-10 bg-white rounded-lg'>
         <Heading title='laskjdfls' subtitle='bahhhh'/>
