@@ -22,7 +22,8 @@ export default function Listings() {
     orderBy: state.orderBy,
     filterBy: state.filterBy,
     seller: state.seller,
-    winner: state.winner
+    winner: state.winner,
+    gridColumns: state.gridColumns
   }), shallow)
   const data = useAuctionStore(state => ({
     auctions: state.auctions,
@@ -38,15 +39,17 @@ export default function Listings() {
     setParams({pageNumber})
   }
 
+
   useEffect(() => {
     getData(url).then(data => {
       setData(data);
       setLoading(false);
     })
-  }, [url, setData])
+  }, [url, setData, params.gridColumns])
 
   if (loading) return <h3>Loading...</h3>
 
+  console.log('Listings rendered', params.gridColumns)
   return (
       <>
         <Filters/>
@@ -54,7 +57,8 @@ export default function Listings() {
             <EmptyFilter showReset/>
         ) : (
             <>
-              <div className='grid grid-cols-4 gap-6'>
+              {/*<div className={`grid grid-cols-4 gap-6`}> /!* Dynamic grid columns *!/*/}
+              <div className={`grid grid-cols-${params.gridColumns} gap-6`}> {/* Dynamic grid columns */}
                 {data.auctions.map(auction => (
                     <AuctionCard auction={auction} key={auction.id}/>
                 ))}

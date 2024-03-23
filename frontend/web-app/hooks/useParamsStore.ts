@@ -10,12 +10,14 @@ type State = {
   filterBy: string
   seller?: string
   winner?: string
+  gridColumns: number
 }
 
 type Actions = {
   setParams: (params: Partial<State>) => void
   reset: () => void
   setSearchValue: (value: string) => void
+  setGridColumns: (value: number) => void
 }
 
 const initialState: State = {
@@ -27,7 +29,8 @@ const initialState: State = {
   orderBy: 'make',
   filterBy: 'live',
   seller: undefined,
-  winner: undefined
+  winner: undefined,
+  gridColumns: 3
 }
 
 export const useParamsStore = create<State & Actions>()((set) => ({
@@ -47,5 +50,9 @@ export const useParamsStore = create<State & Actions>()((set) => ({
 
   setSearchValue: (value: string) => {
     set({searchValue: value})
+  },
+
+  setGridColumns: (value: number) => {
+    set({gridColumns: value})
   }
 }))

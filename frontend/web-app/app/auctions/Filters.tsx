@@ -6,6 +6,7 @@ import {BsFillStopCircleFill, BsStopwatchFill} from 'react-icons/bs';
 import {GiFinishLine, GiFlame} from 'react-icons/gi';
 
 const pageSizeButtons = [4, 8, 12];
+const gridColumnsOptions = [2, 3, 4];
 
 const orderButtons = [
   {
@@ -48,7 +49,9 @@ export default function Filters() {
   const setParams = useParamsStore(state => state.setParams);
   const orderBy = useParamsStore(state => state.orderBy);
   const filterBy = useParamsStore(state => state.filterBy);
+  const gridColumns = useParamsStore(state => state.gridColumns);
 
+  console.log('Filters rendered', gridColumns)
   return (
       <div className='flex justify-between items-center mb-4'>
 
@@ -80,6 +83,20 @@ export default function Filters() {
                 >
                   <Icon className='mr-3 h-4 w-4'/>
                   {label}
+                </Button>
+            ))}
+          </Button.Group>
+        </div>
+
+        <div>
+          <span className='uppercase text-sm text-gray-500 mr-2'>Grid size</span>
+          <Button.Group>
+            {gridColumnsOptions.map((value: number) => (
+                <Button key={value}
+                        onClick={() => setParams({gridColumns: value})}
+                        color={`${gridColumns === value ? 'red' : 'gray'}`}
+                >
+                  {value}
                 </Button>
             ))}
           </Button.Group>
