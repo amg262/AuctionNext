@@ -211,31 +211,21 @@ services:
         ipv4_address: 10.5.0.101
     depends_on:
       - prometheus
-  #      - rabbitmq:/var/lib/rabbitmq
-
-#  redis:
-#    image: redislabs/redismod
-#    ports:
-#      - 6379:6379
-#    networks:
-#      custom:
-#    volumes:
-#      - /var/lib/redis/data
-#
-#  redisinsight:
-#    image: redislabs/redisinsight:latest
-#    ports:
-#      - '8001:8001'
-#    networks:
-#      custom:
-#    volumes:
-#      - /var/lib/redisinsight/data  
+  
+  redis-stack:
+    image: redis/redis-stack:latest
+    ports:
+      - 6379:6379
+      - 8001:8001
+    networks:
+      custom:
+    volumes:
+      - redis-data:/var/lib/redis/data
 
 volumes:
   prometheus-data:
   grafana-data:
-#  redis-data:
-#  redisinsight-data:
+  redis-data:
 #  postgresdata:
 #  mongodata:
 #  rabbitmq:
