@@ -1,8 +1,8 @@
 ﻿namespace Contracts;
 
 /// <summary>
-/// Represents a coupon entity in the database.
-/// This entity is used to store information about discount coupons that can be applied to payments or purchases.
+/// Represents a coupon entity.
+/// Used for storing information about discount coupons applicable to payments or purchases.
 /// </summary>
 public class Coupon
 {

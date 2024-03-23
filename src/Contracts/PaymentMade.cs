@@ -1,5 +1,9 @@
 ﻿namespace Contracts;
 
+/// <summary>
+/// Represents an event indicating that a payment has been made.
+/// This class is used to communicate payment information within the system and to external services.
+/// </summary>
 public class PaymentMade
 {
 	public Guid Id { get; set; }
