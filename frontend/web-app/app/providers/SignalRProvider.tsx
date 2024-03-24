@@ -43,14 +43,12 @@ export default function SignalRProvider({children, user}: Props) {
           .then(() => {
             console.log('Connected to notification hub');
 
-            connection.on('BidPlaced', (auction: Auction, bid: Bid) => {
+            connection.on('BidPlaced', (bid: Bid) => {
               if (bid.bidStatus.includes('Accepted')) {
                 setCurrentPrice(bid.auctionId, bid.amount);
               }
               addBid(bid);
-
-              console.log('BidPlaced', auction, bid)
-              // return toast(<BidPlacedToast auction={auction} bid={bid}/>,)
+              return toast(<BidPlacedToast bid={bid}/>,)
             });
 
             connection.on("PaymentMade", (payment: Payment) => {
