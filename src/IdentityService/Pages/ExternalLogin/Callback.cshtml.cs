@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Security.Claims;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
@@ -38,8 +39,10 @@ public class Callback : PageModel
         
     public async Task<IActionResult> OnGet()
     {
+        
         // read external identity from the temporary cookie
         var result = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
+        Debug.WriteLine($"result {result}");
         if (result?.Succeeded != true)
         {
             throw new Exception("External authentication error");

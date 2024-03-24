@@ -14,8 +14,8 @@ export default function BidPlacedToast({bid}: Props) {
           <Image
               src="/bid.png"
               alt='image'
-              height={80}
-              width={80}
+              height={40}
+              width={40}
               className='rounded-lg w-auto h-auto'
           />
           <span>Bid placed for ${bid?.amount} by {bid?.bidder}!</span>

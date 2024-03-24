@@ -28,12 +28,14 @@ internal static class HostingExtensions
 				options.Events.RaiseInformationEvents = true;
 				options.Events.RaiseFailureEvents = true;
 				options.Events.RaiseSuccessEvents = true;
+				options.LicenseKey = builder.Configuration["IdentityServer:LicenseKey"];
+
 
 				if (builder.Environment.IsEnvironment("Docker"))
 				{
 					options.IssuerUri = "identity-svc";
 				}
-				
+
 				if (builder.Environment.IsProduction())
 				{
 					options.IssuerUri = "https://id.milwaukeesoftware.net";
@@ -50,8 +52,27 @@ internal static class HostingExtensions
 
 		builder.Services.ConfigureApplicationCookie(options => { options.Cookie.SameSite = SameSiteMode.Lax; });
 
-		builder.Services.AddAuthentication();
-
+		builder.Services.AddAuthentication()
+			.AddMicrosoftAccount("Microsoft", options =>
+			{
+				options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+				options.ClientId = builder.Configuration["Microsoft:ClientId"];
+				options.ClientSecret = builder.Configuration["Microsoft:ClientSecret"];
+				options.CallbackPath = "/api/auth/callback/id-server";
+			})
+			.AddGoogle("Google", options =>
+			{
+				options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+				// options.ReturnUrlParameter = "/api/auth/callback/id-server";
+				// Register your IdentityServer with Google at https://console.developers.google.com
+				// Enable the Google+ API
+				// Set the redirect URI to https://localhost:5001/signin-google
+				options.CallbackPath = "/api/auth/callback/id-server";
+				options.ClientId = builder.Configuration["Google:ClientId"];
+				options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+			});
+	
+			
 		return builder.Build();
 	}
 
@@ -78,6 +99,7 @@ internal static class HostingExtensions
 		}
 
 		app.UseIdentityServer();
+		app.UseAuthentication();
 		app.UseAuthorization();
 
 		app.MapRazorPages()
