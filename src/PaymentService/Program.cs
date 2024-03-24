@@ -5,6 +5,7 @@ using PaymentService.Consumers;
 using PaymentService.Data;
 using PaymentService.Services;
 using Polly;
+using Serilog;
 using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,6 +49,9 @@ builder.Services.AddMassTransit(x =>
 	});
 });
 
+
+builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
+
 builder.Services.AddScoped<StripeService>();
 
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
@@ -58,6 +62,7 @@ var app = builder.Build();
 //
 // app.UseHttpsRedirection();
 
+app.UseSerilogRequestLogging();
 
 app.UseAuthorization();
 

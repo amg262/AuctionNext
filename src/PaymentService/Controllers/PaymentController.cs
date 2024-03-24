@@ -26,7 +26,7 @@ public class PaymentController : ControllerBase
 	private readonly AppDbContext _db;
 	private readonly IMapper _mapper;
 	private readonly IPublishEndpoint _publishEndpoint;
-	public bool isPublished = false;
+	private readonly ILogger<PaymentController> _logger;
 
 	/// <summary>
 	/// Initializes a new instance of the PaymentController class.
@@ -35,12 +35,15 @@ public class PaymentController : ControllerBase
 	/// <param name="db">Database context for accessing payment data.</param>
 	/// <param name="mapper">Automapper for DTO to entity mapping.</param>
 	/// <param name="publishEndpoint">The MassTransit publish endpoint for messaging.</param>
-	public PaymentController(IConfiguration config, AppDbContext db, IMapper mapper, IPublishEndpoint publishEndpoint)
+	/// <param name="logger">Serilog structured logging</param>
+	public PaymentController(IConfiguration config, AppDbContext db, IMapper mapper, IPublishEndpoint publishEndpoint,
+		ILogger<PaymentController> logger)
 	{
 		_config = config;
 		_db = db;
 		_mapper = mapper;
 		_publishEndpoint = publishEndpoint;
+		_logger = logger;
 	}
 
 	/// <summary>
@@ -51,6 +54,7 @@ public class PaymentController : ControllerBase
 	public async Task<IActionResult> Get()
 	{
 		var payments = await _db.Payments.ToListAsync();
+		_logger.LogInformation("Payments retrieved");
 		return Ok(payments);
 	}
 

@@ -49,7 +49,8 @@ export default function SignalRProvider({children, user}: Props) {
               }
               addBid(bid);
 
-              return toast(<BidPlacedToast auction={auction} bid={bid}/>,)
+              console.log('BidPlaced', auction, bid)
+              // return toast(<BidPlacedToast auction={auction} bid={bid}/>,)
             });
 
             connection.on("PaymentMade", (payment: Payment) => {
