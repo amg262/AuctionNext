@@ -53,6 +53,7 @@ export type Payment = {
   buyer: string
   paymentIntentId: string
   stripeSessionId: string
+  userId: string
 }
 
 export type Coupon = {

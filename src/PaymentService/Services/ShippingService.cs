@@ -98,7 +98,7 @@ public class ShippingService
 			{
 				PaymentId = payment.Id,
 				Name = toAddress.Name,
-				Company = toAddress.Company,
+				Company = toAddress.Street1,
 				Street1 = toAddress.Street1,
 				Street2 = toAddress.Street2,
 				City = toAddress.City,

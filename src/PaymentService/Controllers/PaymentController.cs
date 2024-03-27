@@ -87,9 +87,9 @@ public class PaymentController : ControllerBase
 
 			var options = new SessionCreateOptions
 			{
-				// SuccessUrl = $"http://localhost:3000/payment/details/{stripeRequestDto.Guid}",
+				// SuccessUrl = $"https://app.auctionnext.com/payment/details/{stripeRequestDto.Guid}",
+				SuccessUrl = $"http://localhost:3000/payment/details/{stripeRequestDto.Guid}",
 				CancelUrl = "https://app.auctionnext.com/",
-				SuccessUrl = $"https://app.auctionnext.com/payment/details/{stripeRequestDto.Guid}",
 				// CancelUrl = "https://app.auctionnext.com/",
 				PaymentMethodTypes = new List<string> {"card"}, // Force card payment collection
 				Mode = "payment",
