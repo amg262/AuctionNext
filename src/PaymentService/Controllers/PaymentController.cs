@@ -178,7 +178,7 @@ public class PaymentController : ControllerBase
 			if (payment.Status != PaymentHelper.StatusApproved)
 			{
 				await _publishEndpoint.Publish(_mapper.Map<PaymentMade>(payment));
-				await _shippingService.CompleteShipping(_mapper.Map<Address>(shippingDetails));
+				await _shippingService.CompleteShipping(payment, _mapper.Map<Address>(shippingDetails));
 			}
 
 			payment.Status = PaymentHelper.StatusApproved;

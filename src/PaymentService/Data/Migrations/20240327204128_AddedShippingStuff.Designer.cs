@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PaymentService.Data;
 
 #nullable disable
 
-namespace PaymentService.Migrations
+namespace PaymentService.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240327204128_AddedShippingStuff")]
+    partial class AddedShippingStuff
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -284,63 +287,6 @@ namespace PaymentService.Migrations
                     b.ToTable("Rewards");
                 });
 
-            modelBuilder.Entity("PaymentService.Entities.Shipping", b =>
-                {
-                    b.Property<int>("ShippingId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ShippingId"));
-
-                    b.Property<string>("Carrier")
-                        .HasColumnType("text");
-
-                    b.Property<string>("City")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Company")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Country")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("PaymentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Rate")
-                        .HasColumnType("text");
-
-                    b.Property<string>("State")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Street1")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Street2")
-                        .HasColumnType("text");
-
-                    b.Property<string>("TrackingCode")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Zip")
-                        .HasColumnType("text");
-
-                    b.HasKey("ShippingId");
-
-                    b.HasIndex("PaymentId");
-
-                    b.ToTable("Shipping");
-                });
-
             modelBuilder.Entity("PaymentService.Entities.Payment", b =>
                 {
                     b.HasOne("PaymentService.Entities.Coupon", "Coupon")
@@ -357,15 +303,6 @@ namespace PaymentService.Migrations
                         .HasForeignKey("PaymentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Payment");
-                });
-
-            modelBuilder.Entity("PaymentService.Entities.Shipping", b =>
-                {
-                    b.HasOne("PaymentService.Entities.Payment", "Payment")
-                        .WithMany()
-                        .HasForeignKey("PaymentId");
 
                     b.Navigation("Payment");
                 });

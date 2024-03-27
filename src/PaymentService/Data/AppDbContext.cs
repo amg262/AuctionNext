@@ -29,6 +29,7 @@ public class AppDbContext : DbContext
 	public DbSet<Coupon> Coupons { get; set; }
 
 	public DbSet<Reward> Rewards { get; set; }
+	public DbSet<Shipping> Shipping { get; set; }
 
 	/// <summary>
 	/// Configures the model that was discovered by convention from the entity types

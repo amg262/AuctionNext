@@ -3,6 +3,7 @@ using EasyPost.Exceptions.API;
 using EasyPost.Models.API;
 using PaymentService.Data;
 using EasyPost.Parameters;
+using PaymentService.Entities;
 
 namespace PaymentService.Services;
 
@@ -20,25 +21,25 @@ public class ShippingService
 	}
 
 
-	public async Task<Shipment> CompleteShipping(Address toAddress)
+	public async Task<Shipment> CompleteShipping(Payment payment, Address toAddress)
 	{
 		try
 		{
-			var to = new EasyPost.Parameters.Address.Create
-			{
-				Name = toAddress.Name,
-				Street1 = toAddress.Street1,
-				Street2 = toAddress.Street2,
-				City = toAddress.City,
-				State = toAddress.State,
-				Zip = toAddress.Zip,
-				Country = toAddress.Country,
-				Phone = toAddress.Phone,
-				// You can add additional parameters as needed outside of the constructor
-				Company = "My Company",
-				Verify = false,
-				VerifyStrict = false
-			};
+			// var to = new EasyPost.Parameters.Address.Create
+			// {
+			// 	Name = toAddress.Name,
+			// 	Street1 = toAddress.Street1,
+			// 	Street2 = toAddress.Street2,
+			// 	City = toAddress.City,
+			// 	State = toAddress.State,
+			// 	Zip = toAddress.Zip,
+			// 	Country = toAddress.Country,
+			// 	Phone = toAddress.Phone,
+			// 	// You can add additional parameters as needed outside of the constructor
+			// 	Company = "My Company",
+			// 	Verify = false,
+			// 	VerifyStrict = false
+			// };
 
 			var to1 = new Address
 			{
@@ -51,24 +52,8 @@ public class ShippingService
 				Country = toAddress.Country,
 				Phone = toAddress.Phone,
 				// You can add additional parameters as needed outside of the constructor
-				Company = "My Company",
+				Company = toAddress.Name,
 			};
-
-
-			// var from = new EasyPost.Parameters.Address.Create
-			// {
-			// 	Name = "AuctionNext",
-			// 	Street1 = "s75 w33075 Rolling Fields Drive",
-			// 	City = "Mukwonago",
-			// 	State = "WI",
-			// 	Zip = "53149",
-			// 	Country = "US",
-			// 	Phone = "262-363-9999",
-			// 	// You can add additional parameters as needed outside of the constructor
-			// 	Company = "AuctionNext",
-			// 	Verify = false,
-			// 	VerifyStrict = false
-			// };
 
 			var from1 = new Address
 			{
@@ -91,42 +76,6 @@ public class ShippingService
 				Weight = 10 // Assuming weight is in ounces
 			};
 
-			// var toVerify = await myClient.Address.Create(to.ToDictionary());
-			// var fromVerify = await myClient.Address.Create(from.ToDictionary());
-			//
-
-			// var address1 = await myClient.Address.Create(addressCreateParameters.ToDictionary());
-			// var address2 = await myClient.Address.Create(addressCreateParametersSender.ToDictionary());
-
-			// Shipment shipment = await myClient.Shipment.Create(new Shipment
-			// {
-			// 	ToAddress = addr1,
-			// 	FromAddress = addr2,
-			// 	Parcel = parcel
-			// });
-
-			// Shipment shipment1 = new Shipment();
-			// shipment1.ToAddress = addr1;
-			// shipment1.FromAddress = addr2;
-			// shipment1.Parcel = parcel;
-			// // shipment1 = await myClient.Shipment.Create();
-			//
-			//
-			// // Then convert the object to a dictionary
-			// // This step will validate the data and throw an exception if there are any errors (i.e. missing required parameters)
-			// // var addressCreateDictionary = addressCreateParameters.ToDictionary();
-			// //
-			// // // Pass the dictionary into the address creation method as normal
-			// // var address = await myClient.Address.Create(addressCreateDictionary);
-			// //
-			// // return address;
-			// var address = await myClient.Address.Create(addressCreateParameters.ToDictionary());
-			// var fromAddress = await myClient.Address.Create(addressCreateParameters.ToDictionary());
-			// // var verifiedAddress = await myClient.Address.Verify(address.Id);
-			// var verifiedFromAddress = await myClient.Address.Verify(fromAddress.Id);
-
-			// Address verifiedToAddress = await VerifyAddress(toAddress);
-			// Address verifiedFromAddress = await VerifyAddress(address2);
 
 			Shipment myShipment = await myClient.Shipment.Create(new Dictionary<string, object>
 			{
@@ -144,6 +93,27 @@ public class ShippingService
 			});
 			Shipment myPurchasedShipment = await myClient.Shipment.Buy(myShipment.Id, myShipment.LowestRate());
 			// myShipment = await myClient.Shipment.Buy(myShipment.Id, myShipment.LowestRate());
+
+			await _db.Shipping.AddAsync(new Shipping
+			{
+				PaymentId = payment.Id,
+				Name = toAddress.Name,
+				Company = toAddress.Company,
+				Street1 = toAddress.Street1,
+				Street2 = toAddress.Street2,
+				City = toAddress.City,
+				State = toAddress.State,
+				Zip = toAddress.Zip,
+				Country = toAddress.Country,
+				Email = toAddress.Email,
+				UpdatedAt = DateTime.UtcNow,
+				Carrier = myPurchasedShipment.Rates[0].Carrier,
+				Rate = myPurchasedShipment.Rates[0].Price,
+				TrackingCode = myPurchasedShipment.TrackingCode
+			});
+
+			await _db.SaveChangesAsync();
+
 			return myPurchasedShipment;
 		}
 		catch (InvalidRequestError error)
