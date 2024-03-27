@@ -3,7 +3,9 @@ using Contracts;
 using PaymentService.DTOs;
 using PaymentService.Entities;
 using StripeCoupon = Stripe.Coupon;
+using StripeAddress = Stripe.Address;
 using Coupon = PaymentService.Entities.Coupon;
+using EasyPost.Models.API;
 
 namespace PaymentService.Utility;
 
@@ -49,5 +51,14 @@ public class MappingProfile : Profile
 		CreateMap<RewardDto, Reward>().ReverseMap();
 
 		CreateMap<Payment, PaymentMade>().ReverseMap();
+
+		CreateMap<StripeAddress, Address>()
+			.ForMember(dest => dest.Street1, opt => opt.MapFrom(src => src.Line1))
+			.ForMember(dest => dest.Street2, opt => opt.MapFrom(src => src.Line2))
+			.ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
+			.ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State))
+			.ForMember(dest => dest.Zip, opt => opt.MapFrom(src => src.PostalCode))
+			.ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))
+			.ReverseMap();
 	}
 }

@@ -187,45 +187,45 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./devcerts:/etc/nginx/certs
   
-  prometheus:
-    image: prom/prometheus:latest
-    volumes:
-      - prometheus-data:/prometheus  # Mount named volume to store data
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    networks:
-      custom:
-        ipv4_address: 10.5.0.100
-
-  grafana:
-    image: grafana/grafana:latest
-    volumes:
-      - grafana-data:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=1dV5AXIWxfsx79rn  # Change this to a strong password
-    ports:
-      - "3000:3000"
-    networks:
-      custom:
-        ipv4_address: 10.5.0.101
-    depends_on:
-      - prometheus
-  
-  redis-stack:
-    image: redis/redis-stack:latest
-    ports:
-      - 6379:6379
-      - 8001:8001
-    networks:
-      custom:
-    volumes:
-      - redis-data:/var/lib/redis/data
-
-volumes:
-  prometheus-data:
-  grafana-data:
-  redis-data:
+#  prometheus:
+#    image: prom/prometheus:latest
+#    volumes:
+#      - prometheus-data:/prometheus  # Mount named volume to store data
+#      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+#    ports:
+#      - "9090:9090"
+#    networks:
+#      custom:
+#        ipv4_address: 10.5.0.100
+#
+#  grafana:
+#    image: grafana/grafana:latest
+#    volumes:
+#      - grafana-data:/var/lib/grafana
+#    environment:
+#      - GF_SECURITY_ADMIN_PASSWORD=1dV5AXIWxfsx79rn  # Change this to a strong password
+#    ports:
+#      - "3000:3000"
+#    networks:
+#      custom:
+#        ipv4_address: 10.5.0.101
+#    depends_on:
+#      - prometheus
+#  
+#  redis-stack:
+#    image: redis/redis-stack:latest
+#    ports:
+#      - 6379:6379
+#      - 8001:8001
+#    networks:
+#      custom:
+#    volumes:
+#      - redis-data:/var/lib/redis/data
+#
+#volumes:
+#  prometheus-data:
+#  grafana-data:
+#  redis-data:
 #  postgresdata:
 #  mongodata:
 #  rabbitmq:

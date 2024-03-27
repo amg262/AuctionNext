@@ -6,12 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using PaymentService.Data;
 using PaymentService.DTOs;
 using PaymentService.Entities;
+using PaymentService.Services;
 using PaymentService.Utility;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using Stripe;
 using Stripe.Checkout;
 using Coupon = PaymentService.Entities.Coupon;
+using Address = EasyPost.Models.API.Address;
 
 namespace PaymentService.Controllers;
 
@@ -27,6 +29,7 @@ public class PaymentController : ControllerBase
 	private readonly IMapper _mapper;
 	private readonly IPublishEndpoint _publishEndpoint;
 	private readonly ILogger<PaymentController> _logger;
+	private readonly ShippingService _shippingService;
 
 	/// <summary>
 	/// Initializes a new instance of the PaymentController class.
@@ -37,13 +40,14 @@ public class PaymentController : ControllerBase
 	/// <param name="publishEndpoint">The MassTransit publish endpoint for messaging.</param>
 	/// <param name="logger">Serilog structured logging</param>
 	public PaymentController(IConfiguration config, AppDbContext db, IMapper mapper, IPublishEndpoint publishEndpoint,
-		ILogger<PaymentController> logger)
+		ILogger<PaymentController> logger, ShippingService shippingService)
 	{
 		_config = config;
 		_db = db;
 		_mapper = mapper;
 		_publishEndpoint = publishEndpoint;
 		_logger = logger;
+		_shippingService = shippingService;
 	}
 
 	/// <summary>
@@ -83,10 +87,16 @@ public class PaymentController : ControllerBase
 
 			var options = new SessionCreateOptions
 			{
-				SuccessUrl = $"https://app.auctionnext.com/payment/details/{stripeRequestDto.Guid}",
+				// SuccessUrl = $"http://localhost:3000/payment/details/{stripeRequestDto.Guid}",
 				CancelUrl = "https://app.auctionnext.com/",
+				SuccessUrl = $"https://app.auctionnext.com/payment/details/{stripeRequestDto.Guid}",
+				// CancelUrl = "https://app.auctionnext.com/",
 				PaymentMethodTypes = new List<string> {"card"}, // Force card payment collection
 				Mode = "payment",
+				ShippingAddressCollection = new SessionShippingAddressCollectionOptions
+				{
+					AllowedCountries = new List<string> {"US", "CA"},
+				},
 				LineItems = new List<SessionLineItemOptions>
 				{
 					new()
@@ -161,10 +171,14 @@ public class PaymentController : ControllerBase
 
 			var service = new SessionService();
 			Session session = await service.GetAsync(payment.StripeSessionId);
+			Stripe.Address shippingDetails = session.CustomerDetails.Address;
+			var that = _mapper.Map<Address>(shippingDetails);
+			Console.WriteLine(that);
 
 			if (payment.Status != PaymentHelper.StatusApproved)
 			{
 				await _publishEndpoint.Publish(_mapper.Map<PaymentMade>(payment));
+				await _shippingService.CompleteShipping(_mapper.Map<Address>(shippingDetails));
 			}
 
 			payment.Status = PaymentHelper.StatusApproved;

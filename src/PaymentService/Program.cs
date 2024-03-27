@@ -53,6 +53,7 @@ builder.Services.AddMassTransit(x =>
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddScoped<StripeService>();
+builder.Services.AddScoped<ShippingService>();
 
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
