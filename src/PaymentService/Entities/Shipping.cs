@@ -10,6 +10,7 @@ public class Shipping
 	[ForeignKey("PaymentId")] public Guid? PaymentId { get; set; }
 	public Payment Payment { get; set; }
 	public string? TrackingCode { get; set; }
+	public string? TrackingUrl { get; set; }
 	public string? Rate { get; set; }
 	public string? Carrier { get; set; }
 	public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;

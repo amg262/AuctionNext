@@ -62,3 +62,23 @@ export type Coupon = {
   discountAmount: number
   minAmount: number
 }
+
+export type Shipping = {
+  shippingId: string
+  paymentId: string
+  payment: Payment
+  trackingCode: string
+  trackingUrl: string
+  rate: string
+  carrier: string
+  updatedAt: string
+  name: string
+  company: string
+  street1: string
+  street2: string
+  city: string
+  state: string
+  zip: string
+  country: string
+  email: string
+}

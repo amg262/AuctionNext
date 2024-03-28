@@ -138,6 +138,7 @@ public class ShippingController : ControllerBase
 			// myShipment = await myClient.Shipment.Buy(myShipment.Id, myShipment.LowestRate());
 
 			shipping.TrackingCode = myPurchasedShipment.TrackingCode;
+			shipping.TrackingUrl = myPurchasedShipment.Tracker.PublicUrl;
 			shipping.Rate = myPurchasedShipment.Rates[0].Price.ToString();
 			shipping.Carrier = myPurchasedShipment.Rates[0].Carrier;
 			shipping.UpdatedAt = DateTime.UtcNow;
