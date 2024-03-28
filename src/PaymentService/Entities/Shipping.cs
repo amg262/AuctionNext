@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using EasyPost.Models.API;
 
 namespace PaymentService.Entities;
 
+/// <summary>
+/// Represents a shipping record in the database with shipping information and tracking details.
+/// </summary>
 public class Shipping
 {
 	[Key] public int ShippingId { get; set; }

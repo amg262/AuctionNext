@@ -10,6 +10,10 @@ using PaymentService.Services;
 
 namespace PaymentService.Controllers;
 
+/// <summary>
+/// Handles shipping-related actions, including listing, creating, updating, and deleting shipping records,
+/// as well as completing shipping actions by integrating with the EasyPost API.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class ShippingController : ControllerBase
@@ -20,7 +24,13 @@ public class ShippingController : ControllerBase
 	private readonly IConfiguration _config;
 	public Client myClient;
 
-
+	/// <summary>
+	/// Initializes a new instance of the ShippingController class.
+	/// </summary>
+	/// <param name="db">Database context for accessing shipping records.</param>
+	/// <param name="shippingService">Service for handling shipping logic and external API integration.</param>
+	/// <param name="mapper">Automapper instance for model mapping.</param>
+	/// <param name="config">Configuration for accessing application settings.</param>
 	public ShippingController(AppDbContext db, ShippingService shippingService, IMapper mapper, IConfiguration config)
 	{
 		_db = db;
@@ -29,6 +39,10 @@ public class ShippingController : ControllerBase
 		_config = config;
 	}
 
+	/// <summary>
+	/// Retrieves all shipping records from the database.
+	/// </summary>
+	/// <returns>A list of shipping records.</returns>
 	[HttpGet]
 	public async Task<IActionResult> Get()
 	{
@@ -37,6 +51,11 @@ public class ShippingController : ControllerBase
 		return Ok(items);
 	}
 
+	/// <summary>
+	/// Adds a new shipping record to the database.
+	/// </summary>
+	/// <param name="shipping">The shipping record to add.</param>
+	/// <returns>The added shipping record.</returns>
 	[HttpPost]
 	public async Task<IActionResult> Post(Shipping shipping)
 	{
@@ -45,6 +64,11 @@ public class ShippingController : ControllerBase
 		return Ok(shipping);
 	}
 
+	/// <summary>
+	/// Updates an existing shipping record in the database.
+	/// </summary>
+	/// <param name="shipping">The shipping record with updated information.</param>
+	/// <returns>The updated shipping record.</returns>
 	[HttpPut]
 	public async Task<IActionResult> Put(Shipping shipping)
 	{
@@ -53,6 +77,11 @@ public class ShippingController : ControllerBase
 		return Ok(shipping);
 	}
 
+	/// <summary>
+	/// Deletes a shipping record from the database.
+	/// </summary>
+	/// <param name="id">The ID of the shipping record to delete.</param>
+	/// <returns>An IActionResult indicating the outcome of the operation.</returns>
 	[HttpDelete("{id}")]
 	public async Task<IActionResult> Delete(int id)
 	{
@@ -62,6 +91,11 @@ public class ShippingController : ControllerBase
 		return Ok();
 	}
 
+	/// <summary>
+	/// Retrieves a shipping record by its ID.
+	/// </summary>
+	/// <param name="id">The ID of the shipping record to retrieve.</param>
+	/// <returns>The requested shipping record.</returns>
 	[HttpGet("{id}")]
 	public async Task<IActionResult> GetShippingById(int id)
 	{
@@ -69,6 +103,14 @@ public class ShippingController : ControllerBase
 		return Ok(item);
 	}
 
+	/// <summary>
+	/// Completes the shipping process for a given payment, creating a shipment with EasyPost and updating the shipping record.
+	/// </summary>
+	/// <param name="paymentId">The ID of the payment associated with the shipping.</param>
+	/// <returns>The updated shipping record with tracking information.</returns>
+	/// <exception cref="InvalidRequestError">Thrown when the request to EasyPost API is invalid.</exception>
+	/// <exception cref="ApiError">Thrown when there's an error in the EasyPost API request.</exception>
+	/// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
 	[HttpGet("{id}")]
 	public async Task<IActionResult> GetShippingByPaymentId(Guid paymentId)
 	{
@@ -166,6 +208,11 @@ public class ShippingController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Verifies an address using the shipping service.
+	/// </summary>
+	/// <param name="toVerify">The address to verify.</param>
+	/// <returns>The verified address.</returns>
 	public async Task<IActionResult> VerifyAddress(Address toVerify)
 	{
 		var verifiedAddress = await _shippingService.VerifyAddress(toVerify);
