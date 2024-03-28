@@ -2,7 +2,6 @@
 using EasyPost.Exceptions.API;
 using EasyPost.Models.API;
 using PaymentService.Data;
-using EasyPost.Parameters;
 using PaymentService.Entities;
 
 namespace PaymentService.Services;
@@ -25,22 +24,6 @@ public class ShippingService
 	{
 		try
 		{
-			// var to = new EasyPost.Parameters.Address.Create
-			// {
-			// 	Name = toAddress.Name,
-			// 	Street1 = toAddress.Street1,
-			// 	Street2 = toAddress.Street2,
-			// 	City = toAddress.City,
-			// 	State = toAddress.State,
-			// 	Zip = toAddress.Zip,
-			// 	Country = toAddress.Country,
-			// 	Phone = toAddress.Phone,
-			// 	// You can add additional parameters as needed outside of the constructor
-			// 	Company = "My Company",
-			// 	Verify = false,
-			// 	VerifyStrict = false
-			// };
-
 			var to1 = new Address
 			{
 				Name = toAddress.Name,
@@ -51,7 +34,6 @@ public class ShippingService
 				Zip = toAddress.Zip,
 				Country = toAddress.Country,
 				Phone = toAddress.Phone,
-				// You can add additional parameters as needed outside of the constructor
 				Company = toAddress.Name,
 			};
 

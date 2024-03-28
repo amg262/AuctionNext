@@ -14,6 +14,7 @@ using Stripe;
 using Stripe.Checkout;
 using Coupon = PaymentService.Entities.Coupon;
 using Address = EasyPost.Models.API.Address;
+using Shipping = PaymentService.Entities.Shipping;
 
 namespace PaymentService.Controllers;
 
@@ -87,8 +88,8 @@ public class PaymentController : ControllerBase
 
 			var options = new SessionCreateOptions
 			{
-				// SuccessUrl = $"https://app.auctionnext.com/payment/details/{stripeRequestDto.Guid}",
-				SuccessUrl = $"http://localhost:3000/payment/details/{stripeRequestDto.Guid}",
+				SuccessUrl = $"https://app.auctionnext.com/payment/details/{stripeRequestDto.Guid}",
+				// SuccessUrl = $"http://localhost:3000/payment/details/{stripeRequestDto.Guid}",
 				CancelUrl = "https://app.auctionnext.com/",
 				// CancelUrl = "https://app.auctionnext.com/",
 				PaymentMethodTypes = new List<string> {"card"}, // Force card payment collection
@@ -178,7 +179,22 @@ public class PaymentController : ControllerBase
 			if (payment.Status != PaymentHelper.StatusApproved)
 			{
 				await _publishEndpoint.Publish(_mapper.Map<PaymentMade>(payment));
-				await _shippingService.CompleteShipping(payment, _mapper.Map<Address>(shippingDetails));
+				var addr = _mapper.Map<Address>(shippingDetails);
+				await _db.Shipping.AddAsync(new Shipping()
+				{
+					PaymentId = payment.Id,
+					Name = addr.Street1,
+					Company = addr.Company,
+					Street1 = addr.Street1,
+					Street2 = addr.Street2,
+					City = addr.City,
+					State = addr.State,
+					Zip = addr.Zip,
+					Country = addr.Country,
+					Email = addr.Email,
+				});
+				await _db.SaveChangesAsync();
+				// await _shippingService.CompleteShipping(payment, _mapper.Map<Address>(shippingDetails));
 			}
 
 			payment.Status = PaymentHelper.StatusApproved;
@@ -192,6 +208,7 @@ public class PaymentController : ControllerBase
 				RewardsActivity = (double) (payment.Total / 100),
 				PaymentId = payment.Id
 			};
+
 
 			_db.Payments.Update(payment);
 			_db.Rewards.Add(reward);

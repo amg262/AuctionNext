@@ -3,8 +3,8 @@ import React from 'react'
 import {Payment} from "@/types";
 import {getCurrentUser} from "@/app/actions/authActions";
 import {completePayment} from "@/app/actions/auctionActions";
-import {numberWithCommas} from "@/app/lib/numberWithComma";
-import {AiOutlineCheckCircle, AiOutlineClockCircle} from "react-icons/ai";
+import {AiOutlineCheckCircle} from "react-icons/ai";
+import CompleteShipping from "@/app/components/CompleteShipping";
 
 export default async function Update({params}: { params: { id: string } }) {
   const user = await getCurrentUser();
@@ -18,6 +18,7 @@ export default async function Update({params}: { params: { id: string } }) {
     error = err;
   }
 
+
   console.log('payment', payment)
 
 
@@ -26,10 +27,13 @@ export default async function Update({params}: { params: { id: string } }) {
   return (
       <div className='mx-auto max-w-[75%] shadow-lg p-10 bg-white rounded-lg'>
         <Heading title='Payment Succcessful!' subtitle=''>
-          <AiOutlineCheckCircle className="text-green-500 ml-2" />
+          <AiOutlineCheckCircle className="text-green-500 ml-2"/>
         </Heading>
-          <div className="mt-6">
+        <div className="mt-6">
           <h2 className="text-2xl font-semibold">Transaction Details</h2>
+          <div className="mt-6">
+            <CompleteShipping payment={payment} />
+          </div>
           <div className="mt-4 bg-gray-100 p-4 rounded-lg">
             {payment && (
                 <div>
