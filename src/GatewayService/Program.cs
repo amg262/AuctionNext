@@ -3,28 +3,29 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+	.LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options => 
-    {
-        options.Authority = builder.Configuration["IdentityServiceUrl"];
-        options.RequireHttpsMetadata = false;
-        options.TokenValidationParameters.ValidateAudience = false;
-        options.TokenValidationParameters.NameClaimType = "username";
-    });
+	.AddJwtBearer(options =>
+	{
+		options.Authority = builder.Configuration["IdentityServiceUrl"];
+		options.RequireHttpsMetadata = false;
+		options.TokenValidationParameters.ValidateAudience = false;
+		options.TokenValidationParameters.NameClaimType = "username";
+	});
 
-builder.Services.AddCors(options => 
+builder.Services.AddCors(options =>
 {
-    options.AddPolicy("customPolicy", b => 
-    {
-        b.AllowAnyHeader()
-            .AllowAnyMethod().AllowCredentials().WithOrigins(builder.Configuration["ClientApp"]);
-    });
+	options.AddPolicy("customPolicy", b =>
+	{
+		b.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins(builder.Configuration["ClientApp"]);
+		b.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://app.auctionnext.com");
+		b.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://api.auctionnext.com");
+	});
 });
 
 var app = builder.Build();
-app.UseCors();
+app.UseCors("customPolicy");
 app.MapReverseProxy();
 
 app.UseAuthentication();

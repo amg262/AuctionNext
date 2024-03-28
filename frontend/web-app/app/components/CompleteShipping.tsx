@@ -20,8 +20,25 @@ export default function CompleteShipping({payment}: Props) {
     //
     console.log('Shipping completed');
     console.log('shipping', payment);
+
+    const requestOptions = {
+      method: 'POST',
+    }
+
     try {
-      const response = fetch(`${baseUrl}shipping/complete/${payment?.id}`, {})
+      const response = fetch(`${baseUrl}shipping/complete/${payment?.id}`, requestOptions)
+          .then(r => console.log(r.json()))
+          .then(console.log)
+          .catch(console.error);
+      // const response = fetchWrapper.post(`shipping/complete/${payment?.id}`, {});
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+
+
+    try {
+      const response = fetch(`https://api.auctionnext.com/shipping/complete/${payment?.id}`, requestOptions)
           .then(r => console.log(r.json()))
           .then(console.log)
           .catch(console.error);
