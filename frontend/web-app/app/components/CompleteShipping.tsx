@@ -6,41 +6,26 @@ import {Payment, Shipping} from "@/types";
 
 type Props = {
   payment?: Payment | null
+  headers?: any
+  user?: any
 }
 
-export default function CompleteShipping({payment}: Props) {
+export default function CompleteShipping({payment, headers, user}: Props) {
   const [shipping, setShipping] = React.useState<Shipping | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
 
   function ship() {
     setIsLoading(true);
-    // const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-    //
-    // console.log('baseUrl', baseUrl);
-
-    // console.log('Shipping completed');
-    // console.log('shipping', payment);
-    // fetch(`${baseUrl}/shipping/complete/${payment?.id}`, {}).then(r => r.json()).then(console.log).catch(console.error);
-    //
     console.log('Shipping completed');
-    // console.log('shipping', payment);
 
     const requestOptions = {
       method: 'POST',
+      headers: headers,
     }
 
-    // try {
-    //   const response = fetch(`${baseUrl}shipping/complete/${payment?.id}`, requestOptions)
-    //       .then(r => console.log(r.json()))
-    //       .then(console.log)
-    //       .catch(console.error);
-    //   // const response = fetchWrapper.post(`shipping/complete/${payment?.id}`, {});
-    //   console.log(response);
-    // } catch (error) {
-    //   console.error(error);
-    // }
-
+    console.log('user', user)
+    console.log('headers', headers)
 
     try {
       const response = fetch(`https://api.auctionnext.com/shipping/complete/${payment?.id}`, requestOptions)
@@ -99,6 +84,7 @@ export default function CompleteShipping({payment}: Props) {
               <h3 className="text-lg font-semibold">Shipping Details</h3>
               <div className="grid grid-cols-2 gap-4 mt-2">
                 <p>Shipping ID: <span className="font-medium">{shipping.shippingId}</span></p>
+                <p>Carrier: <span className="font-medium">{shipping.carrier}</span></p>
                 <p>Tracking Code: <span className="font-medium">{shipping.trackingCode}</span></p>
                 <p>View Tracking: <span className="font-medium">
                   <a rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700 underline"
@@ -107,7 +93,6 @@ export default function CompleteShipping({payment}: Props) {
                   </a>
                 </span></p>
                 {/*<p>Tracking Url: <span className="font-medium">{shipping.trackingUrl}</span></p>*/}
-                <p>Carrier: <span className="font-medium">{shipping.carrier}</span></p>
                 <p>Rate: <span className="font-medium">${shipping.rate}</span></p>
                 <p>Name: <span className="font-medium">{shipping.name}</span></p>
                 <p>Company: <span className="font-medium">{shipping.company}</span></p>

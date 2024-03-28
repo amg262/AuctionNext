@@ -41,7 +41,7 @@ async function del(url: string) {
   return await handleResponse(response);
 }
 
-async function getHeaders() {
+export async function getHeaders() {
   const token = await getTokenWorkaround();
   const headers = {'Content-type': 'application/json'} as any;
   if (token) {
@@ -75,6 +75,7 @@ export const fetchWrapper = {
   get,
   post,
   put,
-  del
+  del,
+  getHeaders
 }
 
