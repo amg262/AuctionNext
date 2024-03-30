@@ -6,6 +6,7 @@ import {getCurrentUser} from "@/app/actions/authActions";
 import {completePayment} from "@/app/actions/auctionActions";
 import {AiOutlineCheckCircle} from "react-icons/ai";
 import CompleteShipping from "@/app/components/CompleteShipping";
+import RefundButton from "@/app/components/RefundButton";
 
 export default async function Update({params}: { params: { id: string } }) {
   const user = await getCurrentUser();
@@ -34,7 +35,10 @@ export default async function Update({params}: { params: { id: string } }) {
         <div className="mt-6">
           <h2 className="text-2xl font-semibold">Transaction Details</h2>
           <div className="mt-6">
-            <CompleteShipping payment={payment} user={user} headers={headers} />
+            <RefundButton payment={payment} user={user} headers={headers}/>
+          </div>
+          <div className="mt-4">
+            <CompleteShipping payment={payment} user={user} headers={headers}/>
           </div>
           <div className="mt-4 bg-gray-100 p-4 rounded-lg">
             {payment && (

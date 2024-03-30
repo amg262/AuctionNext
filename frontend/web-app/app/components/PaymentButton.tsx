@@ -7,13 +7,8 @@ import {Coupon} from "@/types";
 import {useCouponStore} from "@/hooks/useCouponStore";
 
 type Props = {
-  // id: string;
-  // price: number;
-  // model: string;
   data: any;
   coupon?: Coupon;
-  // auctionId: string;
-  // dataObject: any;
 }
 
 

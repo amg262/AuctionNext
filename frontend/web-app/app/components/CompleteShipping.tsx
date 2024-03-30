@@ -1,7 +1,7 @@
 'use client';
 
 import {AiOutlineCar, AiOutlineTransaction} from "react-icons/ai";
-import React from "react";
+import React, {useState} from "react";
 import {Payment, Shipping} from "@/types";
 
 type Props = {
@@ -14,9 +14,12 @@ export default function CompleteShipping({payment, headers, user}: Props) {
   const [shipping, setShipping] = React.useState<Shipping | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
+  const [buttonClicked, setButtonClicked] = useState(false); // Track if the button has been clicked
 
   function ship() {
     setIsLoading(true);
+    setButtonClicked(true); // Disable the button permanently after click
+
     console.log('Shipping completed');
 
     const requestOptions = {
@@ -56,9 +59,9 @@ export default function CompleteShipping({payment, headers, user}: Props) {
   return (
       <div>
         <button
-            className={`flex items-center justify-center text-white font-bold py-2 px-4 rounded cursor-pointer ${isLoading ? 'bg-gray-500' : 'bg-blue-500 hover:bg-blue-700'}`}
+            className={`flex items-center justify-center text-white font-bold py-2 px-4 rounded cursor-pointer ${isLoading || buttonClicked ? 'bg-gray-400 hover:bg-gray-400 opacity-75 pointer-events-none' : 'bg-blue-500 hover:bg-blue-700'}`}
             onClick={ship}
-            disabled={isLoading}
+            disabled={isLoading || buttonClicked}
         >
           <AiOutlineCar className="mr-2"/> {isLoading ? 'Processing...' : 'Complete Shipping'}
         </button>

@@ -12,7 +12,6 @@ using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using Stripe;
 using Stripe.Checkout;
-using Coupon = PaymentService.Entities.Coupon;
 using Address = EasyPost.Models.API.Address;
 using Shipping = PaymentService.Entities.Shipping;
 
@@ -283,6 +282,48 @@ public class PaymentController : ControllerBase
 		return Ok();
 	}
 
+	[HttpPost("refund/{paymentIntentId}")]
+	public async Task<IActionResult> RefundPayment(string paymentIntentId)
+	{
+		try
+		{
+			var refundOptions = new RefundCreateOptions
+			{
+				PaymentIntent = paymentIntentId,
+				Reason = PaymentHelper.RequestedByCustomer,
+				// You can also specify the amount to refund, reason, etc.
+			};
+
+			var refundService = new RefundService();
+			Refund refund = await refundService.CreateAsync(refundOptions);
+
+			// Optionally, update your database to reflect the refund
+			var payment = await _db.Payments.FirstOrDefaultAsync(p => p.PaymentIntentId == paymentIntentId);
+			if (payment == null) return NotFound("Payment not found.");
+
+			payment.Status = PaymentHelper.StatusRefunded;
+			_db.Payments.Update(payment);
+			await _db.SaveChangesAsync();
+
+			return Ok(new {refund.Id, refund.Status});
+		}
+		catch (StripeException ex)
+		{
+			_logger.LogError("Stripe exception: {Message}", ex.Message);
+			return StatusCode(500, new {error = ex.Message});
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError("Exception: {Message}", ex.Message);
+			return StatusCode(500, new {error = ex.Message});
+		}
+	}
+
+	/// <summary>
+	/// Generates a receipt for a payment identified by its ID and returns it as a downloadable PDF.
+	/// </summary>
+	/// <param name="id">The unique identifier of the payment for which to generate the receipt.</param>
+	/// <returns>A PDF file containing the payment receipt.</returns>
 	[HttpGet("receipt/{id}")]
 	public async Task<IActionResult> GenerateReceipt(Guid id)
 	{
@@ -294,7 +335,7 @@ public class PaymentController : ControllerBase
 
 		// Create a new PDF document
 		PdfDocument document = new PdfDocument();
-		document.Info.Title = $"Payment Receipt - {payment.Id}";
+		document.Info.Title = "Payment Receipt";
 
 		// Create an empty page
 		PdfPage page = document.AddPage();
@@ -303,71 +344,42 @@ public class PaymentController : ControllerBase
 		XGraphics gfx = XGraphics.FromPdfPage(page);
 
 		// Create a font
-		XFont font = new XFont("Verdana", 20, XFontStyleEx.Bold);
+		XFont font = new XFont("Times New Roman", 20);
 
 		// Draw the text
-		gfx.DrawString("Payment Receipt", font, XBrushes.Black, new XRect(0, 20, page.Width, page.Height),
+		gfx.DrawString("Payment Receipt", font, XBrushes.Black, new XRect(0, 0, page.Width, page.Height),
 			XStringFormats.TopCenter);
 
 		// Draw more details about the payment
-		XFont detailsFont = new XFont("Verdana", 12, XFontStyleEx.Regular);
-		gfx.DrawString($"Payment ID: {payment.Id}", detailsFont, XBrushes.Black, new XPoint(40, 100));
-		gfx.DrawString($"User ID: {payment.UserId}", detailsFont, XBrushes.Black, new XPoint(40, 130));
-		gfx.DrawString($"Total: ${payment.Total}", detailsFont, XBrushes.Black, new XPoint(40, 160));
-		gfx.DrawString($"Status: {payment.Status}", detailsFont, XBrushes.Black, new XPoint(40, 190));
-		gfx.DrawString($"Date: {payment.UpdatedAt:yyyy-MM-dd HH:mm:ss}", detailsFont, XBrushes.Black,
-			new XPoint(40, 220));
+		XFont fontDetails = new XFont("Times New Roman", 12);
+		double yPosition = 40;
+		double lineSpacing = 20;
 
-		// Save the document into a memory stream
-		using MemoryStream stream = new MemoryStream();
+		gfx.DrawString($"Payment ID: {payment.Id}", fontDetails, XBrushes.Black,
+			new XPoint(40, yPosition += lineSpacing));
+		gfx.DrawString($"User ID: {payment.UserId}", fontDetails, XBrushes.Black,
+			new XPoint(40, yPosition += lineSpacing));
+		gfx.DrawString($"Name: {payment.Name}", fontDetails, XBrushes.Black, new XPoint(40, yPosition += lineSpacing));
+		gfx.DrawString($"Date: {payment.UpdatedAt:yyyy-MM-dd HH:mm:ss}", fontDetails, XBrushes.Black,
+			new XPoint(40, yPosition += lineSpacing));
+		gfx.DrawString($"Total: ${payment.Total}", fontDetails, XBrushes.Black,
+			new XPoint(40, yPosition += lineSpacing));
+		gfx.DrawString($"Discount: ${payment.Discount} (Code: {payment.CouponCode})", fontDetails, XBrushes.Black,
+			new XPoint(40, yPosition += lineSpacing));
+		gfx.DrawString($"Status: {payment.Status}", fontDetails, XBrushes.Black,
+			new XPoint(40, yPosition += lineSpacing));
+		gfx.DrawString($"Payment Intent ID: {payment.PaymentIntentId}", fontDetails, XBrushes.Black,
+			new XPoint(40, yPosition += lineSpacing));
+		gfx.DrawString($"Stripe Session ID: {payment.StripeSessionId}", fontDetails, XBrushes.Black,
+			new XPoint(40, yPosition += lineSpacing));
+		gfx.DrawString($"Auction ID: {payment.AuctionId}", fontDetails, XBrushes.Black,
+			new XPoint(40, yPosition += lineSpacing));
+
+		// Save the document to a stream and return it
+		MemoryStream stream = new MemoryStream();
 		document.Save(stream, false);
+		stream.Position = 0;
+
 		return File(stream.ToArray(), "application/pdf", $"PaymentReceipt-{payment.Id}.pdf");
-	}
-
-
-	[HttpPost("coupon")]
-	public async Task<IActionResult> Coupon()
-	{
-		return Ok("coupon");
-	}
-
-	[HttpPost("create-coupon")]
-	public async Task<IActionResult> CreateCoupon([FromBody] CouponDto? couponDto)
-	{
-		var b = couponDto;
-		Console.WriteLine(b);
-		try
-		{
-			Coupon coupon = _mapper.Map<Coupon>(couponDto);
-			_db.Coupons.Add(coupon);
-			await _db.SaveChangesAsync();
-
-			// Create the coupon in Stripe
-			var options = new Stripe.CouponCreateOptions
-			{
-				AmountOff = (long) (couponDto.DiscountAmount * 100),
-				Name = couponDto.CouponCode,
-				Currency = "usd",
-				Id = couponDto.CouponCode,
-			};
-			var service = new Stripe.CouponService();
-			await service.CreateAsync(options);
-
-			var result = _mapper.Map<CouponDto>(coupon);
-
-			return Ok(result);
-		}
-		catch (StripeException se)
-		{
-			Console.WriteLine(se);
-			throw;
-		}
-		catch (Exception e)
-		{
-			Console.WriteLine(e);
-			throw;
-		}
-
-		return BadRequest();
 	}
 }
