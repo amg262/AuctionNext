@@ -2,6 +2,8 @@
 
 [![wakatime](https://wakatime.com/badge/github/amg262/AuctionNext.svg)](https://wakatime.com/badge/github/amg262/AuctionNext)
 
+## System Diagram
+![AuctionNext.png](AuctionNext.png)
 ## How to run the project
 
 1. Clone the repository: `git clone <repository-url>`
