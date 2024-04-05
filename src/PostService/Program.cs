@@ -43,6 +43,7 @@ builder.Services.AddMassTransit(x =>
 	});
 });
 // I think it needs a change to build it
+//fixxxx 
 var app = builder.Build();
 
 

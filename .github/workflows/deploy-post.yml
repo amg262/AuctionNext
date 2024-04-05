@@ -1,4 +1,4 @@
-﻿name: deploy-payment
+﻿name: deploy-post
 
 on:
   workflow_dispatch:
