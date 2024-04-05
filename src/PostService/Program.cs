@@ -42,7 +42,8 @@ builder.Services.AddMassTransit(x =>
 		cfg.ConfigureEndpoints(context);
 	});
 });
-
+// I think it needs a change to build it
+//fixxxx 
 var app = builder.Build();
 
 
