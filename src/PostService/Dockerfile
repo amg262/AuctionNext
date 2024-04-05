@@ -12,7 +12,6 @@ COPY src/BiddingService/BiddingService.csproj src/BiddingService/BiddingService.
 COPY src/NotificationService/NotificationService.csproj src/NotificationService/NotificationService.csproj
 COPY src/PaymentService/PaymentService.csproj src/PaymentService/PaymentService.csproj
 COPY src/PostService/PostService.csproj src/PostService/PostService.csproj
-
 COPY src/Contracts/Contracts.csproj src/Contracts/Contracts.csproj
 COPY src/IdentityService/IdentityService.csproj src/IdentityService/IdentityService.csproj
 COPY tests/AuctionService.UnitTests/AuctionService.UnitTests.csproj tests/AuctionService.UnitTests/AuctionService.UnitTests.csproj
@@ -23,14 +22,13 @@ COPY tests/SearchService.UnitTests/SearchService.UnitTests.csproj tests/SearchSe
 RUN dotnet restore AuctionNext.sln
 
 # Copy the app folders over
-COPY src/NotificationService src/NotificationService
+COPY src/PostService src/PostService
 COPY src/Contracts src/Contracts
-
-WORKDIR /app/src/NotificationService
+WORKDIR /app/src/PostService
 RUN dotnet publish -c Release -o /app/src/out
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build /app/src/out .
-ENTRYPOINT [ "dotnet", "NotificationService.dll" ]
+ENTRYPOINT [ "dotnet", "PostService.dll" ]

@@ -11,6 +11,8 @@ COPY src/GatewayService/GatewayService.csproj src/GatewayService/GatewayService.
 COPY src/BiddingService/BiddingService.csproj src/BiddingService/BiddingService.csproj
 COPY src/NotificationService/NotificationService.csproj src/NotificationService/NotificationService.csproj
 COPY src/PaymentService/PaymentService.csproj src/PaymentService/PaymentService.csproj
+
+COPY src/PostService/PostService.csproj src/PostService/PostService.csproj
 COPY src/Contracts/Contracts.csproj src/Contracts/Contracts.csproj
 COPY src/IdentityService/IdentityService.csproj src/IdentityService/IdentityService.csproj
 COPY tests/AuctionService.UnitTests/AuctionService.UnitTests.csproj tests/AuctionService.UnitTests/AuctionService.UnitTests.csproj

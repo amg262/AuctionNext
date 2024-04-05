@@ -154,6 +154,24 @@ services:
       - rabbitmq
     networks:
       custom:
+  post-svc:
+    image: amg31/post-svc:latest
+    build:
+      context: .
+      dockerfile: src/PostService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMq__Host=rabbitmq
+      - ConnectionStrings__MongoDbConnection=mongodb://root:mongopw@mongodb
+      - AuctionServiceUrl=http://auction-svc
+    ports:
+      - 7006:80
+    depends_on:
+      - mongodb
+      - rabbitmq
+    networks:
+      custom:
   web-app:
     image: amg31/web-app
     build:
@@ -187,30 +205,30 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./devcerts:/etc/nginx/certs
   
-#  prometheus:
-#    image: prom/prometheus:latest
-#    volumes:
-#      - prometheus-data:/prometheus  # Mount named volume to store data
-#      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-#    ports:
-#      - "9090:9090"
-#    networks:
-#      custom:
-#        ipv4_address: 10.5.0.100
-#
-#  grafana:
-#    image: grafana/grafana:latest
-#    volumes:
-#      - grafana-data:/var/lib/grafana
-#    environment:
-#      - GF_SECURITY_ADMIN_PASSWORD=1dV5AXIWxfsx79rn  # Change this to a strong password
-#    ports:
-#      - "3000:3000"
-#    networks:
-#      custom:
-#        ipv4_address: 10.5.0.101
-#    depends_on:
-#      - prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - prometheus-data:/prometheus  # Mount named volume to store data
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      custom:
+        ipv4_address: 10.5.0.100
+
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=1dV5AXIWxfsx79rn  # Change this to a strong password
+    ports:
+      - "3000:3000"
+    networks:
+      custom:
+        ipv4_address: 10.5.0.101
+    depends_on:
+      - prometheus
 #  
 #  redis-stack:
 #    image: redis/redis-stack:latest
@@ -222,9 +240,9 @@ services:
 #    volumes:
 #      - redis-data:/var/lib/redis/data
 #
-#volumes:
-#  prometheus-data:
-#  grafana-data:
+volumes:
+  prometheus-data:
+  grafana-data:
 #  redis-data:
 #  postgresdata:
 #  mongodata:

@@ -1,0 +1,6 @@
+@PostService_HostAddress = http://localhost:7006
+
+GET {{PostService_HostAddress}}/
+Accept: application/json
+
+###
