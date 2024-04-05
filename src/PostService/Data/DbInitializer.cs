@@ -23,7 +23,7 @@ public static class DbInitializer
 	/// </remarks>
 	public static async Task InitDb(WebApplication app)
 	{
-		await DB.InitAsync("SearchDb", MongoClientSettings
+		await DB.InitAsync("PostDb", MongoClientSettings
 			.FromConnectionString(app.Configuration.GetConnectionString("MongoDbConnection")));
 
 		// await DB.Index<Item>()
