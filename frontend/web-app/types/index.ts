@@ -21,6 +21,10 @@ export type Auction = {
   mileage: number
   imageUrl: string
   id: string
+  length: number
+  width: number
+  height: number
+  weight: number
 }
 
 export type Bid = {
