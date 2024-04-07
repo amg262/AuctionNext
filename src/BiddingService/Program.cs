@@ -1,4 +1,5 @@
 using BiddingService.Consumers;
+using BiddingService.Data;
 using BiddingService.Services;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -60,6 +61,7 @@ await Policy.Handle<TimeoutException>().WaitAndRetryAsync(5, t => TimeSpan.FromS
 	{
 		await DB.InitAsync("BidDb",
 			MongoClientSettings.FromConnectionString(builder.Configuration.GetConnectionString("BidDbConnection")));
+		await DbInitializer.InitDb(app);
 	});
 
 
