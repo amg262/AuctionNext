@@ -21,4 +21,8 @@ public class AuctionDto
 	public string Color { get; set; }
 	public int Mileage { get; set; }
 	public string ImageUrl { get; set; }
+	public float? Length { get; set; } //= 120; // inches
+	public float? Width { get; set; } //= 60; // inches
+	public float? Height { get; set; } //= 60; // inches
+	public float? Weight { get; set; } //= 65504; // ounces
 }

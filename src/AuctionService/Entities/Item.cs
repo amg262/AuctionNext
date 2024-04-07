@@ -20,7 +20,7 @@ public class Item
 	public float? Width { get; set; } = 60; // inches
 	public float? Height { get; set; } = 60; // inches
 	public float? Weight { get; set; } = 65504; // ounces
-
+	
 	// nav properties in EF Core it will be used to create a foreign key relationship
 	public Auction Auction { get; set; }
 	public Guid AuctionId { get; set; }

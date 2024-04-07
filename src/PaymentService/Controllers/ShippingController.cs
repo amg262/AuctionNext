@@ -169,10 +169,18 @@ public class ShippingController : ControllerBase
 				{
 					"parcel", new Dictionary<string, object>
 					{
-						{"length", 9},
-						{"width", 6},
-						{"height", 2},
-						{"weight", 10}
+						{"length", 10},
+						{"width", 20},
+						{"height", 30},
+						{"weight", 200},
+						// {"length", 9},
+						// {"width", 6},
+						// {"height", 2},
+						// {"weight", 10}
+
+						// {"width", 6},
+						// {"height", 2},
+						// {"weight", 10}
 					}
 				}
 			});

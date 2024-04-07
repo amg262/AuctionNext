@@ -32,6 +32,10 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.AuctionId, opt => opt.MapFrom(src => src.AuctionId))
 			.ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Winner))
 			.ForMember(dest => dest.CouponCode, opt => opt.MapFrom(src => src.CouponCode))
+			.ForMember(dest => dest.Length, opt => opt.MapFrom(src => src.Length))
+			.ForMember(dest => dest.Width, opt => opt.MapFrom(src => src.Width))
+			.ForMember(dest => dest.Height, opt => opt.MapFrom(src => src.Height))
+			.ForMember(dest => dest.Weight, opt => opt.MapFrom(src => src.Weight))
 			.ReverseMap();
 
 		CreateMap<CouponDto, Coupon>().ReverseMap();
