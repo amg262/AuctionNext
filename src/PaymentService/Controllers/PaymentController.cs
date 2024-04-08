@@ -29,7 +29,6 @@ public class PaymentController : ControllerBase
 	private readonly IMapper _mapper;
 	private readonly IPublishEndpoint _publishEndpoint;
 	private readonly ILogger<PaymentController> _logger;
-	private readonly ShippingService _shippingService;
 
 	/// <summary>
 	/// Initializes a new instance of the PaymentController class.
@@ -40,14 +39,13 @@ public class PaymentController : ControllerBase
 	/// <param name="publishEndpoint">The MassTransit publish endpoint for messaging.</param>
 	/// <param name="logger">Serilog structured logging</param>
 	public PaymentController(IConfiguration config, AppDbContext db, IMapper mapper, IPublishEndpoint publishEndpoint,
-		ILogger<PaymentController> logger, ShippingService shippingService)
+		ILogger<PaymentController> logger)
 	{
 		_config = config;
 		_db = db;
 		_mapper = mapper;
 		_publishEndpoint = publishEndpoint;
 		_logger = logger;
-		_shippingService = shippingService;
 	}
 
 	/// <summary>
