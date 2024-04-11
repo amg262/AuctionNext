@@ -54,6 +54,7 @@ public static class DbInitializer
 					Content =
 						"Serverless architecture allows developers to build and run applications and services without having to manage infrastructure. This article delves into the benefits, challenges, and future of serverless computing...",
 					Author = "Jane Doe",
+					UserId = "bob",
 					ImageUrl = "https://source.unsplash.com/featured/?serverless", // Example Unsplash URL
 					Category = "Technology",
 					Status = "Published",
@@ -68,6 +69,7 @@ public static class DbInitializer
 					Content =
 						"Asynchronous programming is essential for developing scalable and responsive applications. This article covers the basics of async/await in C#, including best practices and common pitfalls...",
 					Author = "John Smith",
+					UserId = "bob",
 					ImageUrl = "https://source.unsplash.com/featured/?coding", // Example Unsplash URL
 					Category = "Programming",
 					Status = "Published",
@@ -82,6 +84,7 @@ public static class DbInitializer
 					Content =
 						"Microservices architecture is an approach in which a single application is composed of many loosely coupled and independently deployable smaller services. This guide covers the basics, advantages, and how to get started...",
 					Author = "Alice Johnson",
+					UserId = "bob",
 					ImageUrl = "https://source.unsplash.com/featured/?microservices", // Example Unsplash URL
 					Category = "Architecture",
 					Status = "Published",
@@ -96,6 +99,7 @@ public static class DbInitializer
 					Content =
 						"Blazor is a free and open-source web framework that enables developers to create web apps using C# and HTML. This article explores how Blazor works, its various modes (Server and WebAssembly), and its advantages over traditional JavaScript frameworks...",
 					Author = "Emily White",
+					UserId = "tom",
 					ImageUrl =
 						"https://source.unsplash.com/featured/?blazor", // Placeholder, specific Blazor images may be hard to find
 					Category = "Web Development",
@@ -111,6 +115,7 @@ public static class DbInitializer
 					Content =
 						"With cyber threats on the rise, securing your .NET applications has never been more important. This article covers modern security practices, including secure coding principles, data protection, and using ASP.NET Core's built-in security features...",
 					Author = "David Brown",
+					UserId = "tom",
 					ImageUrl = "https://source.unsplash.com/featured/?cybersecurity", // Example Unsplash URL
 					Category = "Security",
 					Status = "Published",
@@ -125,6 +130,7 @@ public static class DbInitializer
 					Content =
 						"Docker simplifies the process of deploying .NET applications across different environments. This guide explains Docker concepts, how to Dockerize a .NET application, and best practices for working with Docker containers...",
 					Author = "Michael Lee",
+					UserId = "tom",
 					ImageUrl = "https://source.unsplash.com/featured/?docker", // Example Unsplash URL
 					Category = "DevOps",
 					Status = "Published",
@@ -139,6 +145,7 @@ public static class DbInitializer
 					Content =
 						"Since its introduction in 2000, C# has become one of the most popular and versatile programming languages. This article explores the history of C#, its major milestones, and how it has evolved over the years to meet modern development needs...",
 					Author = "Sarah Green",
+					UserId = "alice",
 					ImageUrl = "https://source.unsplash.com/featured/?csharp", // Example Unsplash URL
 					Category = "Programming Languages",
 					Status = "Published",
@@ -153,6 +160,7 @@ public static class DbInitializer
 					Content =
 						"RESTful APIs are the backbone of modern web services and applications. This article provides a step-by-step guide on how to design, develop, and deploy RESTful APIs using ASP.NET Core, highlighting best practices and common pitfalls...",
 					Author = "Alex Turner",
+					UserId = "alice",
 					ImageUrl = "https://source.unsplash.com/featured/?api", // Example Unsplash URL
 					Category = "Web Development",
 					Status = "Published",
@@ -167,6 +175,7 @@ public static class DbInitializer
 					Content =
 						"ML.NET is a powerful, open-source machine learning framework for .NET developers. This article introduces the basics of machine learning, how to get started with ML.NET, and walks through a simple project to predict user behavior...",
 					Author = "Chris Johnson",
+					UserId = "alice",
 					ImageUrl = "https://source.unsplash.com/featured/?machinelearning", // Example Unsplash URL
 					Category = "Machine Learning",
 					Status = "Published",

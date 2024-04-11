@@ -1,3 +1,5 @@
+import {DateTime} from "next-auth/providers/kakao";
+
 export type PagedResult<T> = {
   results: T[]
   pageCount: number
@@ -85,4 +87,18 @@ export type Shipping = {
   zip: string
   country: string
   email: string
+}
+
+export type Post = {
+  guid: string
+  title: string
+  description: string
+  content: string
+  userId: string
+  author: string
+  imageUrl: string
+  category: string
+  status: string
+  createdAt: DateTime
+  updatedAt: DateTime
 }
