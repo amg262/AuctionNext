@@ -9,6 +9,10 @@ export async function getData(query: string): Promise<PagedResult<Auction>> {
   return await fetchWrapper.get(`search/${query}`)
 }
 
+export async function getPosts() {
+  return await fetchWrapper.get(`post`);
+}
+
 export async function getCoupon(code: string) {
   return await fetchWrapper.get(`coupon/code/${code}`);
 }
