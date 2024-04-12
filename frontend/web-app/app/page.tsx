@@ -7,6 +7,7 @@ export default function Home() {
         <div>
           <PostList/>
         </div>
+        <br/><br/>
         <Listings/>
       </div>
   )

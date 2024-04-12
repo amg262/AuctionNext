@@ -54,7 +54,7 @@ public class PostController : ControllerBase
     /// </summary>
     /// <param name="id">The ID of the post to retrieve.</param>
     /// <returns>The requested post if found; otherwise, NotFound.</returns>
-    [HttpGet("{id:length(24)}")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> Get(string id)
     {
         var post = await DB.Find<Post>().OneAsync(id);
