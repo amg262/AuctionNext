@@ -33,9 +33,16 @@ const initialState: State = {
   gridColumns: 3
 }
 
+/**
+ * Store for managing UI parameters for filtering, sorting, and pagination.
+ */
 export const useParamsStore = create<State & Actions>()((set) => ({
   ...initialState,
 
+  /**
+   * Updates one or more parameters in the store.
+   * @param newParams Partial object containing one or more parameters to update.
+   */
   setParams: (newParams: Partial<State>) => {
     set((state) => {
       if (newParams.pageNumber) {
@@ -46,12 +53,23 @@ export const useParamsStore = create<State & Actions>()((set) => ({
     })
   },
 
+  /**
+   * Resets all parameters to their initial states.
+   */
   reset: () => set(initialState),
 
+  /**
+   * Sets the search value for filtering.
+   * @param value The new search term.
+   */
   setSearchValue: (value: string) => {
     set({searchValue: value})
   },
 
+  /**
+   * Sets the number of columns in a grid layout.
+   * @param value The new number of columns.
+   */
   setGridColumns: (value: number) => {
     set({gridColumns: value})
   }

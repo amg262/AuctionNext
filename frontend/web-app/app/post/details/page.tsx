@@ -1,8 +1,9 @@
 import Heading from '@/app/components/Heading'
 import React from 'react'
 import {getCurrentUser} from "@/app/actions/authActions";
+import {Post} from "@/types";
 
-export default async function Update({params}: { params: { id: string } }) {
+export default async function Update({params}: { params: { id: string, post: Post } }) {
   const user = await getCurrentUser();
 
   return (
