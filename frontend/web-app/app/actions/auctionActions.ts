@@ -14,15 +14,20 @@ export async function getData(query: string): Promise<PagedResult<Auction>> {
   return await fetchWrapper.get(`search/${query}`)
 }
 
+export async function updatePost(data: FieldValues, id: string) {
+  return await fetchWrapper.put(`post/${id}`, data);
+}
+
+export async function createPost(data: FieldValues) {
+  return await fetchWrapper.post('post', data);
+}
+
 /**
  * Fetches a specific post by its ID.
  * @param id The unique identifier of the post.
  * @returns A promise that resolves with the post data.
  */
 export async function getPost(id: string) {
-  console.log('getPost', id)
-  const data = await fetchWrapper.get(`post/${id}`)
-  console.log('data', data)
   return await fetchWrapper.get(`post/${id}`);
 }
 

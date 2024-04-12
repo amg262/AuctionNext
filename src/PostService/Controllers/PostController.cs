@@ -30,7 +30,7 @@ public class PostController : ControllerBase
     /// </summary>
     /// <param name="post">The post object to create.</param>
     /// <returns>The created post.</returns>
-    [HttpPost("create")]
+    [HttpPost]
     public async Task<IActionResult> Post([FromBody] Post post)
     {
         if (post == null)

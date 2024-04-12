@@ -8,7 +8,7 @@ import Link from 'next/link'
 import {usePathname, useRouter} from 'next/navigation'
 import React from 'react'
 import {AiFillCar, AiFillTrophy, AiOutlineLogout} from 'react-icons/ai'
-import {HiCog, HiUser} from 'react-icons/hi2';
+import {HiCog, HiPencil, HiUser} from 'react-icons/hi2';
 
 type Props = {
   user: User
@@ -49,6 +49,11 @@ export default function UserActions({user}: Props) {
         <Dropdown.Item icon={HiCog}>
           <Link href='/session'>
             Session (dev only)
+          </Link>
+        </Dropdown.Item>
+        <Dropdown.Item icon={HiPencil}>
+          <Link href='/post/create'>
+            New post
           </Link>
         </Dropdown.Item>
         <Dropdown.Divider/>

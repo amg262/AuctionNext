@@ -15,27 +15,23 @@ export default async function PostDetails({params}: { params: { id: string } }) 
     error = err;
   }
 
-
-  console.log('payment', post)
-
-
   if (error) {
     return <div>Error: {error}</div>;
   }
 
   if (!post) {
+    //
+    // getPost(params.id)
+    //     .then((res) => {
+    //       post = res;
+    //       console.log('post', post)
+    //
+    //       return res
+    //     }).catch((err) => {
+    //   return err
+    // });
 
-    getPost(params.id)
-        .then((res) => {
-          post = res;
-          console.log('post', post)
-
-          return res
-        }).catch((err) => {
-      return err
-    });
-
-    // return <div>Loading...</div>; // Optionally show a loading or not found message
+    return <div>Loading...</div>; // Optionally show a loading or not found message
   }
 
 
