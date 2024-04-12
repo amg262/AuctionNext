@@ -5,12 +5,12 @@ import {Post} from "@/types";
 
 export default async function PostDetails({params}: { params: { id: string } }) {
   let error = null;
-  let post: Post | null = null
+  let post: Post = {} as Post;
 
   try {
-    const {post: postData} = await getPost(params.id);
-    post = postData;
-    console.log('postDat', postData)
+    post = await getPost(params.id);
+    // post = postData;
+    console.log('post - comp', post)
   } catch (err: any) {
     error = err;
   }
@@ -24,8 +24,20 @@ export default async function PostDetails({params}: { params: { id: string } }) 
   }
 
   if (!post) {
-    return <div>Loading...</div>; // Optionally show a loading or not found message
+
+    getPost(params.id)
+        .then((res) => {
+          post = res;
+          console.log('post', post)
+
+          return res
+        }).catch((err) => {
+      return err
+    });
+
+    // return <div>Loading...</div>; // Optionally show a loading or not found message
   }
+
 
   return (
       <div className='max-w-4xl mx-auto mt-10 px-4'>

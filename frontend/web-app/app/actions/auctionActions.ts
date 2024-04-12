@@ -20,6 +20,9 @@ export async function getData(query: string): Promise<PagedResult<Auction>> {
  * @returns A promise that resolves with the post data.
  */
 export async function getPost(id: string) {
+  console.log('getPost', id)
+  const data = await fetchWrapper.get(`post/${id}`)
+  console.log('data', data)
   return await fetchWrapper.get(`post/${id}`);
 }
 

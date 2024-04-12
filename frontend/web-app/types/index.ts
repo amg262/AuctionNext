@@ -91,7 +91,6 @@ export type Shipping = {
 
 export type Post = {
   id: string
-  guid: string
   title: string
   description: string
   content: string
