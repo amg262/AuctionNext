@@ -13,8 +13,6 @@ type Props = {
 export default function PostCard({post}: Props) {
   const excerpt = (content: string) => content.substring(0, 150) + '...';
 
-  console.log('post', post)
-
   return (
       <Link href={`/post/details/${post.id}`}>
         <a className='block shadow-lg rounded-lg overflow-hidden'>
