@@ -27,6 +27,7 @@ public static class DbInitializer
         await DB.InitAsync("PostDb", MongoClientSettings
             .FromConnectionString(app.Configuration.GetConnectionString("MongoDbConnection")));
 
+
         await DB.Index<Post>()
             .Key(x => x.Title, KeyType.Text)
             // .Key(x => x.Description, KeyType.Text)
@@ -37,6 +38,11 @@ public static class DbInitializer
             // .Key(x => x.Status, KeyType.Text)
             // .Key(x => x.CreatedAt, KeyType.Ascending)
             // .Key(x => x.UpdatedAt, KeyType.Ascending)
+            .CreateAsync();
+
+
+        await DB.Index<Comment>()
+            .Key(c => c.PostId, KeyType.Ascending)
             .CreateAsync();
 
         // Check if the 'Post' collection is empty
@@ -205,26 +211,26 @@ public static class DbInitializer
                     CreatedAt = DateTime.UtcNow.AddDays(-45),
                     UpdatedAt = DateTime.UtcNow.AddDays(-14)
                 },
-                new()
-                {
-                    Title = "Introduction to Machine Learning with .NET",
-                    Description = "Getting started with machine learning in .NET using ML.NET.",
-                    Content =
-                        "ML.NET is a powerful, open-source machine learning framework for .NET developers. This article " +
-                        "introduces the basics of machine learning, how to get started with ML.NET, and walks through a " +
-                        "simple project to predict user behavior." +
-                        "<br/>" +
-                        "ML.NET is a powerful, open-source machine learning framework for .NET developers. This article " +
-                        "introduces the basics of machine learning, how to get started with ML.NET, and walks through a " +
-                        "simple project to predict user behavior.",
-                    Author = "Chris Johnson",
-                    UserId = "alice",
-                    ImageUrl = "https://source.unsplash.com/featured/?machinelearning", // Example Unsplash URL
-                    Category = "Machine Learning",
-                    Status = "Published",
-                    CreatedAt = DateTime.UtcNow.AddDays(-55),
-                    UpdatedAt = DateTime.UtcNow.AddDays(-18)
-                }
+                // new()
+                // {
+                //     Title = "Introduction to Machine Learning with .NET",
+                //     Description = "Getting started with machine learning in .NET using ML.NET.",
+                //     Content =
+                //         "ML.NET is a powerful, open-source machine learning framework for .NET developers. This article " +
+                //         "introduces the basics of machine learning, how to get started with ML.NET, and walks through a " +
+                //         "simple project to predict user behavior." +
+                //         "<br/>" +
+                //         "ML.NET is a powerful, open-source machine learning framework for .NET developers. This article " +
+                //         "introduces the basics of machine learning, how to get started with ML.NET, and walks through a " +
+                //         "simple project to predict user behavior.",
+                //     Author = "Chris Johnson",
+                //     UserId = "alice",
+                //     ImageUrl = "https://source.unsplash.com/featured/?machinelearning", // Example Unsplash URL
+                //     Category = "Machine Learning",
+                //     Status = "Published",
+                //     CreatedAt = DateTime.UtcNow.AddDays(-55),
+                //     UpdatedAt = DateTime.UtcNow.AddDays(-18)
+                // }
                 // Add more example posts here
             };
 

@@ -50,11 +50,11 @@ export default function PostForm({post, user}: Props) {
       let id = '';
       let res;
       if (pathname.includes('/post/create')) {
-        res = await createPost(postData); // Changed from createAuction
+        res = await createPost(postData);
         id = res.id;
       } else {
         if (post) {
-          res = await updatePost(postData, post.id); // Changed from updateAuction
+          res = await updatePost(postData, post.id);
           id = post.id;
         }
       }
