@@ -4,6 +4,7 @@ import Heading from "@/app/components/Heading";
 import AuthTest from "@/app/session/AuthTest";
 import Test from "@/app/session/Test";
 import {getPosts} from '../actions/auctionActions';
+import Footer from "@/app/components/Footer";
 
 
 export default async function Post() {
@@ -32,6 +33,7 @@ export default async function Post() {
           <h3 className='text-lg'>Token data</h3>
           <pre className='overflow-auto'>{JSON.stringify(token, null, 2)}</pre>
         </div>
+        <Footer/>
       </div>
   )
 }

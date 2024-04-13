@@ -1,5 +1,6 @@
 import Listings from "./auctions/Listings";
 import PostList from "@/app/post/PostList";
+import Footer from "@/app/components/Footer";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
         </div>
         <br/><br/>
         <Listings/>
+        <Footer/>
       </div>
   )
 }
