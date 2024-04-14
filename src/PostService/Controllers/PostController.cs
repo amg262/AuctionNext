@@ -72,7 +72,7 @@ public class PostController : ControllerBase
     /// <param name="id">The ID of the post to update.</param>
     /// <param name="post">The updated post object.</param>
     /// <returns>The updated post if the operation is successful; otherwise, NotFound.</returns>
-    [HttpPut("{id:length(24)}")]
+    [HttpPut("{id}")]
     public async Task<IActionResult> Put(string id, [FromBody] Post post)
     {
         if (post == null)
@@ -98,6 +98,7 @@ public class PostController : ControllerBase
     /// </summary>
     /// <param name="id">The ID of the post to delete.</param>
     /// <returns>A NoContent result if the post is successfully deleted; otherwise, NotFound.</returns>
+    [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
         var post = await DB.Find<Post>().OneAsync(id);
@@ -109,5 +110,42 @@ public class PostController : ControllerBase
         await DB.DeleteAsync<Post>(id); // Correct usage to delete a document by ID
         // await post.DeleteAsync(); // Incorrect usage to delete a document by instance
         return NoContent();
+    }
+
+
+    /// <summary>
+    /// Posts a new comment to a specific blog post.
+    /// </summary>
+    /// <param name="postId">The ID of the post to which the comment is being added.</param>
+    /// <param name="comment">The comment object containing the user's input.</param>
+    /// <returns>An IActionResult that indicates whether the comment was successfully posted or if an error occurred.</returns>
+    [HttpPost("{postId}/comment")]
+    public async Task<IActionResult> Comment(string postId, [FromBody] Comment comment)
+    {
+        if (comment == null)
+        {
+            return BadRequest("Comment cannot be null.");
+        }
+
+        var post = await DB.Find<Post>().OneAsync(postId);
+
+        if (post == null)
+        {
+            return NotFound($"Post with ID {postId} not found.");
+        }
+
+        var newComment = new Comment
+        {
+            Content = comment.Content,
+            PostId = post.ID,
+            UserId = comment.UserId,
+            Author = User.Identity.Name
+        };
+
+        await DB.InsertAsync(newComment);
+
+        // await post.SaveAsync();
+
+        return Ok(post);
     }
 }
