@@ -143,6 +143,18 @@ public class PostController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Get all comments from the database.
+    /// </summary>
+    /// <returns>200 http code with Comments</returns>
+    [HttpGet("comments")]
+    public async Task<IActionResult> GetComments()
+    {
+        var filter = Builders<Comment>.Filter.Empty; // Defines an empty filter to select all documents
+        var comments = await DB.Find<Comment>().Match(filter).ExecuteAsync();
+        return Ok(comments);
+    }
+
 
     /// <summary>
     /// Posts a new comment to a specific blog post.
