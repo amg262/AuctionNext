@@ -3,7 +3,12 @@
 import {SetStateAction, useState} from "react";
 import {createComment} from "@/app/actions/auctionActions";
 
-export default function PostCommentForm({postId}: { postId: string; }) {
+type Props = {
+  postId: string,
+  username?: string
+}
+
+export default function PostCommentForm({postId, username}: { postId: string, username?: string | undefined }) {
   const [loading, setLoading] = useState(false);
   const [comment, setComment] = useState('');
 
@@ -18,14 +23,22 @@ export default function PostCommentForm({postId}: { postId: string; }) {
     console.log('postId', postId)
     console.log('comment', comment)
 
-    await createComment(postId, comment);
+    await createComment(postId, {content: comment, userId: username});
     setComment('');
 
-    if (comment.trim()) {
-      // onSubmit(postId, comment);
+    // await fetch(`https://api.auctionnext.com/post/${postId}/comment`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({content: comment, userId: username})
+    // })
+  }
 
-    }
-  };
+  // if (comment.trim()) {
+  //   // onSubmit(postId, comment);
+  //
+  // }
 
   return (
       <div className='mt-4'>

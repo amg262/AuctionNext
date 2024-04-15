@@ -78,7 +78,7 @@ export default async function PostDetails({params}: { params: { id: string } }) 
         )}
 
         {post.userId !== user?.username && (
-            <PostCommentForm postId={post.id}/>
+            <PostCommentForm postId={post.id} username={user?.username}/>
         )}
         <PostComments key={post.id} post={post} userId={post.userId}/>
         <br/>
