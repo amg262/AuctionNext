@@ -9,7 +9,7 @@ namespace PostService.Data;
 /// </summary>
 public static class DbInitializer
 {
-    private static readonly Random Random = new Random();
+    private static readonly Random Random = new();
 
     /// <summary>
     /// Initializes the MongoDB database with necessary indexes and seeds it with initial data if empty.
@@ -31,15 +31,11 @@ public static class DbInitializer
 
 
         await DB.Index<Post>()
+            .Key(x => x.ID, KeyType.Ascending)
             .Key(x => x.Title, KeyType.Text)
-            // .Key(x => x.Description, KeyType.Text)
             .Key(x => x.Content, KeyType.Text)
-            // .Key(x => x.Author, KeyType.Text)
             .Key(x => x.UserId, KeyType.Text)
             .Key(x => x.Category, KeyType.Text)
-            // .Key(x => x.Status, KeyType.Text)
-            // .Key(x => x.CreatedAt, KeyType.Ascending)
-            // .Key(x => x.UpdatedAt, KeyType.Ascending)
             .CreateAsync();
 
 
@@ -227,22 +223,9 @@ public static class DbInitializer
                 // Add more example posts here
             };
 
-            var index = 0;
-
             foreach (var post in seedPosts)
             {
-                index++;
-                // var user = string.Empty;
-
                 await post.SaveAsync();
-
-                // user = post.UserId switch
-                // {
-                //     "bob" => "alice",
-                //     "alice" => "bob",
-                //     "tom" => "alice",
-                //     _ => user
-                // };
 
                 var comment = new Comment
                 {
@@ -260,7 +243,6 @@ public static class DbInitializer
                 };
 
                 await DB.InsertAsync(comment);
-                // await comment.SaveAsync();
             }
         }
 
@@ -283,6 +265,10 @@ public static class DbInitializer
         // if (items.Count > 0) await DB.SaveAsync(items);
     }
 
+    /// <summary>
+    /// Generates a random comment from a predefined list of comments.
+    /// </summary>
+    /// <returns>A random comment string selected from a list of predefined comments.</returns>
     private static string RandomComment()
     {
         var predefinedComments = new List<string>
