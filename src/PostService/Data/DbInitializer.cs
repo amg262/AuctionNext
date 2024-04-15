@@ -9,6 +9,8 @@ namespace PostService.Data;
 /// </summary>
 public static class DbInitializer
 {
+    private static readonly Random Random = new Random();
+
     /// <summary>
     /// Initializes the MongoDB database with necessary indexes and seeds it with initial data if empty.
     /// </summary>
@@ -56,8 +58,6 @@ public static class DbInitializer
                 new()
                 {
                     Title = "The Rise of Serverless Architecture",
-                    Description = "Exploring how serverless computing is changing the development landscape.",
-
                     Content =
                         "Serverless architecture allows developers to build and run applications and services without " +
                         "having to manage infrastructure. This article delves into the benefits, challenges, and future " +
@@ -77,7 +77,6 @@ public static class DbInitializer
                 new()
                 {
                     Title = "Understanding Async/Await in C#",
-                    Description = "A deep dive into asynchronous programming in C#.",
                     Content =
                         "Asynchronous programming is essential for developing scalable and responsive applications. " +
                         "This article covers the basics of async/await in C#, including best practices and common pitfalls." +
@@ -95,7 +94,6 @@ public static class DbInitializer
                 new()
                 {
                     Title = "A Beginner's Guide to Microservices",
-                    Description = "Microservices architecture explained for beginners.",
                     Content =
                         "Microservices architecture is an approach in which a single application is composed of many " +
                         "loosely coupled and independently deployable smaller services. This guide covers the basics, " +
@@ -115,7 +113,6 @@ public static class DbInitializer
                 new()
                 {
                     Title = "Exploring Blazor for Web Development",
-                    Description = "An introduction to Blazor and its capabilities for building web applications.",
                     Content =
                         "Blazor is a free and open-source web framework that enables developers to create web apps using " +
                         "C# and HTML. This article explores how Blazor works, its various modes (Server and WebAssembly), " +
@@ -136,7 +133,6 @@ public static class DbInitializer
                 new()
                 {
                     Title = "Modern Security Practices for .NET Applications",
-                    Description = "Best security practices to follow when developing .NET applications.",
                     Content =
                         "With cyber threats on the rise, securing your .NET applications has never been more important. " +
                         "This article covers modern security practices, including secure coding principles, data " +
@@ -156,7 +152,6 @@ public static class DbInitializer
                 new()
                 {
                     Title = "Getting Started with Docker for .NET Developers",
-                    Description = "A comprehensive guide to using Docker in .NET development.",
                     Content =
                         "Docker simplifies the process of deploying .NET applications across different environments." +
                         " This guide explains Docker concepts, how to Dockerize a .NET application, and best practices " +
@@ -176,7 +171,6 @@ public static class DbInitializer
                 new()
                 {
                     Title = "The Evolution of C#",
-                    Description = "Tracing the development and evolution of the C# programming language.",
                     Content =
                         "Since its introduction in 2000, C# has become one of the most popular and versatile " +
                         "programming languages. This article explores the history of C#, its major milestones, " +
@@ -196,7 +190,6 @@ public static class DbInitializer
                 new()
                 {
                     Title = "Building RESTful APIs with ASP.NET Core",
-                    Description = "A guide to developing RESTful web services with ASP.NET Core.",
                     Content =
                         "RESTful APIs are the backbone of modern web services and applications. This article provides " +
                         "a step-by-step guide on how to design, develop, and deploy RESTful APIs using ASP.NET Core, " +
@@ -234,9 +227,40 @@ public static class DbInitializer
                 // Add more example posts here
             };
 
+            var index = 0;
+
             foreach (var post in seedPosts)
             {
+                index++;
+                // var user = string.Empty;
+
                 await post.SaveAsync();
+
+                // user = post.UserId switch
+                // {
+                //     "bob" => "alice",
+                //     "alice" => "bob",
+                //     "tom" => "alice",
+                //     _ => user
+                // };
+
+                var comment = new Comment
+                {
+                    PostId = post.ID,
+                    Content = RandomComment(),
+                    Author = post.Author,
+                    // UserId = user,
+                    UserId = post.UserId switch
+                    {
+                        "bob" => "alice",
+                        "alice" => "bob",
+                        "tom" => "alice",
+                        _ => string.Empty
+                    },
+                };
+
+                await DB.InsertAsync(comment);
+                // await comment.SaveAsync();
             }
         }
 
@@ -257,5 +281,24 @@ public static class DbInitializer
         // Console.WriteLine(items.Count + " returned from the auction service");
         //
         // if (items.Count > 0) await DB.SaveAsync(items);
+    }
+
+    private static string RandomComment()
+    {
+        var predefinedComments = new List<string>
+        {
+            "Great insight, thanks for sharing!",
+            "Very informative post, learned a lot.",
+            "I disagree with your point, but interesting read!",
+            "This is exactly what I was looking for, perfect!",
+            "Could you elaborate on this further?",
+            "Fascinating approach, could you provide more details?",
+            "I never thought about it this way, thanks for opening my eyes!",
+            "This seems incorrect, can you verify your sources?",
+            "Amazing explanation, very clear and concise.",
+            "I'm not sure I understand this completely, could you help?"
+        };
+        var index = Random.Next(predefinedComments.Count);
+        return predefinedComments[index];
     }
 }

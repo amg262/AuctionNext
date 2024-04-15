@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using PostService.DTOs;
+using PostService.Models;
 
 namespace PostService.RequestHelpers;
 
@@ -8,12 +10,9 @@ namespace PostService.RequestHelpers;
 /// </summary>
 public class MappingProfiles : Profile
 {
-
-	public MappingProfiles()
-	{
-		// Maps AuctionCreated DTO to Item entity, configuring how auction creation data should be translated to the Item model.
-		// CreateMap<AuctionCreated, Item>();
-		// // Maps AuctionUpdated DTO to Item entity, specifying how updates from auction events are applied to the existing Item model.
-		// CreateMap<AuctionUpdated, Item>();
-	}
+    public MappingProfiles()
+    {
+        CreateMap<Post, PostDto>().ReverseMap();
+        CreateMap<Comment, CommentDto>().ReverseMap();
+    }
 }

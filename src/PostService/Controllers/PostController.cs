@@ -148,4 +148,82 @@ public class PostController : ControllerBase
 
         return Ok(post);
     }
+
+    [HttpGet("{postId}/comment/{commentId}")]
+    public async Task<IActionResult> GetComment(string postId, string commentId)
+    {
+        var post = await DB.Find<Post>().OneAsync(postId);
+        if (post == null)
+        {
+            return NotFound($"Post with ID {postId} not found.");
+        }
+
+        var comment = await DB.Find<Comment>().OneAsync(commentId);
+        if (comment == null)
+        {
+            return NotFound($"Comment with ID {commentId} not found.");
+        }
+
+        return Ok(comment);
+    }
+
+    [HttpPut("{postId}/comment/{commentId}")]
+    public async Task<IActionResult> PutComment(string postId, string commentId, [FromBody] Comment comment)
+    {
+        if (comment == null)
+        {
+            return BadRequest("Comment cannot be null.");
+        }
+
+        var post = await DB.Find<Post>().OneAsync(postId);
+        if (post == null)
+        {
+            return NotFound($"Post with ID {postId} not found.");
+        }
+
+        var existingComment = await DB.Find<Comment>().OneAsync(commentId);
+        if (existingComment == null)
+        {
+            return NotFound($"Comment with ID {commentId} not found.");
+        }
+
+        existingComment.Content = comment.Content;
+        await existingComment.SaveAsync();
+
+        return Ok(existingComment);
+    }
+
+
+    [HttpDelete("{postId}/comment/{commentId}")]
+    public async Task<IActionResult> DeleteComment(string postId, string commentId)
+    {
+        var post = await DB.Find<Post>().OneAsync(postId);
+        if (post == null)
+        {
+            return NotFound($"Post with ID {postId} not found.");
+        }
+
+        var comment = await DB.Find<Comment>().OneAsync(commentId);
+        if (comment == null)
+        {
+            return NotFound($"Comment with ID {commentId} not found.");
+        }
+
+        await DB.DeleteAsync<Comment>(commentId);
+
+        return NoContent();
+    }
+
+    [HttpGet("{postId}/comment")]
+    public async Task<IActionResult> GetComments(string postId)
+    {
+        var post = await DB.Find<Post>().OneAsync(postId);
+        if (post == null)
+        {
+            return NotFound($"Post with ID {postId} not found.");
+        }
+
+        var comments = await DB.Find<Comment>().ManyAsync(c => c.PostId == postId);
+        return Ok(comments);
+    }
 }
