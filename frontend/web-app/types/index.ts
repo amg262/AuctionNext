@@ -102,3 +102,11 @@ export type Post = {
   createdAt: DateTime
   updatedAt: DateTime
 }
+
+export type PostComment = {
+  postId: string
+  content: string
+  author: string
+  userId: string
+  createdAt: DateTime
+}

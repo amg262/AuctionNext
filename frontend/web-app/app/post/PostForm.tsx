@@ -32,7 +32,7 @@ export default function PostForm({post, user}: Props) {
 
   useEffect(() => {
     if (post) {
-      const {title, content, imageUrl, category, userId: id} = post;
+      const {title, content, imageUrl, category, userId} = post;
       reset({title, content, imageUrl, category, userId, user: user?.username});
     }
     setFocus('title');

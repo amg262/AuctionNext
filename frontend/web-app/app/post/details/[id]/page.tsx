@@ -1,11 +1,17 @@
 import React from 'react'
 import Image from 'next/image';
-import {getPost} from "@/app/actions/auctionActions";
-import {Post} from "@/types";
+import {createComment, getPost, getPostComments} from "@/app/actions/auctionActions";
+import {Post, PostComment} from "@/types";
+import Footer from "@/app/components/Footer";
+import PostComments from "@/app/post/PostComments";
+import PostCommentForm from "@/app/post/PostCommentForm";
+import {getCurrentUser} from "@/app/actions/authActions";
 
 export default async function PostDetails({params}: { params: { id: string } }) {
+  const user = await getCurrentUser()
   let error = null;
   let post: Post = {} as Post;
+  let postComments: PostComment[] = [];
 
   try {
     post = await getPost(params.id);
@@ -14,6 +20,29 @@ export default async function PostDetails({params}: { params: { id: string } }) 
   } catch (err: any) {
     error = err;
   }
+
+  try {
+    postComments = await getPostComments(params.id);
+    // post = postData;
+    console.log('comment - comp', postComments)
+  } catch (err: any) {
+    error = err;
+  }
+
+  async function createPostComment(postId: string, commentContent: any) {
+    try {
+      // Assuming you have a function to call your API
+      const response = await createComment(postId, commentContent);
+      // You might want to update the local state to show the comment immediately
+      console.log('Comment created', response);
+    } catch (error) {
+      console.error('Failed to post comment', error);
+    }
+  }
+
+  // async function createComment() {
+  //   console.log('Create comment')
+  // }
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -47,6 +76,14 @@ export default async function PostDetails({params}: { params: { id: string } }) 
         {post.userId && (
             <p className='text-gray-800 text-lg font-semibold mt-4'>Author: {post.userId}</p>
         )}
+
+        {post.userId !== user?.username && (
+            <PostCommentForm postId={post.id}/>
+        )}
+        <PostComments key={post.id} post={post} userId={post.userId}/>
+        <br/>
+        <br/>
+        <Footer/>
       </div>
   )
 }

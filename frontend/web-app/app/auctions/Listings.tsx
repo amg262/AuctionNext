@@ -49,7 +49,7 @@ export default function Listings() {
 
   if (loading) return <h3>Loading...</h3>
 
-  console.log('Listings rendered', params.gridColumns)
+  // console.log('Listings rendered', params.gridColumns)
   return (
       <>
         <Filters/>

@@ -14,10 +14,33 @@ export async function getData(query: string): Promise<PagedResult<Auction>> {
   return await fetchWrapper.get(`search/${query}`)
 }
 
+export async function getPostComments(postId: string) {
+  return await fetchWrapper.get(`post/${postId}/comment`);
+}
+
+export async function createComment(postId: string, data: any) {
+  return await fetchWrapper.post(`post/${postId}/comment`, data);
+}
+
+export async function getComments() {
+  return await fetchWrapper.get('post/comments');
+}
+
+/**
+ * Updates a post with the provided data.
+ * @param data
+ * @param id
+ * @returns A promise that resolves with the updated post data.
+ */
 export async function updatePost(data: FieldValues, id: string) {
   return await fetchWrapper.put(`post/${id}`, data);
 }
 
+/**
+ * Creates a new post with the provided data.
+ * @param data
+ * @returns A promise that resolves with the created post data.
+ */
 export async function createPost(data: FieldValues) {
   return await fetchWrapper.post('post', data);
 }
