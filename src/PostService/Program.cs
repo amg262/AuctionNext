@@ -32,12 +32,12 @@ builder.Services.AddMassTransit(x =>
 			host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
 		});
 
-		cfg.ReceiveEndpoint("search-post-created", e =>
-		{
-			e.UseMessageRetry(r => r.Interval(5, 5));
-
-			e.ConfigureConsumer<AuctionCreatedConsumer>(context);
-		});
+		// cfg.ReceiveEndpoint("search-post-created", e =>
+		// {
+		// 	e.UseMessageRetry(r => r.Interval(5, 5));
+		//
+		// 	e.ConfigureConsumer<AuctionCreatedConsumer>(context);
+		// });
 
 		cfg.ConfigureEndpoints(context);
 	});

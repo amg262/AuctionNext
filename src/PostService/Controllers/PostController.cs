@@ -1,5 +1,7 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
+using Contracts;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using MongoDB.Entities;
@@ -17,16 +19,18 @@ public class PostController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly ILogger<PostController> _logger;
+    private readonly IPublishEndpoint _publishEndpoint;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PostController"/> class.
     /// </summary>
     /// <param name="mapper">AutoMapper interface to map between DTO and domain models.</param>
     /// <param name="logger">ILogger interface for logging</param>
-    public PostController(IMapper mapper, ILogger<PostController> logger)
+    public PostController(IMapper mapper, ILogger<PostController> logger, IPublishEndpoint publishEndpoint)
     {
         _mapper = mapper;
         _logger = logger;
+        _publishEndpoint = publishEndpoint;
     }
 
     /// <summary>
@@ -65,6 +69,7 @@ public class PostController : ControllerBase
         // Best For: Situations where you are certain the document is new and does not exist in the database.
         // It ensures that duplicates are not created inadvertently.
         await DB.InsertAsync(post);
+        await _publishEndpoint.Publish(_mapper.Map<PostCreated>(post));
 
         // Best For: Scenarios where you might be working with a document that could either be new or already exist,
         // and you want to upsert (update if exists, insert if not).
