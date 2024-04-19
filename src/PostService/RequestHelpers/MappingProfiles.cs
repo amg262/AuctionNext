@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Contracts;
 using PostService.DTOs;
 using PostService.Models;
 
@@ -14,5 +15,6 @@ public class MappingProfiles : Profile
     {
         CreateMap<Post, PostDto>().ReverseMap();
         CreateMap<Comment, CommentDto>().ReverseMap();
+        CreateMap<Post, PostCreated>().ReverseMap();
     }
 }

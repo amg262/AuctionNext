@@ -2,7 +2,7 @@
 
 import {useAuctionStore} from '@/hooks/useAuctionStore';
 import {useBidStore} from '@/hooks/useBidStore';
-import {Auction, AuctionFinished, Bid, Payment} from '@/types';
+import {Auction, AuctionFinished, Bid, Payment, Post} from '@/types';
 import {HubConnection, HubConnectionBuilder} from '@microsoft/signalr'
 import {User} from 'next-auth';
 import React, {ReactNode, useEffect, useState} from 'react'
@@ -12,6 +12,7 @@ import {getDetailedViewData} from "@/app/actions/auctionActions";
 import AuctionFinishedToast from "@/app/components/AuctionFinishedToast";
 import PaymentMadeToast from "@/app/components/PaymentMadeToast";
 import BidPlacedToast from "@/app/components/BidPlacedToast";
+import PostCreatedToast from "@/app/components/PostCreatedToast";
 
 
 type Props = {
@@ -53,6 +54,10 @@ export default function SignalRProvider({children, user}: Props) {
 
             connection.on("PaymentMade", (payment: Payment) => {
               return toast(<PaymentMadeToast payment={payment}/>, {duration: 10000})
+            });
+
+            connection.on("PostCreated", (post: Post) => {
+              return toast(<PostCreatedToast post={post}/>, {duration: 10000})
             });
 
             connection.on('AuctionCreated', (auction: Auction) => {
