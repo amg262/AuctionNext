@@ -1,9 +1,13 @@
 ﻿# AuctionNext
 
-[![wakatime](https://wakatime.com/badge/github/amg262/AuctionNext.svg)](https://wakatime.com/badge/github/amg262/AuctionNext)
+
 
 ## System Diagram
 ![AuctionNext.png](AuctionNext.png)
+
+### I promise I have a life
+[![wakatime](https://wakatime.com/badge/github/amg262/AuctionNext.svg)](https://wakatime.com/badge/github/amg262/AuctionNext)
+
 ## How to run the project
 
 1. Clone the repository: `git clone <repository-url>`
