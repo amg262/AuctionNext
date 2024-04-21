@@ -11,9 +11,9 @@ type Props = {
 
 export default function PostCommentsWithForm({username, post}: Props) {
   const [postComments, setPostComments] = React.useState<PostComment[]>([]);
-  const [error, setError] = React.useState(null);
-
+  const [error, setError] = React.useState<any>(null);
   const [comment, setComment] = React.useState('');
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const handleChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setComment(event.target.value);
@@ -21,17 +21,13 @@ export default function PostCommentsWithForm({username, post}: Props) {
 
   const handleSubmit = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
-
-    console.log('postId', post.id)
-    console.log('comment', comment)
-
+    setIsSubmitting(true);
     try {
-      // Assuming you have a function to call your API
       const response = await createComment(post.id, {content: comment, userId: username});
-      // You might want to update the local state to show the comment immediately
       console.log('Comment created', response);
       setPostComments([...postComments, {postId: post.id, content: comment, userId: username}]);
       setComment('');
+      setIsSubmitting(false);
     } catch (error) {
       console.error('Failed to post comment', error);
     }
@@ -40,17 +36,27 @@ export default function PostCommentsWithForm({username, post}: Props) {
   useEffect(() => {
 
     async function fetchPostComments() {
-        try {
-          const comments = await getPostComments(post.id);
-          setPostComments(comments);
-        } catch (error) {
-          console.error('Failed to fetch post comments', error);
-        }
+      try {
+        const comments = await getPostComments(post.id);
+        setPostComments(comments);
+      } catch (error) {
+        setError(error);
+        console.error('Failed to fetch post comments', error);
+      }
     }
 
-    fetchPostComments();
+    fetchPostComments().then(r => r).catch(e => e);
 
   }, [post.id, comment, postComments.length]);
+
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Check if the Enter key was pressed and also ensure that the Shift key was NOT held down.
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();  // Prevent the default action to avoid a new line in textarea
+      handleSubmit(event).then(r => r).catch(error => error);
+    }
+  };
 
 
   if (error) {
@@ -67,10 +73,13 @@ export default function PostCommentsWithForm({username, post}: Props) {
             placeholder="Add a comment..."
             value={comment}
             onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            disabled={isSubmitting}
             rows={4}
         ></textarea>
-            <button type="submit" className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Post Comment
+            <button type="submit" disabled={isSubmitting}
+                    className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              {isSubmitting ? 'Posting...' : 'Post Comment'}
             </button>
           </form>
         </div>

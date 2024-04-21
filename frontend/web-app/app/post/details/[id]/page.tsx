@@ -3,8 +3,6 @@ import Image from 'next/image';
 import {createComment, getPost, getPostComments} from "@/app/actions/auctionActions";
 import {Post, PostComment} from "@/types";
 import Footer from "@/app/components/Footer";
-import PostComments from "@/app/post/PostComments";
-import PostCommentForm from "@/app/post/PostCommentForm";
 import {getCurrentUser} from "@/app/actions/authActions";
 import PostCommentsWithForm from "@/app/post/PostCommentsWithForm";
 
@@ -77,13 +75,18 @@ export default async function PostDetails({params}: { params: { id: string } }) 
         {post.userId && (
             <p className='text-gray-800 text-lg font-semibold mt-4'>Author: {post.userId}</p>
         )}
-        <PostCommentsWithForm key={post.id} post={post} username={user?.username}/>
 
-        {post.userId !== user?.username && (
-            // <PostCommentForm postId={post.id} username={user?.username}/>
-            <>
-            </>
+        {user?.username ? (
+            <PostCommentsWithForm key={post.id} post={post} username={user.username}/>
+        ) : (
+            <p className='text-gray-800 text-lg font-semibold mt-4'>Please login to post a comment.</p>
         )}
+
+        {/*{post.userId !== user?.username && (*/}
+        {/*    // <PostCommentForm postId={post.id} username={user?.username}/>*/}
+        {/*    <>*/}
+        {/*    </>*/}
+        {/*)}*/}
         {/*<PostComments key={post.id} post={post} userId={post.userId}/>*/}
         <br/>
         <br/>
