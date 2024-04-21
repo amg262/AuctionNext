@@ -26,6 +26,7 @@ public class PostController : ControllerBase
     /// </summary>
     /// <param name="mapper">AutoMapper interface to map between DTO and domain models.</param>
     /// <param name="logger">ILogger interface for logging</param>
+    /// <param name="publishEndpoint"></param>
     public PostController(IMapper mapper, ILogger<PostController> logger, IPublishEndpoint publishEndpoint)
     {
         _mapper = mapper;
