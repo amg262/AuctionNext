@@ -196,6 +196,7 @@ public class PostController : ControllerBase
         // };
 
         await DB.InsertAsync(newComment);
+        await _publishEndpoint.Publish(_mapper.Map<CommentCreated>(newComment));
 
         // await post.SaveAsync();
 
