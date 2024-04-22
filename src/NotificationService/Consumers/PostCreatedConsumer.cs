@@ -27,10 +27,10 @@ public class PostCreatedConsumer : IConsumer<PostCreated>
     /// When a post is created, this method is called, and it notifies all connected clients
     /// about the new post using the SignalR hub.
     /// </summary>
-    /// <param name="message">The context containing the message data.</param>
-    public async Task Consume(ConsumeContext<PostCreated> message)
+    /// <param name="context">The context containing the message data.</param>
+    public async Task Consume(ConsumeContext<PostCreated> context)
     {
         Console.WriteLine("--> post created message received");
-        await _hubContext.Clients.All.SendAsync("PostCreated", message);
+        await _hubContext.Clients.All.SendAsync("PostCreated", context.Message);
     }
 }
