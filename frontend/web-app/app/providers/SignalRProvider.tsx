@@ -61,10 +61,10 @@ export default function SignalRProvider({children, user}: Props) {
               return toast(<PostCreatedToast post={post}/>, {duration: 10000})
             });
 
-            connection.on("CommentCreated", (post: Post, postComment: PostComment) => {
-              console.log('CommentCreated', post, postComment);
-              return toast(<CommentCreatedToast post={post} postComment={postComment}
-                                                key={post.id}/>, {duration: 10000})
+            connection.on("CommentCreated", (postComment: PostComment) => {
+              console.log('CommentCreated', postComment);
+              return toast(<CommentCreatedToast postComment={postComment}
+                                                key={postComment.postId}/>, {duration: 10000})
             });
 
             connection.on('AuctionCreated', (auction: Auction) => {
