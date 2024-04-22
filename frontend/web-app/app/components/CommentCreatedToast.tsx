@@ -9,6 +9,7 @@ type Props = {
 }
 
 export default function CommentCreatedToast({post, postComment}: Props) {
+  console.log('postComment - toast', postComment)
   return (
       <Link href={`/post/details/${post.id}`} className='flex flex-col items-center'>
         <div className='flex flex-row items-center gap-2'>
@@ -19,7 +20,7 @@ export default function CommentCreatedToast({post, postComment}: Props) {
               width={80}
               className='rounded-lg w-auto h-auto'
           />
-          <span>New Comment by {postComment.userId}</span>
+          <span>New Comment on {post.title}</span>
         </div>
       </Link>
   )

@@ -62,6 +62,7 @@ export default function SignalRProvider({children, user}: Props) {
             });
 
             connection.on("CommentCreated", (post: Post, postComment: PostComment) => {
+              console.log('CommentCreated', post, postComment);
               return toast(<CommentCreatedToast post={post} postComment={postComment}
                                                 key={post.id}/>, {duration: 10000})
             });
