@@ -187,6 +187,7 @@ public class PostController : ControllerBase
         commentDto.Author = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
         var newComment = _mapper.Map<Comment>(commentDto);
+        commentDto.PostTitle = post.Title;
 
         // var newCommentDto = new CommentDto
         // {
@@ -197,7 +198,7 @@ public class PostController : ControllerBase
         // };
 
         await DB.InsertAsync(newComment);
-        await _publishEndpoint.Publish(_mapper.Map<CommentCreated>(newComment));
+        await _publishEndpoint.Publish(_mapper.Map<CommentCreated>(commentDto));
 
         // await post.SaveAsync();
 

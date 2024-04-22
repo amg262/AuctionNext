@@ -25,8 +25,13 @@ export default function PostCommentsWithForm({username, post}: Props) {
     event.preventDefault();
     setIsSubmitting(true);
     try {
-      const response = await createComment(post.id, {content: comment, userId: username});
-      setPostComments([...postComments, {postId: post.id, content: comment, userId: username}]);
+      const response = await createComment(post.id, {
+        postId: post.id,
+        postTitle: post.title,
+        content: comment,
+        userId: username
+      });
+      setPostComments([...postComments, {postId: post.id, postTitle: post.title, content: comment, userId: username}]);
       setComment('');
       setIsSubmitting(false);
     } catch (error) {

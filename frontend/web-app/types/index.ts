@@ -104,6 +104,7 @@ export type Post = {
 }
 
 export type PostComment = {
+  postTitle?: string
   postId: string
   content: string
   author?: string
