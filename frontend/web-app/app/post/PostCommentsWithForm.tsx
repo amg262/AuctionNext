@@ -3,6 +3,7 @@
 import React, {useEffect} from "react";
 import {Post, PostComment} from "@/types";
 import {createComment, getPostComments} from "@/app/actions/auctionActions";
+import CommentForm from "@/app/post/CommentForm";
 
 type Props = {
   username?: string,
@@ -15,6 +16,7 @@ export default function PostCommentsWithForm({username, post}: Props) {
   const [comment, setComment] = React.useState('');
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
+
   const handleChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setComment(event.target.value);
   };
@@ -24,17 +26,16 @@ export default function PostCommentsWithForm({username, post}: Props) {
     setIsSubmitting(true);
     try {
       const response = await createComment(post.id, {content: comment, userId: username});
-      console.log('Comment created', response);
       setPostComments([...postComments, {postId: post.id, content: comment, userId: username}]);
       setComment('');
       setIsSubmitting(false);
     } catch (error) {
+      setError(error);
       console.error('Failed to post comment', error);
     }
   }
 
   useEffect(() => {
-
     async function fetchPostComments() {
       try {
         const comments = await getPostComments(post.id);
@@ -65,23 +66,14 @@ export default function PostCommentsWithForm({username, post}: Props) {
 
   return (
       <div>
-
         <div className='mt-4'>
-          <form onSubmit={handleSubmit}>
-        <textarea
-            className="w-full p-2 border rounded"
-            placeholder="Add a comment..."
-            value={comment}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-            disabled={isSubmitting}
-            rows={4}
-        ></textarea>
-            <button type="submit" disabled={isSubmitting}
-                    className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              {isSubmitting ? 'Posting...' : 'Post Comment'}
-            </button>
-          </form>
+          <CommentForm
+              comment={comment}
+              isSubmitting={isSubmitting}
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+              handleKeyDown={handleKeyDown}
+          />
         </div>
         <div className='mt-6'>
           <h2 className='text-2xl font-bold text-gray-800'>Comments:</h2>
