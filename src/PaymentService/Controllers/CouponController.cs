@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PaymentService.Data;
 using PaymentService.DTOs;
+using Serilog;
+using Serilog.Core;
 using Stripe;
 using Coupon = PaymentService.Entities.Coupon;
 using StripeCoupon = Stripe.Coupon;
@@ -19,6 +21,7 @@ public class CouponController : ControllerBase
     private readonly IConfiguration _config;
     private readonly AppDbContext _db;
     private readonly IMapper _mapper;
+    private readonly Logger _log = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 
     /// <summary>
     /// Initializes a new instance of the CouponController.
@@ -40,6 +43,7 @@ public class CouponController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get()
     {
+        _log.Verbose("Getting all coupons");
         List<Coupon?> coupons = await _db.Coupons.ToListAsync();
         return Ok(coupons);
     }

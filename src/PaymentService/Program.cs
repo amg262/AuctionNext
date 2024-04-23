@@ -15,42 +15,43 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
-	opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 builder.Services.AddMassTransit(x =>
 {
-	x.AddEntityFrameworkOutbox<AppDbContext>(o =>
-	{
-		o.QueryDelay = TimeSpan.FromSeconds(10);
+    x.AddEntityFrameworkOutbox<AppDbContext>(o =>
+    {
+        o.QueryDelay = TimeSpan.FromSeconds(10);
 
-		o.UsePostgres();
-		o.UseBusOutbox();
-	});
+        o.UsePostgres();
+        o.UseBusOutbox();
+    });
 
-	x.AddConsumersFromNamespaceContaining<PaymentMadeFaultConsumer>();
+    x.AddConsumersFromNamespaceContaining<PaymentMadeFaultConsumer>();
 
-	x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("payment", false));
+    x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("payment", false));
 
-	x.UsingRabbitMq((context, cfg) =>
-	{
-		cfg.UseRetry(r =>
-		{
-			r.Handle<RabbitMqConnectionException>();
-			r.Interval(5, TimeSpan.FromSeconds(10));
-		});
-		cfg.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
-		{
-			host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
-			host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
-		});
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.UseRetry(r =>
+        {
+            r.Handle<RabbitMqConnectionException>();
+            r.Interval(5, TimeSpan.FromSeconds(10));
+        });
+        cfg.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
+        {
+            host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
+            host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
+        });
 
-		cfg.ConfigureEndpoints(context);
-	});
+        cfg.ConfigureEndpoints(context);
+    });
 });
 
 
-builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration).Enrich.FromLogContext());
 
 builder.Services.AddScoped<StripeService>();
 builder.Services.AddScoped<ShippingService>();
