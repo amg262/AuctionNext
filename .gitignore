@@ -353,3 +353,5 @@ __pycache__/
 
 
 infra/prod-k8s/prod-secrets.yaml
+
+src/IdentityService/Duende_License.key
