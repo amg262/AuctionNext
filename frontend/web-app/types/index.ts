@@ -63,7 +63,7 @@ export type Payment = {
 }
 
 export type Coupon = {
-  couponId: number
+  couponId?: number
   couponCode: string
   discountAmount: number
   minAmount: number
