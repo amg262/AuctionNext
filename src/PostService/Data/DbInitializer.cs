@@ -282,7 +282,17 @@ public static class DbInitializer
             "I never thought about it this way, thanks for opening my eyes!",
             "This seems incorrect, can you verify your sources?",
             "Amazing explanation, very clear and concise.",
-            "I'm not sure I understand this completely, could you help?"
+            "I'm not sure I understand this completely, could you help?",
+            "Spot on! This aligns perfectly with my experience.",
+            "This is a new perspective for me, quite intriguing!",
+            "Your example helped clarify the concept, thank you.",
+            "Is there a reference or source that supports this argument?",
+            "I appreciate the simplicity of your explanation.",
+            "Wow, this really challenges the conventional wisdom.",
+            "Can this method be applied in other contexts as well?",
+            "Your insight here is very valuable, keep posting!",
+            "This contradicts what I've read elsewhere; interesting take.",
+            "Could you break down the last point a bit more?"
         };
         var index = Random.Next(predefinedComments.Count);
         return predefinedComments[index];
