@@ -73,7 +73,7 @@ export default async function PostDetails({params}: { params: { id: string } }) 
         )}
         <p className='text-gray-600 text-lg'>{post.content}</p>
         {post.userId && (
-            <p className='text-gray-800 text-lg font-semibold mt-4'>Author: {post.userId}</p>
+            <p className='text-gray-400 text-md font-semibold mt-4'>Author: {post.userId}</p>
         )}
 
         {user?.username ? (

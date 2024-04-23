@@ -1,19 +1,43 @@
+'use client';
+
 import Heading from '@/app/components/Heading'
-import React from 'react'
-import {getCurrentUser} from "@/app/actions/authActions";
+import React, {useEffect, useState} from 'react'
 import {getCoupons} from "@/app/actions/auctionActions";
 import {Coupon} from "@/types";
 
-export default async function Page({params}: { params: { id: string } }) {
-  const user = await getCurrentUser();
-  const coupons = await getCoupons();
+export default function Page({params}: { params: { id: string } }) {
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [error, setError] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    async function fetchCoupons() {
+      setIsLoading(true);
+      try {
+        const coupons = await getCoupons();
+        setCoupons(coupons);
+        setIsLoading(false);
+      } catch (error) {
+        setError(error instanceof Error ? error.message : "An unknown error occurred");
+        setIsLoading(false);
+        console.error('Failed to fetch coupons', error);
+      }
+    }
+
+    fetchCoupons().then(r => r).catch(e => e);
+  }, [coupons]);
+
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  // const coupons = await getCoupons();
   // I'm trying to do something here cmon man
   // still doing it
   return (
       <div className='mx-auto max-w-[75%] shadow-lg p-10 bg-white rounded-lg'>
         <Heading title='Coupons' subtitle='Manage coupons that sync with Stripe'/>
-
-        {coupons && <pre>{JSON.stringify(coupons, null, 2)}</pre>}
 
         <div className="flex flex-wrap gap-5">
           {coupons && coupons.map((coupon: Coupon) => (
