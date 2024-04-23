@@ -49,7 +49,7 @@ public static class DbInitializer
             foreach (var post in seedPosts)
             {
                 await post.SaveAsync();
-                var numberOfComments = Random.Next(1, 5); // Each post gets between 1 and 4 comments
+                var numberOfComments = Random.Next(1, 5);
 
                 for (var i = 0; i < numberOfComments; i++)
                 {

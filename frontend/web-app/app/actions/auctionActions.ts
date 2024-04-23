@@ -14,15 +14,56 @@ export async function getData(query: string): Promise<PagedResult<Auction>> {
   return await fetchWrapper.get(`search/${query}`)
 }
 
-export async function getPostComments(postId: string) {
+/**
+ * Creates a new coupon with the provided data.
+ * @param data
+ * @returns A promise that resolves with the created coupon data.
+ */
+export async function createCoupon(data: any): Promise<any> {
+  return await fetchWrapper.post('coupon/create', data);
+}
+
+/**
+ * Fetches a coupon by its code.
+ * @param code
+ * @returns A promise that resolves with the coupon data.
+ */
+export async function getCouponByCode(code: string) {
+  return await fetchWrapper.get(`coupon/code/${code}`);
+}
+
+/**
+ * Fetches all coupons available.
+ * @returns A promise that resolves with all coupons.
+ */
+export async function getCoupons(): Promise<any> {
+  return await fetchWrapper.get('coupon');
+}
+
+/**
+ * Retrieves comments for a specific post by its ID.
+ * @param {string} postId - The unique identifier for the post.
+ * @returns {Promise<any>} A promise that resolves with the fetched comments.
+ */
+export async function getPostComments(postId: string): Promise<any> {
   return await fetchWrapper.get(`post/${postId}/comment`);
 }
 
-export async function createComment(postId: string, data: any) {
+/**
+ * Creates a new comment for a specific post.
+ * @param {string} postId - The unique identifier for the post.
+ * @param {any} data - The data for the new comment, typically includes fields like content, author, etc.
+ * @returns {Promise<any>} A promise that resolves with the response from the server after attempting to create the comment.
+ */
+export async function createComment(postId: string, data: any): Promise<any> {
   return await fetchWrapper.post(`post/${postId}/comment`, data);
 }
 
-export async function getComments() {
+/**
+ * Retrieves all comments from the server across all posts.
+ * @returns {Promise<any>} A promise that resolves with all comments.
+ */
+export async function getComments(): Promise<any> {
   return await fetchWrapper.get('post/comments');
 }
 
