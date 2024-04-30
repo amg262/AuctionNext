@@ -15,6 +15,7 @@ type CouponForm = {
 
 export default function Page({params}: { params: { id: string } }) {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [coupon, setCoupon] = useState<Coupon>({couponCode: '', discountAmount: 0, minAmount: 0} as Coupon);
   const [error, setError] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 

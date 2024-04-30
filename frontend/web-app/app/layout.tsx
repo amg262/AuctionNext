@@ -22,9 +22,7 @@ export default async function RootLayout({children,}: { children: React.ReactNod
         <SignalRProvider user={user}>
           {children}
         </SignalRProvider>
-
       </main>
-
       </body>
       </html>
   )
