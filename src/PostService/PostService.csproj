@@ -23,14 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="protos\posts.proto">
-      <GrpcServices>Server</GrpcServices>
-      <Access>Public</Access>
-      <ProtoCompile>True</ProtoCompile>
-      <CompileOutputs>True</CompileOutputs>
-      <OutputDir>obj\Debug\net7.0\</OutputDir>
-      <Generator>MSBuild:Compile</Generator>
-    </Protobuf>
+    <Protobuf Include="protos/post.proto" GrpcServices="Server" />
+    <Protobuf Include="protos/posts.proto" GrpcServices="Server" />
   </ItemGroup>
 
 </Project>

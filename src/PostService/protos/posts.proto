@@ -1,28 +1,62 @@
-syntax = "proto3";
+﻿syntax = "proto3";
 
-// Defines the namespace for the generated C# classes.
 option csharp_namespace = "PostService";
 
-// The GrpcPost service provides operations related to posts.
-service GrpcPost {
-  // Retrieves post details for a given post ID.
-  rpc GetPost (GetPostRequest) returns (GrpcPostResponse);
+service GrpcPostService {
+  rpc GetPosts (GetPostsRequest) returns (GetPostsResponse) {}
+  rpc GetPost(GetPostRequest) returns (GetPostResponse) {}
+  rpc CreatePost(CreatePostRequest) returns (CreatePostResponse) {}
+  rpc UpdatePost(UpdatePostRequest) returns (UpdatePostResponse) {}
+  rpc DeletePost(DeletePostRequest) returns (DeletePostResponse) {}
 }
 
-// Request message for getting post details. Requires an post ID.
+message GetPostsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message GetPostsResponse {
+  repeated Post posts = 1;
+}
+
 message GetPostRequest {
-  string id = 1; // The unique identifier for the post.
+  string id = 1;
 }
 
-// Represents the detailed model of an post.
-message GrpcPostModel {
-  string id = 1; // The unique identifier of the post.
-  string title = 2; // The seller's username or identifier.
-  string content = 3; // The end time of the post in ISO 8601 format.
-  string userId = 4; // The end time of the post in ISO 8601 format.
+message GetPostResponse {
+  Post post = 1;
 }
 
-// Response message containing the requested post's details.
-message GrpcPostResponse {
-  GrpcPostModel post = 1; // The post model with detailed information.
+message CreatePostRequest {
+  string title = 1;
+  string content = 2;
+}
+
+message CreatePostResponse {
+  Post post = 1;
+}
+
+message UpdatePostRequest {
+  string id = 1;
+  string title = 2;
+  string content = 3;
+}
+
+message UpdatePostResponse {
+  Post post = 1;
+}
+
+message DeletePostRequest {
+  string id = 1;
+}
+
+message DeletePostResponse {
+  bool success = 1;
+}
+
+message Post {
+  string id = 1;
+  string title = 2;
+  string content = 3;
+  string userId = 4;
 }

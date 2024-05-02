@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+// Defines the namespace for the generated C# classes.
+option csharp_namespace = "PostService";
+
+// The GrpcPost service provides operations related to posts.
+service GrpcPost {
+  // Retrieves post details for a given post ID.
+  rpc GetPost (GetPostRequest) returns (GrpcPostResponse);
+}
+
+// Request message for getting post details. Requires an post ID.
+message GetPostRequest {
+  string id = 1; // The unique identifier for the post.
+}
+
+// Represents the detailed model of an post.
+message GrpcPostModel {
+  string id = 1; // The unique identifier of the post.
+  string title = 2; // The seller's username or identifier.
+  string content = 3; // The end time of the post in ISO 8601 format.
+  string userId = 4; // The end time of the post in ISO 8601 format.
+}
+
+// Response message containing the requested post's details.
+message GrpcPostResponse {
+  GrpcPostModel post = 1; // The post model with detailed information.
+}
