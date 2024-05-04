@@ -14,6 +14,7 @@
 						{
 							"listen": "test",
 							"script": {
+								"id": "a4630630-7d29-4e98-9b60-f360d6e3f357",
 								"exec": [
 									"var jsonData = pm.response.json();",
 									"",
@@ -31,7 +32,7 @@
 									"})"
 								],
 								"type": "text/javascript",
-								"id": "a4630630-7d29-4e98-9b60-f360d6e3f357"
+								"packages": {}
 							}
 						}
 					],
@@ -42,7 +43,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{auctionApi}}/api/auctions"
+						"url": "https://api.auctionnext.com/auctions"
 					},
 					"response": []
 				},
@@ -3518,7 +3519,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": \"0bab0135-d91d-4120-a1b9-83e6da262957\",\r\n  \"model\": \"string\",\r\n  \"soldAmount\": 100000,\r\n  \"coupons\": [\"40OFF\"]\r\n}",
+							"raw": "{\r\n  \"id\": \"0bab0135-d91d-4120-a1b9-83e6da262957\",\r\n  \"model\": \"string\",\r\n  \"soldAmount\": 100000,\r\n  \"coupons\": {\r\n    \"couponId\": 2,\r\n    \"couponCode\": \"40OFF\",\r\n    \"discountAmount\": 40,\r\n    \"minAmount\": 40\r\n}\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3615,7 +3616,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": \"0bab0135-d91d-4120-a1b9-83e6da262957\",\r\n  \"model\": \"string\",\r\n  \"soldAmount\": 100000,\r\n  \"coupons\": [\"40OFF\"]\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3623,7 +3624,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://api.auctionnext.com/payment/create",
+							"raw": "https://api.auctionnext.com/shipping/complete/9b35bedc-463a-4746-8884-d494d1745f17",
 							"protocol": "https",
 							"host": [
 								"api",
@@ -3631,8 +3632,9 @@
 								"com"
 							],
 							"path": [
-								"payment",
-								"create"
+								"shipping",
+								"complete",
+								"9b35bedc-463a-4746-8884-d494d1745f17"
 							],
 							"query": [
 								{
@@ -3708,7 +3710,7 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -3720,7 +3722,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://api.auctionnext.com/payment/create",
+							"raw": "https://api.auctionnext.com/payment/receipt/a32cc985-f0d1-4569-baa0-36f02eca62c0",
 							"protocol": "https",
 							"host": [
 								"api",
@@ -3729,7 +3731,8 @@
 							],
 							"path": [
 								"payment",
-								"create"
+								"receipt",
+								"a32cc985-f0d1-4569-baa0-36f02eca62c0"
 							],
 							"query": [
 								{
@@ -3817,7 +3820,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://api.auctionnext.com/payment/create",
+							"raw": "https://api.auctionnext.com/payment/refund/pi_3OzQpQJCh47a7Nh11xPt4iNC",
 							"protocol": "https",
 							"host": [
 								"api",
@@ -3826,7 +3829,8 @@
 							],
 							"path": [
 								"payment",
-								"create"
+								"refund",
+								"pi_3OzQpQJCh47a7Nh11xPt4iNC"
 							],
 							"query": [
 								{
@@ -3914,7 +3918,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://api.auctionnext.com/payment/create",
+							"raw": "https://api.auctionnext.com/payment/create/a32cc985-f0d1-4569-baa0-36f02eca62c0",
 							"protocol": "https",
 							"host": [
 								"api",
@@ -3923,7 +3927,8 @@
 							],
 							"path": [
 								"payment",
-								"create"
+								"create",
+								"a32cc985-f0d1-4569-baa0-36f02eca62c0"
 							],
 							"query": [
 								{
@@ -4088,7 +4093,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\t\"paymentId\" : {{paymentId}}\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -4096,7 +4101,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://api.auctionnext.com/payment/validate",
+							"raw": "https://api.auctionnext.com/payment/validate?paymentId={{paymentId}}",
 							"protocol": "https",
 							"host": [
 								"api",
@@ -4125,8 +4130,7 @@
 								},
 								{
 									"key": "paymentId",
-									"value": "{{paymentId}}",
-									"disabled": true
+									"value": "{{paymentId}}"
 								}
 							]
 						}
@@ -4179,11 +4183,11 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\t\"paymentId\" : {{paymentId}}\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -4191,7 +4195,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://api.auctionnext.com/payment/validate",
+							"raw": "https://api.auctionnext.com/coupon/get-coupons",
 							"protocol": "https",
 							"host": [
 								"api",
@@ -4199,8 +4203,8 @@
 								"com"
 							],
 							"path": [
-								"payment",
-								"validate"
+								"coupon",
+								"get-coupons"
 							],
 							"query": [
 								{
@@ -4239,7 +4243,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"stripeSessionUrl\": \"string\",\r\n  \"stripeSessionId\": \"string\",\r\n  \"approvedUrl\": \"string\",\r\n  \"cancelUrl\": \"string\",\r\n  \"auctionId\": \"0bab0135-d91d-4120-a1b9-83e6da262957\",\r\n  \"model\": \"string\",\r\n  \"soldAmount\": 100000\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -4285,7 +4289,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\t\"id\": \"58350d43-7129-44e7-94f8-b7ebed25a9ae\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -4293,7 +4297,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://api.auctionnext.com/payment/",
+							"raw": "http://api.auctionnext.com/payment/e746ea7a-2684-4bdd-b74b-e81a46c1f73d",
 							"protocol": "http",
 							"host": [
 								"api",
@@ -4302,7 +4306,7 @@
 							],
 							"path": [
 								"payment",
-								""
+								"e746ea7a-2684-4bdd-b74b-e81a46c1f73d"
 							],
 							"query": [
 								{
@@ -4318,7 +4322,6 @@
 								{
 									"key": "id",
 									"value": "58350d43-7129-44e7-94f8-b7ebed25a9ae",
-									"type": "text",
 									"disabled": true
 								}
 							]
@@ -4337,7 +4340,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\t\"id\": 1,\r\n\t\"couponCode\": \"10OFF\",\r\n\t\"discountAmount\": 10,\r\n\t\"minAmount\": 10\r\n}",
+							"raw": "{\r\n\"couponCode\": \"NEWYEAR2022\",\r\n    \"discountAmount\": 2,\r\n  \"minAmount\": 2\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -4345,7 +4348,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://api.auctionnext.com/payment/coupon/create",
+							"raw": "http://api.auctionnext.com/payment/coupon",
 							"protocol": "http",
 							"host": [
 								"api",
@@ -4354,8 +4357,7 @@
 							],
 							"path": [
 								"payment",
-								"coupon",
-								"create"
+								"coupon"
 							],
 							"query": [
 								{
@@ -4371,7 +4373,6 @@
 								{
 									"key": "id",
 									"value": "58350d43-7129-44e7-94f8-b7ebed25a9ae",
-									"type": "text",
 									"disabled": true
 								}
 							]
@@ -4397,7 +4398,7 @@
 								}
 							}
 						},
-						"url": "http://api.auctionnext.com/coupon/{{code}}"
+						"url": "http://api.auctionnext.com/coupon/code/{{code}}"
 					},
 					"response": []
 				},
@@ -4419,6 +4420,45 @@
 		{
 			"name": "Post",
 			"item": [
+				{
+					"name": "Get Post",
+					"id": "8e40e18e-56c2-456d-9fca-04eaabebf597",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.auctionnext.com/post"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Comments",
+					"id": "be09188e-ddde-47c2-b9cb-6d255752ae59",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.auctionnext.com/post/comments"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Comments Copy",
+					"id": "24444a06-49da-4ed9-8bd8-16b2b27c47bc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://api.auctionnext.com/post/661d4590316cd372fd5b73f8/comment"
+					},
+					"response": []
+				},
 				{
 					"name": "Create Post",
 					"id": "abddab2a-509a-4a7e-92fc-33b84581ba84",
@@ -4465,19 +4505,7 @@
 								}
 							}
 						},
-						"url": "https://api.auctionnext.com/post/661c03612f6da5461dd130ee/comment"
-					},
-					"response": []
-				},
-				{
-					"name": "Get Post",
-					"id": "8e40e18e-56c2-456d-9fca-04eaabebf597",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": []
+						"url": "https://api.auctionnext.com/post/661d4590316cd372fd5b73f8/comment"
 					},
 					"response": []
 				},
@@ -4489,7 +4517,8 @@
 					},
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": "https://api.auctionnext.com/post/661888195750fc3400f5e286"
 					},
 					"response": []
 				},
@@ -4500,8 +4529,9 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [],
+						"url": "https://id.auctionnext.com/connect/token"
 					},
 					"response": []
 				},
@@ -4511,13 +4541,16 @@
 						{
 							"listen": "test",
 							"script": {
+								"id": "67459045-d613-4681-9b7f-d50994377ad6",
 								"exec": [
 									"var response = pm.response.json();",
 									"",
-									"pm.collectionVariables.set(\"BobToken\", response.access_token);"
+									"pm.collectionVariables.set(\"BobToken\", response.access_token);",
+									"",
+									""
 								],
 								"type": "text/javascript",
-								"id": "67459045-d613-4681-9b7f-d50994377ad6"
+								"packages": {}
 							}
 						}
 					],
@@ -4563,7 +4596,7 @@
 								}
 							]
 						},
-						"url": "{{identitySvc}}/connect/token"
+						"url": "https://id.auctionnext.com/connect/token"
 					},
 					"response": []
 				}
