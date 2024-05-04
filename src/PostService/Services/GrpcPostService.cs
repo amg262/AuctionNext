@@ -1,9 +1,9 @@
 ﻿using MongoDB.Entities;
+using PostService.Models;
 
 namespace PostService.Services;
 
 using Grpc.Core;
-using PostService;
 
 public class GrpcPostService
 {
@@ -15,14 +15,14 @@ public class GrpcPostService
     {
         Console.WriteLine("==> Received Grpc request for post");
 
-        var post = await DB.Find<Post>().OneAsync(Guid.Parse((ReadOnlySpan<char>)request.Id))
+        var post = await DB.Find<Post>().OneAsync(request.Id)
                    ?? throw new RpcException(new Status(StatusCode.NotFound, "Not found"));
 
         var response = new GrpcPostResponse
         {
             Post = new GrpcPostModel
             {
-                Id = post.Id.ToString(),
+                Id = request.Id.ToString(),
                 UserId = post.UserId,
                 Content = post.Content,
                 Title = post.Title

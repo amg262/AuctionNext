@@ -172,6 +172,7 @@ services:
       - AuctionServiceUrl=http://auction-svc
     ports:
       - 7006:80
+      - 8888:8888
     depends_on:
       - mongodb
       - rabbitmq
