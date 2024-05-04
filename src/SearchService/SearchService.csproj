@@ -18,10 +18,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\PostService\PostService.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="protos/post.proto" GrpcServices="Server" />
+    <Protobuf Include="protos/post.proto" GrpcServices="Client" />
   </ItemGroup>
 
 </Project>
